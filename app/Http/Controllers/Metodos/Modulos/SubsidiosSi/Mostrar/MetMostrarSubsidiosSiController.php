@@ -29,6 +29,7 @@ class MetMostrarSubsidiosSiController extends Controller
                                             $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
                                         }
                                     })
+                                    ->where('sdestatus', '!=', null)
                                     ->sum('sdemontoareconocerreal');
 
         $zonas = sdesubsidiosdetalles::join('cliclientes as cli', 'cli.cliid', 'sdesubsidiosdetalles.cliid')
@@ -39,6 +40,7 @@ class MetMostrarSubsidiosSiController extends Controller
                                         }
                                     })
                                     ->distinct('cli.clizona')
+                                    ->where('sdestatus', '!=', null)
                                     ->get([
                                         'cli.clizona'
                                     ]);

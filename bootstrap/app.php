@@ -77,9 +77,9 @@ $app->configure('mail');
 // $app->middleware([
 //     App\Http\Middleware\ExampleMiddleware::class
 // ]);
-// $app->middleware([
-//     "abilitarcor" => App\Http\Middleware\CorsMiddleware::class // Add this
-// ]);
+$app->middleware([
+    "abilitarcor" => App\Http\Middleware\CorsMiddleware::class // Add this
+]);
 $app->routeMiddleware([
     'permisos' => App\Http\Middleware\Permisos::class,
 ]);
