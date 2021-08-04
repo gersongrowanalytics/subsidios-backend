@@ -83,7 +83,7 @@ class MetCargarSOController extends Controller
                 if($fec){
 
                     if($i == 2){
-                        fsofacturasso::where('fsoid', $fec->fecid)->delete();
+                        // fsofacturasso::where('fsoid', $fec->fecid)->delete();
                     }
 
                     $pro = proproductos::where('prosku', $ex_codigoproducto)->first(['proid']);
@@ -127,7 +127,7 @@ class MetCargarSOController extends Controller
                 }
             }
 
-            $this->Alinear();
+            // $this->Alinear();
 
         }else{
             $respuesta = false;
@@ -178,15 +178,16 @@ class MetCargarSOController extends Controller
         return $array;
     }
 
-
-    public function Alinear()
+    public function Alinear($fecid)
     {
 
         // $fecid = 1005;
 
         // $fso = fsofacturasso::where('fecid', $fecid)->get();
 
-        $sdes = sdesubsidiosdetalles::get();
+        $sdes = sdesubsidiosdetalles::where('fecid', $fecid)
+                                    ->where('sdesac', false)
+                                    ->get();
 
         foreach($sdes as $sde){
             $fso = fsofacturasso::where('fecid', $sde->fecid)
@@ -202,6 +203,14 @@ class MetCargarSOController extends Controller
                                 ->where('proid', $sde->proid)
                                 ->where('fsoruc', $sde->sderucsubcliente)
                                 ->sum('fsocantidadbulto');
+
+                $montoAReconocerReal = 0;
+
+                if(floatval($fsosuma) > floatval($sde->sdecantidadbultos)){
+                    $montoAReconocerReal = floatval($sde->sdecantidadbultos);
+                }else{
+                    $montoAReconocerReal = floatval($fsosuma);
+                }
 
                 $status = "OK";
 
@@ -219,8 +228,8 @@ class MetCargarSOController extends Controller
                 }
 
                 $sdee = sdesubsidiosdetalles::find($sde->sdeid);
-                $sdee->sdecantidadbultosreal = $fsosuma;
-                $sdee->sdemontoareconocerreal = floatval($fsosuma) * floatval($sde->sdedsctodos);
+                $sdee->sdecantidadbultosreal = $montoAReconocerReal;
+                $sdee->sdemontoareconocerreal = floatval($montoAReconocerReal) * floatval($sde->sdedsctodos);
                 $sdee->sdestatus = $status;
                 $sdee->sdeaprobado = true;
 

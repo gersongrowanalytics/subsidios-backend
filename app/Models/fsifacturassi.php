@@ -25,5 +25,6 @@ class fsifacturassi extends Model
         "fsivalornetodolares",
         "fsipedido",
         "fsipedidooriginal",
+        "fsisunataprobado"
     ];
 }

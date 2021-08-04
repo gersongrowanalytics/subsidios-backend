@@ -30,6 +30,7 @@ class cliclientes extends Model
         'cligerenteregional',
         'cligerentezona',
         'cliejecutivo',
-        'cliidentificadoraplicativo'
+        'cliidentificadoraplicativo',
+        'cliclientesac'
     ];
 }

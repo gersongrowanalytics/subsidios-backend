@@ -12,6 +12,8 @@ use App\Models\fecfechas;
 use App\Models\proproductos;
 use App\Models\cliclientes;
 use App\Models\sdesubsidiosdetalles;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class MetCargarSubsiduosNoAprobadosController extends Controller
 {
@@ -56,61 +58,78 @@ class MetCargarSubsiduosNoAprobadosController extends Controller
 
             $logs['NUMERO_LINEAS_EXCEL'] = $numRows;
 
-            $ex_anio = $objPHPExcel->getActiveSheet()->getCell('C2')->getCalculatedValue();
-            $ex_mes  = $objPHPExcel->getActiveSheet()->getCell('C3')->getCalculatedValue();
+            $ex_anio = $objPHPExcel->getActiveSheet()->getCell('A2')->getCalculatedValue();
+            $ex_mes  = $objPHPExcel->getActiveSheet()->getCell('B3')->getCalculatedValue();
 
 
             
             $fec = fecfechas::where('fecmesabreviacion', $ex_mes)
                             ->where('fecanionumero', $ex_anio)
+                            ->where('fecdianumero', "1")
                             ->first(['fecid']);
 
             if($fec){
                 
                 sdesubsidiosdetalles::where('fecid', $fec->fecid)
-                                    ->where('sdesac', 0)
+                                    // ->where('sdesac', 0)
                                     ->delete();
 
-                for ($i=5; $i <= $numRows ; $i++) {
-                    $ex_zona                = $objPHPExcel->getActiveSheet()->getCell('B'.$i)->getCalculatedValue();
-                    $ex_territorio          = $objPHPExcel->getActiveSheet()->getCell('C'.$i)->getCalculatedValue();
-                    $ex_cliente             = $objPHPExcel->getActiveSheet()->getCell('D'.$i)->getCalculatedValue();
-                    $ex_codigosolicitante   = $objPHPExcel->getActiveSheet()->getCell('E'.$i)->getCalculatedValue();
-                    $ex_codigodestinatario  = $objPHPExcel->getActiveSheet()->getCell('F'.$i)->getCalculatedValue();
-                    $ex_segmentocliente     = $objPHPExcel->getActiveSheet()->getCell('G'.$i)->getCalculatedValue();
-                    $ex_subsegmentocliente  = $objPHPExcel->getActiveSheet()->getCell('H'.$i)->getCalculatedValue();
-                    $ex_rucsubcliente       = $objPHPExcel->getActiveSheet()->getCell('I'.$i)->getCalculatedValue();
-                    $ex_subcliente          = $objPHPExcel->getActiveSheet()->getCell('J'.$i)->getCalculatedValue();
-                    $ex_nombrecomercial     = $objPHPExcel->getActiveSheet()->getCell('K'.$i)->getCalculatedValue();
-                    $ex_sector              = $objPHPExcel->getActiveSheet()->getCell('L'.$i)->getCalculatedValue();
-                    $ex_codigouni           = $objPHPExcel->getActiveSheet()->getCell('M'.$i)->getCalculatedValue();
-                    $ex_descripcion         = $objPHPExcel->getActiveSheet()->getCell('N'.$i)->getCalculatedValue();
-                    $ex_pcsapfinal          = $objPHPExcel->getActiveSheet()->getCell('O'.$i)->getCalculatedValue();
-                    $ex_dsctouno            = $objPHPExcel->getActiveSheet()->getCell('P'.$i)->getCalculatedValue();
-                    $ex_pcsubsidiado        = $objPHPExcel->getActiveSheet()->getCell('Q'.$i)->getCalculatedValue();
-                    $ex_mup                 = $objPHPExcel->getActiveSheet()->getCell('R'.$i)->getCalculatedValue();
-                    $ex_pvpigv              = $objPHPExcel->getActiveSheet()->getCell('S'.$i)->getCalculatedValue();
-                    $ex_dsctodos            = $objPHPExcel->getActiveSheet()->getCell('T'.$i)->getCalculatedValue();
-                    $ex_destrucsap          = $objPHPExcel->getActiveSheet()->getCell('U'.$i)->getCalculatedValue();
-                    $ex_inicio              = $objPHPExcel->getActiveSheet()->getCell('V'.$i)->getCalculatedValue();
-                    $ex_bultosacordados     = $objPHPExcel->getActiveSheet()->getCell('W'.$i)->getCalculatedValue();
+                for ($i=2; $i <= $numRows ; $i++) {
 
-                    // $ex_cantidadbultos      = $objPHPExcel->getActiveSheet()->getCell('X'.$i)->getCalculatedValue();
-                    // $ex_montoareconocer     = $objPHPExcel->getActiveSheet()->getCell('Y'.$i)->getCalculatedValue();
+
+                    $ex_anio                = $objPHPExcel->getActiveSheet()->getCell('A'.$i)->getCalculatedValue();
+                    $ex_mes                 = $objPHPExcel->getActiveSheet()->getCell('B'.$i)->getCalculatedValue();
+
+                    $ex_zona                = $objPHPExcel->getActiveSheet()->getCell('C'.$i)->getCalculatedValue();
+                    $ex_territorio          = $objPHPExcel->getActiveSheet()->getCell('D'.$i)->getCalculatedValue();
+                    $ex_cliente             = $objPHPExcel->getActiveSheet()->getCell('E'.$i)->getCalculatedValue();
+                    $ex_codigosolicitante   = $objPHPExcel->getActiveSheet()->getCell('F'.$i)->getCalculatedValue();
+                    $ex_codigodestinatario  = $objPHPExcel->getActiveSheet()->getCell('G'.$i)->getCalculatedValue();
+                    $ex_sectoruno  = $objPHPExcel->getActiveSheet()->getCell('H'.$i)->getCalculatedValue();
+
+                    $ex_segmentocliente     = $objPHPExcel->getActiveSheet()->getCell('I'.$i)->getCalculatedValue();
+                    $ex_subsegmentocliente  = $objPHPExcel->getActiveSheet()->getCell('J'.$i)->getCalculatedValue();
+                    $ex_rucsubcliente       = $objPHPExcel->getActiveSheet()->getCell('K'.$i)->getCalculatedValue();
+                    $ex_subcliente          = $objPHPExcel->getActiveSheet()->getCell('L'.$i)->getCalculatedValue();
+                    $ex_nombrecomercial     = $objPHPExcel->getActiveSheet()->getCell('M'.$i)->getCalculatedValue();
+                    $ex_sector              = $objPHPExcel->getActiveSheet()->getCell('N'.$i)->getCalculatedValue();
+                    $ex_codigouni           = $objPHPExcel->getActiveSheet()->getCell('O'.$i)->getCalculatedValue();
+                    $ex_descripcion         = $objPHPExcel->getActiveSheet()->getCell('P'.$i)->getCalculatedValue();
+                    $ex_pcsapfinal          = $objPHPExcel->getActiveSheet()->getCell('Q'.$i)->getCalculatedValue();
+                    $ex_dsctouno            = $objPHPExcel->getActiveSheet()->getCell('R'.$i)->getCalculatedValue();
+                    $ex_pcsubsidiado        = $objPHPExcel->getActiveSheet()->getCell('S'.$i)->getCalculatedValue();
+                    $ex_mup                 = $objPHPExcel->getActiveSheet()->getCell('T'.$i)->getCalculatedValue();
+                    $ex_pvpigv              = $objPHPExcel->getActiveSheet()->getCell('U'.$i)->getCalculatedValue();
+                    $ex_dsctodos            = $objPHPExcel->getActiveSheet()->getCell('V'.$i)->getCalculatedValue();
+                    $ex_destrucsap          = $objPHPExcel->getActiveSheet()->getCell('W'.$i)->getCalculatedValue();
+
+
+                    $ex_inicio              = $objPHPExcel->getActiveSheet()->getCell('X'.$i)->getCalculatedValue();
+                    $ex_inicio = Date::excelToDateTimeObject($ex_inicio);
+                    $ex_inicio = json_encode($ex_inicio);
+                    $ex_inicio = json_decode($ex_inicio);
+                    $ex_inicio = date("Y-m", strtotime($ex_inicio->date));
+                    
+
+
+                    $ex_bultosacordados     = $objPHPExcel->getActiveSheet()->getCell('Y'.$i)->getCalculatedValue();
+
+
+                    // 
+                    $ex_cantidadbultos      = $objPHPExcel->getActiveSheet()->getCell('Z'.$i)->getCalculatedValue();
+                    $ex_montoareconocer     = $objPHPExcel->getActiveSheet()->getCell('AA'.$i)->getCalculatedValue();
 
                     // CAMPOS OTORGADOS POR SAC
-                    // $ex_cantidadbultosreal  = $objPHPExcel->getActiveSheet()->getCell('Z'.$i)->getCalculatedValue();
-                    // $ex_montoareconocerreal = $objPHPExcel->getActiveSheet()->getCell('AA'.$i)->getCalculatedValue();
+                    $ex_cantidadbultosreal  = $objPHPExcel->getActiveSheet()->getCell('AB'.$i)->getCalculatedValue();
+                    $ex_montoareconocerreal = $objPHPExcel->getActiveSheet()->getCell('AC'.$i)->getCalculatedValue();
 
-                    // $ex_status              = $objPHPExcel->getActiveSheet()->getCell('AB'.$i)->getCalculatedValue();
-                    // $ex_diferenciaahorrocliente = $objPHPExcel->getActiveSheet()->getCell('AC'.$i)->getCalculatedValue();
-    
-    
+                    $ex_status              = $objPHPExcel->getActiveSheet()->getCell('AD'.$i)->getCalculatedValue();
+                    $ex_diferenciaahorrocliente = $objPHPExcel->getActiveSheet()->getCell('AE'.$i)->getCalculatedValue();
     
                     $pro = proproductos::where('prosku', $ex_codigouni)->first(['proid']);
     
                     if($pro){
-                        $cli = cliclientes::where('clicodigoshipto', $ex_codigodestinatario)->first(['cliid']);
+                        $cli = cliclientes::where('clicodigoshipto', $ex_codigodestinatario)->first(['cliid', 'cliclientesac']);
     
                         if($cli){
     
@@ -120,6 +139,9 @@ class MetCargarSubsiduosNoAprobadosController extends Controller
                             $sden->cliid = $cli->cliid;
                             $sden->sdecodigosolicitante     = $ex_codigosolicitante;
                             $sden->sdecodigodestinatario    = $ex_codigodestinatario;
+
+                            $sden->sdesectoruno             = $ex_sectoruno;
+
                             $sden->sdesegmentoscliente      = $ex_segmentocliente;
                             $sden->sdesubsegmentoscliente   = $ex_subsegmentocliente;
                             $sden->sderucsubcliente         = $ex_rucsubcliente;
@@ -138,8 +160,8 @@ class MetCargarSubsiduosNoAprobadosController extends Controller
                             $sden->sdeinicio                = $ex_inicio;
                             $sden->sdebultosacordados       = $ex_bultosacordados;
 
-                            // $sden->sdecantidadbultos        = $ex_cantidadbultos;
-                            // $sden->sdemontoareconocer       = $ex_montoareconocer;
+                            $sden->sdecantidadbultos        = $ex_cantidadbultos;
+                            $sden->sdemontoareconocer       = $ex_montoareconocer;
 
                             // $sacStatus = false;
                             // if($ex_cantidadbultosreal){
@@ -152,9 +174,18 @@ class MetCargarSubsiduosNoAprobadosController extends Controller
 
                             // $sden->sdecantidadbultosreal    = $ex_cantidadbultosreal;
                             // $sden->sdemontoareconocerreal   = $ex_montoareconocerreal;
-                            $sden->sdesac = false;
+                            
+                            if($cli->cliclientesac == 1){
+                                $sden->sdesac = true;
+                                $sden->sdeaprobado = true;
+                                $sden->sdecantidadbultosreal    = $ex_cantidadbultosreal;
+                                $sden->sdemontoareconocerreal   = $ex_montoareconocerreal;
+                                $sden->sdestatus                = $ex_status;
 
-                            // $sden->sdestatus                = $ex_status;
+                            }else{
+                                $sden->sdesac = false;
+                            }
+
                             // $sden->sdediferenciaahorro      = $ex_diferenciaahorrocliente;
                             $sden->save();
     

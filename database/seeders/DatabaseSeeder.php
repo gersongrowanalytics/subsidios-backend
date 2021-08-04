@@ -39,10 +39,26 @@ class DatabaseSeeder extends Seeder
 
         perpersonas::create([
             "pernumerodocumentoidentidad" => "73819654",
-            "pernombrecompleto"           => "GERSON VILCA ALVAREZ",
+            "pernombrecompleto"           => "Gerson Vilca Alvarez",
             "pernombre"                   => "Gerson",
             "perapellidopaterno"          => "Vilca",
             "perapellidomaterno"          => "Alvarez",
+        ]);
+
+        perpersonas::create([
+            "pernumerodocumentoidentidad" => "0000000",
+            "pernombrecompleto"           => "Maria Yauri",
+            "pernombre"                   => "Maria",
+            "perapellidopaterno"          => "Yauri",
+            "perapellidomaterno"          => "",
+        ]);
+
+        perpersonas::create([
+            "pernumerodocumentoidentidad" => "0000000",
+            "pernombrecompleto"           => "Soporte Grow",
+            "pernombre"                   => "Soporte",
+            "perapellidopaterno"          => "Grow",
+            "perapellidomaterno"          => "",
         ]);
 
         tputiposusuarios::create([
@@ -59,6 +75,28 @@ class DatabaseSeeder extends Seeder
             "usucorreo"       => "gerson.vilca@grow-analytics.com",
             "usucontrasenia"  => Hash::make('gerson$$'),
             "usutoken"        => "TOKENESPECIFICOUNIFODEVGERSONGROW1845475#LD72",
+        ]);
+
+        usuusuarios::create([
+            "tpuid"           => 1,
+            "perid"           => 2,
+            "estid"           => 1,
+            "usucodigo"       => "01",
+            "usuusuario"      => "maria.yauri@softys.com",
+            "usucorreo"       => "maria.yauri@softys.com",
+            "usucontrasenia"  => Hash::make('Maria$$Yauri$$39232'),
+            "usutoken"        => "ToKEnMariaYa2339281dkshqqqoakw3i4ksl3lrkfFAOQ23",
+        ]);
+
+        usuusuarios::create([
+            "tpuid"           => 1,
+            "perid"           => 3,
+            "estid"           => 1,
+            "usucodigo"       => "GROWSOPORTE-01",
+            "usuusuario"      => "soporte@grow-analytics.com.pe",
+            "usucorreo"       => "soporte@grow-analytics.com.pe",
+            "usucontrasenia"  => Hash::make('Soporte$$Grow$$029213'),
+            "usutoken"        => "StoKEsOPOR43920TE023lddddowke20349to123OUot249",
         ]);
 
         // 

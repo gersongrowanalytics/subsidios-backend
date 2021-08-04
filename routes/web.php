@@ -42,9 +42,11 @@ $router->get('/seed', 'Prueba\PruebaController@EjecutarSeeds');
             $router->post('/so/so', 'Validaciones\Modulos\CargaArchivos\SO\CargarSOController@ValCargarSO');
 
             $router->post('/si/facturas', 'Validaciones\Modulos\CargaArchivos\SI\CargarFacturasSiController@ValCargarFacturasSi');
+            $router->post('/si/estado-sunat-facturas', 'Validaciones\Modulos\CargaArchivos\SI\CargarEstadoSunatSiController@ValCargarEstadoSunatSi');
         });
 
         $router->group(['prefix' => 'subsidiosSo'], function () use ($router) {
+            $router->get('/logica/{fecid}', 'Metodos\Modulos\CargaArchivos\SO\MetCargarSOController@Alinear');
             $router->post('/mostrar', 'Validaciones\Modulos\SubsidiosSo\Mostrar\MostrarSubsidiosSoController@ValMostrarSubsidiosSo');
 
             $router->post('/mostrar-filtros', 'Validaciones\Modulos\SubsidiosSo\Mostrar\MostrarFiltrosController@ValMostrarFiltros');

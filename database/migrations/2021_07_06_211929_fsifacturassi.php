@@ -30,6 +30,7 @@ class Fsifacturassi extends Migration
             $table->string('fsivalornetodolares');
             $table->string('fsipedido');
             $table->string('fsipedidooriginal');
+            $table->boolean('fsisunataprobado')->default(1);
 
             $table->timestamps();
 

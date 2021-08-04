@@ -23,15 +23,15 @@ class MetMostrarSubsidiosSoController extends Controller
 
         $descargarSde = $this->ArmarExcelDescargaSubsidiosSo($fechaInicio, $fechaFinal);
 
-        $sumSde = sdesubsidiosdetalles::join('cliclientes as cli', 'cli.cliid', 'sdesubsidiosdetalles.cliid')
-                                    ->join('fecfechas as fec', 'fec.fecid', 'sdesubsidiosdetalles.fecid')
-                                    ->where(function ($query) use($fechaInicio, $fechaFinal) {
-                                        if($fechaInicio != null){
-                                            $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
-                                        }
-                                    })
-                                    ->where('sdestatus', '!=', null)
-                                    ->sum('sdemontoareconocerreal');
+        // $sumSde = sdesubsidiosdetalles::join('cliclientes as cli', 'cli.cliid', 'sdesubsidiosdetalles.cliid')
+        //                             ->join('fecfechas as fec', 'fec.fecid', 'sdesubsidiosdetalles.fecid')
+        //                             ->where(function ($query) use($fechaInicio, $fechaFinal) {
+        //                                 if($fechaInicio != null){
+        //                                     $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
+        //                                 }
+        //                             })
+        //                             // ->where('sdestatus', '!=', null)
+        //                             ->sum('sdemontoareconocerreal');
 
         $zonas = sdesubsidiosdetalles::join('cliclientes as cli', 'cli.cliid', 'sdesubsidiosdetalles.cliid')
                                     ->join('fecfechas as fec', 'fec.fecid', 'sdesubsidiosdetalles.fecid')
@@ -40,35 +40,36 @@ class MetMostrarSubsidiosSoController extends Controller
                                             $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
                                         }
                                     })
-                                    ->where('sdestatus', '!=', null)
+                                    // ->where('sdestatus', '!=', null)
                                     ->distinct('cli.clizona')
                                     ->get([
-                                        'cli.clizona'
+                                        'cli.clizona',
+                                        // 'sdestatus'
                                     ]);
 
         foreach($zonas as $posicionZon => $zon){
 
-            $sumSdeZona = sdesubsidiosdetalles::join('cliclientes as cli', 'cli.cliid', 'sdesubsidiosdetalles.cliid')
-                                    ->join('proproductos as pro', 'pro.proid', 'sdesubsidiosdetalles.proid')
-                                    ->join('catcategorias as cat', 'cat.catid', 'pro.catid')
-                                    ->join('fecfechas as fec', 'fec.fecid', 'sdesubsidiosdetalles.fecid')
-                                    ->where('clizona', $zon['clizona'])
-                                    ->where('sdestatus', '!=', null)
-                                    ->where(function ($query) use($fechaInicio, $fechaFinal) {
-                                        if($fechaInicio != null){
-                                            $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
-                                        }
-                                    })
-                                    ->sum('sdemontoareconocerreal');
+            // $sumSdeZona = sdesubsidiosdetalles::join('cliclientes as cli', 'cli.cliid', 'sdesubsidiosdetalles.cliid')
+            //                         ->join('proproductos as pro', 'pro.proid', 'sdesubsidiosdetalles.proid')
+            //                         ->join('catcategorias as cat', 'cat.catid', 'pro.catid')
+            //                         ->join('fecfechas as fec', 'fec.fecid', 'sdesubsidiosdetalles.fecid')
+            //                         ->where('clizona', $zon['clizona'])
+            //                         // ->where('sdestatus', '!=', null)
+            //                         ->where(function ($query) use($fechaInicio, $fechaFinal) {
+            //                             if($fechaInicio != null){
+            //                                 $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
+            //                             }
+            //                         })
+            //                         ->sum('sdemontoareconocerreal');
 
-            $zonas[$posicionZon]['sumSdeZona'] = $sumSdeZona;
+            // $zonas[$posicionZon]['sumSdeZona'] = $sumSdeZona;
 
             $sdes = sdesubsidiosdetalles::join('cliclientes as cli', 'cli.cliid', 'sdesubsidiosdetalles.cliid')
                                     ->join('proproductos as pro', 'pro.proid', 'sdesubsidiosdetalles.proid')
                                     ->join('catcategorias as cat', 'cat.catid', 'pro.catid')
                                     ->join('fecfechas as fec', 'fec.fecid', 'sdesubsidiosdetalles.fecid')
                                     ->where('clizona', $zon['clizona'])
-                                    ->where('sdestatus', '!=', null)
+                                    // ->where('sdestatus', '!=', null)
                                     ->where(function ($query) use($fechaInicio, $fechaFinal) {
                                         if($fechaInicio != null){
                                             $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
@@ -89,7 +90,8 @@ class MetMostrarSubsidiosSoController extends Controller
                                         'sdemontoareconocerreal',
                                         'sdestatus',
                                         'sdediferenciaahorro',
-                                        'sdebultosacordados'
+                                        'sdebultosacordados',
+                                        'sdesac'
                                     ]);
 
             $zonas[$posicionZon]['data'] = $sdes;
@@ -98,7 +100,7 @@ class MetMostrarSubsidiosSoController extends Controller
         $requestsalida = response()->json([
             "datos" => $zonas,
             "descargarSde" => $descargarSde,
-            "sumSde" => $sumSde
+            // "sumSde" => $sumSde
         ]);
 
         return $requestsalida;
@@ -163,6 +165,7 @@ class MetMostrarSubsidiosSoController extends Controller
                 $arrayTitulos = array(
                     array("title" => "", "width" => array("wpx" => 100)),
                     array("title" => "", "width" => array("wpx" => 100)),
+                    array("title" => "", "width" => array("wpx" => 100)),
                     array("title" => "", "width" => array("wpx" => 150)),
                     array("title" => "", "width" => array("wpx" => 150)),
                     array("title" => "", "width" => array("wpx" => 150)),
@@ -194,8 +197,93 @@ class MetMostrarSubsidiosSoController extends Controller
 
                 $nuevoArray[0]['columns'] = $arrayTitulos;
 
+                // $arrayFilaExcel = array(
+                //     array("value" => ""),
+                //     array(
+                //         "value" => "AÑO",
+                //         "style" => array(
+                //             "font" => array(
+                //                 "sz" => "9",
+                //                 "bold" => true,
+                //                 "color" => array(
+                //                     "rgb" => "FFFFFFFF"
+                //                 )
+                //             ),
+                //             "fill" => array(
+                //                 "patternType" => 'solid',
+                //                 "fgColor" => array(
+                //                     "rgb" => "FF000000"
+                //                 )
+                //             )
+                            
+                //         )
+                //     ),
+                //     array(
+                //         "value" => $descargarSde->fecanionumero, 
+                //         "style" => array(
+                //             "font" => array(
+                //                 "sz" => "9",
+                //                 "bold" => true,
+                //                 "color" => array(
+                //                     "rgb" => "FFFFFFFF"
+                //                 )
+                //             ),
+                //             "fill" => array(
+                //                 "patternType" => 'solid',
+                //                 "fgColor" => array(
+                //                     "rgb" => "FF000000"
+                //                 )
+                //             )
+                            
+                //         )
+                //     ),
+                // );
+                // $nuevoArray[0]['data'][] = $arrayFilaExcel;
+
+                // $arrayFilaExcel = array(
+                //     array("value" => ""),
+                //     array(
+                //         "value" => "MES",
+                //         "style" => array(
+                //             "font" => array(
+                //                 "sz" => "9",
+                //                 "bold" => true,
+                //                 "color" => array(
+                //                     "rgb" => "FFFFFFFF"
+                //                 )
+                //             ),
+                //             "fill" => array(
+                //                 "patternType" => 'solid',
+                //                 "fgColor" => array(
+                //                     "rgb" => "FF000000"
+                //                 )
+                //             )
+                            
+                //         )
+                //     ),
+                //     array(
+                //         "value" => $descargarSde->fecmesabreviacion,
+                //         "style" => array(
+                //             "font" => array(
+                //                 "sz" => "9",
+                //                 "bold" => true,
+                //                 "color" => array(
+                //                     "rgb" => "FFFFFFFF"
+                //                 )
+                //             ),
+                //             "fill" => array(
+                //                 "patternType" => 'solid',
+                //                 "fgColor" => array(
+                //                     "rgb" => "FF000000"
+                //                 )
+                //             )
+                            
+                //         )
+                //     ),
+                // );
+                // $nuevoArray[0]['data'][] = $arrayFilaExcel;
+
                 $arrayFilaExcel = array(
-                    array("value" => ""),
                     array(
                         "value" => "AÑO",
                         "style" => array(
@@ -209,36 +297,12 @@ class MetMostrarSubsidiosSoController extends Controller
                             "fill" => array(
                                 "patternType" => 'solid',
                                 "fgColor" => array(
-                                    "rgb" => "FF000000"
+                                    "rgb" => "FF004FB8"
                                 )
                             )
                             
                         )
                     ),
-                    array(
-                        "value" => $descargarSde->fecanionumero, 
-                        "style" => array(
-                            "font" => array(
-                                "sz" => "9",
-                                "bold" => true,
-                                "color" => array(
-                                    "rgb" => "FFFFFFFF"
-                                )
-                            ),
-                            "fill" => array(
-                                "patternType" => 'solid',
-                                "fgColor" => array(
-                                    "rgb" => "FF000000"
-                                )
-                            )
-                            
-                        )
-                    ),
-                );
-                $nuevoArray[0]['data'][] = $arrayFilaExcel;
-
-                $arrayFilaExcel = array(
-                    array("value" => ""),
                     array(
                         "value" => "MES",
                         "style" => array(
@@ -252,36 +316,12 @@ class MetMostrarSubsidiosSoController extends Controller
                             "fill" => array(
                                 "patternType" => 'solid',
                                 "fgColor" => array(
-                                    "rgb" => "FF000000"
+                                    "rgb" => "FF004FB8"
                                 )
                             )
                             
                         )
                     ),
-                    array(
-                        "value" => $descargarSde->fecmesabreviacion,
-                        "style" => array(
-                            "font" => array(
-                                "sz" => "9",
-                                "bold" => true,
-                                "color" => array(
-                                    "rgb" => "FFFFFFFF"
-                                )
-                            ),
-                            "fill" => array(
-                                "patternType" => 'solid',
-                                "fgColor" => array(
-                                    "rgb" => "FF000000"
-                                )
-                            )
-                            
-                        )
-                    ),
-                );
-                $nuevoArray[0]['data'][] = $arrayFilaExcel;
-
-                $arrayFilaExcel = array(
-                    array("value" => ""),
                     array(
                         "value" => "ZONA",
                         "style" => array(
@@ -295,7 +335,7 @@ class MetMostrarSubsidiosSoController extends Controller
                             "fill" => array(
                                 "patternType" => 'solid',
                                 "fgColor" => array(
-                                    "rgb" => "FF222B35"
+                                    "rgb" => "FF004FB8"
                                 )
                             )
                             
@@ -314,7 +354,7 @@ class MetMostrarSubsidiosSoController extends Controller
                             "fill" => array(
                                 "patternType" => 'solid',
                                 "fgColor" => array(
-                                    "rgb" => "FF222B35"
+                                    "rgb" => "FF004FB8"
                                 )
                             )
                             
@@ -333,7 +373,7 @@ class MetMostrarSubsidiosSoController extends Controller
                             "fill" => array(
                                 "patternType" => 'solid',
                                 "fgColor" => array(
-                                    "rgb" => "FF222B35"
+                                    "rgb" => "FF004FB8"
                                 )
                             )
                             
@@ -352,7 +392,7 @@ class MetMostrarSubsidiosSoController extends Controller
                             "fill" => array(
                                 "patternType" => 'solid',
                                 "fgColor" => array(
-                                    "rgb" => "FF222B35"
+                                    "rgb" => "FF004FB8"
                                 )
                             )
                             
@@ -371,7 +411,7 @@ class MetMostrarSubsidiosSoController extends Controller
                             "fill" => array(
                                 "patternType" => 'solid',
                                 "fgColor" => array(
-                                    "rgb" => "FF222B35"
+                                    "rgb" => "FF004FB8"
                                 )
                             )
                             
@@ -390,7 +430,7 @@ class MetMostrarSubsidiosSoController extends Controller
                             "fill" => array(
                                 "patternType" => 'solid',
                                 "fgColor" => array(
-                                    "rgb" => "FF222B35"
+                                    "rgb" => "FF004FB8"
                                 )
                             )
                             
@@ -409,7 +449,7 @@ class MetMostrarSubsidiosSoController extends Controller
                             "fill" => array(
                                 "patternType" => 'solid',
                                 "fgColor" => array(
-                                    "rgb" => "FF222B35"
+                                    "rgb" => "FF004FB8"
                                 )
                             )
                             
@@ -428,7 +468,7 @@ class MetMostrarSubsidiosSoController extends Controller
                             "fill" => array(
                                 "patternType" => 'solid',
                                 "fgColor" => array(
-                                    "rgb" => "FF222B35"
+                                    "rgb" => "FF004FB8"
                                 )
                             )
                             
@@ -447,7 +487,7 @@ class MetMostrarSubsidiosSoController extends Controller
                             "fill" => array(
                                 "patternType" => 'solid',
                                 "fgColor" => array(
-                                    "rgb" => "FF222B35"
+                                    "rgb" => "FF004FB8"
                                 )
                             )
                             
@@ -466,7 +506,7 @@ class MetMostrarSubsidiosSoController extends Controller
                             "fill" => array(
                                 "patternType" => 'solid',
                                 "fgColor" => array(
-                                    "rgb" => "FF222B35"
+                                    "rgb" => "FF004FB8"
                                 )
                             )
                             
@@ -485,7 +525,7 @@ class MetMostrarSubsidiosSoController extends Controller
                             "fill" => array(
                                 "patternType" => 'solid',
                                 "fgColor" => array(
-                                    "rgb" => "FF222B35"
+                                    "rgb" => "FF004FB8"
                                 )
                             )
                             
@@ -504,7 +544,7 @@ class MetMostrarSubsidiosSoController extends Controller
                             "fill" => array(
                                 "patternType" => 'solid',
                                 "fgColor" => array(
-                                    "rgb" => "FF222B35"
+                                    "rgb" => "FF004FB8"
                                 )
                             )
                             
@@ -523,7 +563,7 @@ class MetMostrarSubsidiosSoController extends Controller
                             "fill" => array(
                                 "patternType" => 'solid',
                                 "fgColor" => array(
-                                    "rgb" => "FF222B35"
+                                    "rgb" => "FF004FB8"
                                 )
                             )
                             
@@ -542,7 +582,7 @@ class MetMostrarSubsidiosSoController extends Controller
                             "fill" => array(
                                 "patternType" => 'solid',
                                 "fgColor" => array(
-                                    "rgb" => "FF222B35"
+                                    "rgb" => "FF004FB8"
                                 )
                             )
                             
@@ -561,7 +601,7 @@ class MetMostrarSubsidiosSoController extends Controller
                             "fill" => array(
                                 "patternType" => 'solid',
                                 "fgColor" => array(
-                                    "rgb" => "FF222B35"
+                                    "rgb" => "FF004FB8"
                                 )
                             )
                             
@@ -580,7 +620,7 @@ class MetMostrarSubsidiosSoController extends Controller
                             "fill" => array(
                                 "patternType" => 'solid',
                                 "fgColor" => array(
-                                    "rgb" => "FF222B35"
+                                    "rgb" => "FF004FB8"
                                 )
                             )
                             
@@ -599,7 +639,7 @@ class MetMostrarSubsidiosSoController extends Controller
                             "fill" => array(
                                 "patternType" => 'solid',
                                 "fgColor" => array(
-                                    "rgb" => "FF222B35"
+                                    "rgb" => "FF004FB8"
                                 )
                             )
                             
@@ -618,7 +658,7 @@ class MetMostrarSubsidiosSoController extends Controller
                             "fill" => array(
                                 "patternType" => 'solid',
                                 "fgColor" => array(
-                                    "rgb" => "FF222B35"
+                                    "rgb" => "FF004FB8"
                                 )
                             )
                             
@@ -637,7 +677,7 @@ class MetMostrarSubsidiosSoController extends Controller
                             "fill" => array(
                                 "patternType" => 'solid',
                                 "fgColor" => array(
-                                    "rgb" => "FF222B35"
+                                    "rgb" => "FF004FB8"
                                 )
                             )
                             
@@ -656,7 +696,7 @@ class MetMostrarSubsidiosSoController extends Controller
                             "fill" => array(
                                 "patternType" => 'solid',
                                 "fgColor" => array(
-                                    "rgb" => "FF222B35"
+                                    "rgb" => "FF004FB8"
                                 )
                             )
                             
@@ -675,7 +715,7 @@ class MetMostrarSubsidiosSoController extends Controller
                             "fill" => array(
                                 "patternType" => 'solid',
                                 "fgColor" => array(
-                                    "rgb" => "FF222B35"
+                                    "rgb" => "FF004FB8"
                                 )
                             )
                             
@@ -694,12 +734,55 @@ class MetMostrarSubsidiosSoController extends Controller
                             "fill" => array(
                                 "patternType" => 'solid',
                                 "fgColor" => array(
-                                    "rgb" => "FF222B35"
+                                    "rgb" => "FF004FB8"
                                 )
                             )
                             
                         )
                     ),
+
+
+                    array(
+                        "value" => "CANTIDAD BULTOS DT",
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                                "color" => array(
+                                    "rgb" => "FFFFFFFF"
+                                )
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => "FF004FB8"
+                                )
+                            )
+                            
+                        )
+                    ),
+
+                    array(
+                        "value" => "MONTO A REONOCER S/IGV DT",
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                                "color" => array(
+                                    "rgb" => "FFFFFFFF"
+                                )
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => "FF004FB8"
+                                )
+                            )
+                            
+                        )
+                    ),
+
+
                     array(
                         "value" => "CANTIDAD BULTOS SOFTYS",
                         "style" => array(
@@ -713,7 +796,7 @@ class MetMostrarSubsidiosSoController extends Controller
                             "fill" => array(
                                 "patternType" => 'solid',
                                 "fgColor" => array(
-                                    "rgb" => "FF222B35"
+                                    "rgb" => "FF004FB8"
                                 )
                             )
                             
@@ -732,7 +815,7 @@ class MetMostrarSubsidiosSoController extends Controller
                             "fill" => array(
                                 "patternType" => 'solid',
                                 "fgColor" => array(
-                                    "rgb" => "FF222B35"
+                                    "rgb" => "FF004FB8"
                                 )
                             )
                             
@@ -752,7 +835,7 @@ class MetMostrarSubsidiosSoController extends Controller
                             "fill" => array(
                                 "patternType" => 'solid',
                                 "fgColor" => array(
-                                    "rgb" => "FF222B35"
+                                    "rgb" => "FF004FB8"
                                 )
                             )
                             
@@ -772,38 +855,70 @@ class MetMostrarSubsidiosSoController extends Controller
                             "fill" => array(
                                 "patternType" => 'solid',
                                 "fgColor" => array(
-                                    "rgb" => "FF222B35"
+                                    "rgb" => "FF004FB8"
                                 )
                             )
                             
                         )
                     ),
 
-                    array(
-                        "value" => "PK",
-                        "style" => array(
-                            "font" => array(
-                                "sz" => "9",
-                                "bold" => true,
-                                "color" => array(
-                                    "rgb" => "FFFFFFFF"
-                                )
-                            ),
-                            "fill" => array(
-                                "patternType" => 'solid',
-                                "fgColor" => array(
-                                    "rgb" => "FF222B35"
-                                )
-                            )
+                    // array(
+                    //     "value" => "PK",
+                    //     "style" => array(
+                    //         "font" => array(
+                    //             "sz" => "9",
+                    //             "bold" => true,
+                    //             "color" => array(
+                    //                 "rgb" => "FFFFFFFF"
+                    //             )
+                    //         ),
+                    //         "fill" => array(
+                    //             "patternType" => 'solid',
+                    //             "fgColor" => array(
+                    //                 "rgb" => "FF004FB8"
+                    //             )
+                    //         )
                             
-                        )
-                    ),
+                    //     )
+                    // ),
                 );
                 $nuevoArray[0]['data'][] = $arrayFilaExcel;
             }
 
             $arrayFilaExcel = array(
-                array("value" => ""),
+                array(
+                    "value" => $descargarSde->fecanionumero,
+                    "style" => array(
+                        "font" => array(
+                            "sz" => "9",
+                            "bold" => true,
+                        ),
+                        "fill" => array(
+                            "patternType" => 'solid',
+                            "fgColor" => array(
+                                "rgb" => "FFF2F2F2"
+                            )
+                        )
+                    )
+                ),
+                array(
+                    "value" => $descargarSde->fecmesabreviacion,
+                    "style" => array(
+                        "font" => array(
+                            "sz" => "9",
+                            "bold" => true,
+                        ),
+                        "fill" => array(
+                            "patternType" => 'solid',
+                            "fgColor" => array(
+                                "rgb" => "FFF2F2F2"
+                            )
+                        )
+                    )
+                ),
+
+
+
                 array(
                     "value" => $descargarSde->clizona,
                     "style" => array(
@@ -1134,6 +1249,42 @@ class MetMostrarSubsidiosSoController extends Controller
                         )
                     )
                 ),
+
+
+                array(
+                    "value" => $descargarSde->sdecantidadbultos, 
+                    "style" => array(
+                        "font" => array(
+                            "sz" => "9",
+                            "bold" => true,
+                        ),
+                        "fill" => array(
+                            "patternType" => 'solid',
+                            "fgColor" => array(
+                                "rgb" => "FFF2F2F2"
+                            )
+                        )
+                    )
+                ),
+
+                array(
+                    "value" => $descargarSde->sdemontoareconocer, 
+                    "style" => array(
+                        "font" => array(
+                            "sz" => "9",
+                            "bold" => true,
+                        ),
+                        "fill" => array(
+                            "patternType" => 'solid',
+                            "fgColor" => array(
+                                "rgb" => "FFF2F2F2"
+                            )
+                        )
+                    )
+                ),
+
+
+
                 array(
                     "value" => $descargarSde->sdecantidadbultosreal, 
                     "style" => array(
@@ -1194,21 +1345,21 @@ class MetMostrarSubsidiosSoController extends Controller
                         )
                     )
                 ),
-                array(
-                    "value" => $descargarSde->sdecodigodestinatario.$descargarSde->prosku.$descargarSde->sderucsubcliente,
-                    "style" => array(
-                        "font" => array(
-                            "sz" => "9",
-                            "bold" => true,
-                        ),
-                        "fill" => array(
-                            "patternType" => 'solid',
-                            "fgColor" => array(
-                                "rgb" => "FFF2F2F2"
-                            )
-                        )
-                    )
-                ),
+                // array(
+                //     "value" => $descargarSde->sdecodigodestinatario.$descargarSde->prosku.$descargarSde->sderucsubcliente,
+                //     "style" => array(
+                //         "font" => array(
+                //             "sz" => "9",
+                //             "bold" => true,
+                //         ),
+                //         "fill" => array(
+                //             "patternType" => 'solid',
+                //             "fgColor" => array(
+                //                 "rgb" => "FFF2F2F2"
+                //             )
+                //         )
+                //     )
+                // ),
             );
 
             $nuevoArray[0]['data'][] = $arrayFilaExcel;
