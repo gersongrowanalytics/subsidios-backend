@@ -43,7 +43,7 @@ class MetMostrarSubsidiosPendientesController extends Controller
                                             $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
                                         // }
                                     })
-                                    ->orderBy('clizonacodigo', 'DESC')
+                                    // ->orderBy('clizonacodigo', 'DESC')
                                     ->distinct('cli.clizona')
                                     ->get([
                                         'cli.clizona'
