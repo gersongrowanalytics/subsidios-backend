@@ -40,7 +40,7 @@ class MetMostrarSubsidiosSoController extends Controller
                                     })
                                     // ->where('sdestatus', '!=', null)
                                     ->distinct('cli.clizona')
-                                    ->orderBy('clizonacodigo', 'DESC')
+                                    // ->orderBy('clizonacodigo', 'DESC')
                                     ->get([
                                         'cli.clizona',
                                         // 'sdestatus'
