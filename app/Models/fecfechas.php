@@ -18,5 +18,6 @@ class fecfechas extends Model
         "fecdiatexto",
         "fecmestexto",
         "fecaniotexto",
+        "fecmesabierto"
     ];
 }

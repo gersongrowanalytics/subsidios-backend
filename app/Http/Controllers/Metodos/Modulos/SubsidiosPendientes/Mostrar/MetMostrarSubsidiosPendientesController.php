@@ -28,9 +28,9 @@ class MetMostrarSubsidiosPendientesController extends Controller
                                     ->where('sdeaprobado', 1 )
                                     ->where('sdependiente', 1 )
                                     ->where(function ($query) use($fechaInicio, $fechaFinal) {
-                                        if($fechaInicio != null){
+                                        // if($fechaInicio != null){
                                             $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
-                                        }
+                                        // }
                                     })
                                     ->sum('sdemontoareconocerreal');
 
@@ -39,10 +39,11 @@ class MetMostrarSubsidiosPendientesController extends Controller
                                     ->where('sdeaprobado', 1 )
                                     ->where('sdependiente', 1 )
                                     ->where(function ($query) use($fechaInicio, $fechaFinal) {
-                                        if($fechaInicio != null){
+                                        // if($fechaInicio != null){
                                             $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
-                                        }
+                                        // }
                                     })
+                                    ->orderBy('clizonacodigo', 'DESC')
                                     ->distinct('cli.clizona')
                                     ->get([
                                         'cli.clizona'
@@ -59,9 +60,9 @@ class MetMostrarSubsidiosPendientesController extends Controller
                                     ->where('sdeaprobado', 1 )
                                     ->where('sdependiente', 1 )
                                     ->where(function ($query) use($fechaInicio, $fechaFinal) {
-                                        if($fechaInicio != null){
+                                        // if($fechaInicio != null){
                                             $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
-                                        }
+                                        // }
                                     })
                                     ->orderBy('sdestatus' , 'DESC')
                                     ->sum('sdemontoareconocerreal');
@@ -77,9 +78,9 @@ class MetMostrarSubsidiosPendientesController extends Controller
                                     ->where('sdeaprobado', 1 )
                                     ->where('sdependiente', 1 )
                                     ->where(function ($query) use($fechaInicio, $fechaFinal) {
-                                        if($fechaInicio != null){
+                                        // if($fechaInicio != null){
                                             $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
-                                        }
+                                        // }
                                     })
                                     ->orderBy('sdestatus' , 'DESC')
                                     ->get([
@@ -102,7 +103,8 @@ class MetMostrarSubsidiosPendientesController extends Controller
                                         'fecfecha',
                                         'sdependiente',
                                         'sderucsubcliente',
-                                        'sdesubsidiosdetalles.sdecodigodestinatario'
+                                        'sdesubsidiosdetalles.sdecodigodestinatario',
+                                        'sdesector'
                                     ]);
 
             foreach($sdes as $posicionSde => $sde){

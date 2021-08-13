@@ -19,6 +19,11 @@ class CreateSdesubsidiosdetallesTable extends Migration
             $table->unsignedInteger('fecid');
             $table->unsignedInteger('proid');
             $table->unsignedInteger('cliid');
+
+            $table->string('sdezona')->nullable();
+            $table->string('sdeterritorio')->nullable();
+            $table->string('sdecliente')->nullable();
+
             $table->string('sdecodigosolicitante');
             $table->string('sdecodigodestinatario');
             $table->string('sdesectoruno')->nullable();
@@ -52,7 +57,7 @@ class CreateSdesubsidiosdetallesTable extends Migration
             $table->boolean('sdependiente')->default(0);
             $table->boolean('sdeencontrofactura')->default(0);
 
-
+            $table->boolean('sdeeditado')->default(1);
             // $table->string('sdecantidad');
             // $table->string('sdetotal');
             $table->timestamps();

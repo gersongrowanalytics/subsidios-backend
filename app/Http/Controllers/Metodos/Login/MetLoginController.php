@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Models\usuusuarios;
 use App\Models\tuptiposusuariospermisos;
+use App\Models\fecfechas;
 
 class MetLoginController extends Controller
 {
@@ -17,6 +18,7 @@ class MetLoginController extends Controller
         $respuesta = true;
         $mensaje = "Bienvenido, ";
         $datos = [];
+        $fechaDisponible = null;
         
         $usuario     = $request['usuario'];
         $contrasenia = $request['contrasenia'];
@@ -27,6 +29,8 @@ class MetLoginController extends Controller
 
         if($usu){
             if (Hash::check($contrasenia, $usu->usucontrasenia)) {
+
+                $fechaDisponible = fecfechas::where('fecmesabierto', true)->first();
 
                 $tuptiposusuariospermisos = tuptiposusuariospermisos::join('pempermisos as pem', 'pem.pemid', 'tuptiposusuariospermisos.pemid')
                                                                     ->where('tuptiposusuariospermisos.tpuid', $usu->tpuid )
@@ -58,6 +62,7 @@ class MetLoginController extends Controller
             'respuesta' => $respuesta,
             'mensaje'   => $mensaje,
             'datos'     => $datos,
+            'fecha'     => $fechaDisponible
         ]);
     }
 }

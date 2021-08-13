@@ -22,6 +22,7 @@ use App\Models\proproductos;
 use App\Models\fsifacturassi;
 use App\Models\fdsfacturassidetalles;
 use App\Models\ndsnotascreditossidetalles;
+use App\Models\sfssubsidiosfacturassi;
 
 class MetCargarFacturasSiController extends Controller
 {
@@ -37,7 +38,19 @@ class MetCargarFacturasSiController extends Controller
             "FECHA_NO_REGISTRADA" => "",
             "CLIENTES_NO_ENCONTRADOS" => [],
             "PRODUCTOS_NO_ENCONTRADOS" => [],
-            "FACTURA_NO_ASIGNADA" => []
+            "FACTURA_NO_ASIGNADA" => [],
+            "CORRELATIVOS_FACTURAS_NO_ENCONTRADOS" => [],
+            "TPC_NO_ENCONTRADO" => [],
+            "NO_EXISTE_CLIENTE" => [],
+            "NO_ES_FORMATO_CORRELATIVO_FACTURA" => [],
+            "NO_ES_FORMATO_SERIE_FACTURA" => [],
+            "NO_ES_FORMATO_CODIGO_FACTURA" => [],
+            "FECHAS_NO_CUMPLE_FORMATO" => [],
+            "FACTURAS_ANULADAS" => [],
+            "NO_GUARDO_FACTURA" => [],
+            "NUEVA_SERIE_CREADA" => [],
+            "CODIGO_DOCUMENTO_NO_EXISTE" => []
+
         );
 
         $pkis = array();
@@ -140,10 +153,11 @@ class MetCargarFacturasSiController extends Controller
                         if($fec){
 
                             if($i == 2){
-                                // ndsnotascreditossidetalles::where('fecid', $fec->fecid)->delete();
-                                // nsinotascreditossi::where('fecid', $fec->fecid)->delete();
-                                // fdsfacturassidetalles::where('fecid', $fec->fecid)->delete();
-                                // fsifacturassi::where('fecid', $fec->fecid)->delete();
+                                ndsnotascreditossidetalles::where('fecid', $fec->fecid)->delete();
+                                nsinotascreditossi::where('fecid', $fec->fecid)->delete();
+                                fdsfacturassidetalles::where('fecid', $fec->fecid)->delete();
+                                fsifacturassi::where('fecid', $fec->fecid)->delete();
+                                sfssubsidiosfacturassi::where('fecid', $fec->fecid)->delete();
                             }
 
                             $fecidDocumento = $fec->fecid;
@@ -186,7 +200,8 @@ class MetCargarFacturasSiController extends Controller
                                         }else{
                                             $respuesta = false;
                                             $mensaje = "";
-                                            $logs['CODIGO_DOCUMENTO_NO_EXISTE'][] = "El codigo del comprobante: ".$codigoFactura." no existe en los registros, porfavor revisar bien el codigo asignado. EN LA LINEA: ".$i;
+                                            // $logs['CODIGO_DOCUMENTO_NO_EXISTE'][] = "El codigo del comprobante: ".$codigoFactura." no existe en los registros, porfavor revisar bien el codigo asignado. EN LA LINEA: ".$i;
+                                            $logs['CODIGO_DOCUMENTO_NO_EXISTE'] = $this->EliminarDuplicidad( $logs["CODIGO_DOCUMENTO_NO_EXISTE"], $codigoFactura, $i);
                                         }
                                     }
 
@@ -232,7 +247,8 @@ class MetCargarFacturasSiController extends Controller
                                                     if($secn->save()){
                                                         $encontroSec = true;
                                                         $secidDocumento = $secn->secid;
-                                                        $logs['NUEVA_SERIE_CREADA'][] = "La serie : ".$serieDocumento." se acaba de registrar en nuestros servidores. EN LA LINEA: ".$i;
+                                                        // $logs['NUEVA_SERIE_CREADA'][] = "La serie : ".$serieDocumento." se acaba de registrar en nuestros servidores. EN LA LINEA: ".$i;
+                                                        $logs['NUEVA_SERIE_CREADA'] = $this->EliminarDuplicidad( $logs["NUEVA_SERIE_CREADA"], $serieDocumento, $i);
                                                     }
                                                 }
                                             }
@@ -245,7 +261,7 @@ class MetCargarFacturasSiController extends Controller
 
                                                     $correlativoDocumento = $correlativoFac;
 
-                                                    $cli = cliclientes::where('clicodigo', $ex_solicitante)->first();
+                                                    $cli = cliclientes::where('clicodigoshipto', $ex_destinatario)->first();
 
                                                     if($cli){
 
@@ -294,7 +310,7 @@ class MetCargarFacturasSiController extends Controller
                                                                 }else{
                                                                     $respuesta = false;
                                                                     $mensaje = "No existe el producto: ".$ex_material." recomendamos actualizar dicha maestra, linea excel: ".$i;
-                                                                    $logs['NO_EXISTE_PRODUCTO'][] = "El producto: ".$ex_material." no se encontro en nuestros registros, recomendamos actualizar la maestra de productos EN LA LINEA: ".$i;
+                                                                    // $logs['NO_EXISTE_PRODUCTO'][] = "El producto: ".$ex_material." no se encontro en nuestros registros, recomendamos actualizar la maestra de productos EN LA LINEA: ".$i;
                                                                     $logs['PRODUCTOS_NO_ENCONTRADOS'] = $this->EliminarDuplicidad( $logs["PRODUCTOS_NO_ENCONTRADOS"], $ex_material, $i);
                                                                 }
 
@@ -339,12 +355,13 @@ class MetCargarFacturasSiController extends Controller
                                                                     }else{
                                                                         $respuesta = false;
                                                                         $mensaje = "No existe el producto: ".$ex_material." recomendamos actualizar dicha maestra, linea excel: ".$i;
-                                                                        $logs['NO_EXISTE_PRODUCTO'][] = "El producto: ".$ex_material." no se encontro en nuestros registros, recomendamos actualizar la maestra de productos EN LA LINEA: ".$i;
+                                                                        // $logs['NO_EXISTE_PRODUCTO'][] = "El producto: ".$ex_material." no se encontro en nuestros registros, recomendamos actualizar la maestra de productos EN LA LINEA: ".$i;
                                                                         $logs['PRODUCTOS_NO_ENCONTRADOS'] = $this->EliminarDuplicidad( $logs["PRODUCTOS_NO_ENCONTRADOS"], $ex_material, $i);
                                                                     }
 
                                                                 }else{
-                                                                    $logs['NO_GUARDO_FACTURA'][] = "La factura: ".$ex_factura." no se pudo guardar en nuestros registros, revisar bien sus datos EN LA LINEA: ".$i;
+                                                                    // $logs['NO_GUARDO_FACTURA'][] = "La factura: ".$ex_factura." no se pudo guardar en nuestros registros, revisar bien sus datos EN LA LINEA: ".$i;
+                                                                    $logs['NO_GUARDO_FACTURA'] = $this->EliminarDuplicidad( $logs["NO_GUARDO_FACTURA"], $ex_factura, $i);
                                                                 }
 
                                                             }
@@ -413,7 +430,7 @@ class MetCargarFacturasSiController extends Controller
                                                                     }else{
                                                                         $respuesta = false;
                                                                         $mensaje = "No existe el producto: ".$ex_material." recomendamos actualizar dicha maestra, linea excel: ".$i;
-                                                                        $logs['NO_EXISTE_PRODUCTO'][] = "El producto: ".$ex_material." no se encontro en nuestros registros, recomendamos actualizar la maestra de productos EN LA LINEA: ".$i;
+                                                                        // $logs['NO_EXISTE_PRODUCTO'][] = "El producto: ".$ex_material." no se encontro en nuestros registros, recomendamos actualizar la maestra de productos EN LA LINEA: ".$i;
                                                                         $logs['PRODUCTOS_NO_ENCONTRADOS'] = $logs['PRODUCTOS_NO_ENCONTRADOS'][] = $this->EliminarDuplicidad( $logs["PRODUCTOS_NO_ENCONTRADOS"], $ex_material, $i);
                                                                     }
                                                                 }else{
@@ -486,7 +503,7 @@ class MetCargarFacturasSiController extends Controller
                                                                         }else{
                                                                             $respuesta = false;
                                                                             $mensaje = "No existe el producto: ".$ex_material." recomendamos actualizar dicha maestra, linea excel: ".$i;
-                                                                            $logs['NO_EXISTE_PRODUCTO'][] = "El producto: ".$ex_material." no se encontro en nuestros registros, recomendamos actualizar la maestra de productos EN LA LINEA: ".$i;
+                                                                            // $logs['NO_EXISTE_PRODUCTO'][] = "El producto: ".$ex_material." no se encontro en nuestros registros, recomendamos actualizar la maestra de productos EN LA LINEA: ".$i;
                                                                             $logs['PRODUCTOS_NO_ENCONTRADOS'] = $logs['PRODUCTOS_NO_ENCONTRADOS'][] = $this->EliminarDuplicidad( $logs["PRODUCTOS_NO_ENCONTRADOS"], $ex_material, $i);
                                                                         }
 
@@ -507,39 +524,43 @@ class MetCargarFacturasSiController extends Controller
                                                     }else{
                                                         $respuesta = false;
                                                         $mensaje = "";
-                                                        $logs['NO_EXISTE_CLIENTE'][] = "El codigo del cliente: ".$ex_solicitante." no existe en nuestros registros, recomendamos actualizar la maestra de clientes. EN LA LINEA: ".$i;    
-                                                        $logs["CLIENTES_NO_ENCONTRADOS"] = $this->EliminarDuplicidad( $logs["CLIENTES_NO_ENCONTRADOS"], $ex_solicitante, $i);
+                                                        // $logs['NO_EXISTE_CLIENTE'][] = "El codigo del cliente: ".$ex_solicitante." no existe en nuestros registros, recomendamos actualizar la maestra de clientes. EN LA LINEA: ".$i;    
+                                                        $logs["NO_EXISTE_CLIENTE"] = $this->EliminarDuplicidad( $logs["NO_EXISTE_CLIENTE"], $ex_solicitante, $i);
                                                     }
 
                                                 }else{
                                                     $respuesta = false;
                                                     $mensaje = "";
-                                                    $logs['NO_ES_FORMATO_CORRELATIVO_FACTURA'][] = $correlativoFac." EN LA LINEA: ".$i;
+                                                    // $logs['NO_ES_FORMATO_CORRELATIVO_FACTURA'][] = $correlativoFac." EN LA LINEA: ".$i;
+                                                    $logs["NO_ES_FORMATO_CORRELATIVO_FACTURA"] = $this->EliminarDuplicidad( $logs["NO_ES_FORMATO_CORRELATIVO_FACTURA"], $correlativoFac, $i);
                                                 }
                                             }
 
                                         }else{
                                             $respuesta = false;
                                             $mensaje = "";
-                                            $logs['NO_ES_FORMATO_SERIE_FACTURA'][] = "La serie: ".$serieFactura." no tiene 4 digitos EN LA LINEA: ".$i;
+                                            // $logs['NO_ES_FORMATO_SERIE_FACTURA'][] = "La serie: ".$serieFactura." no tiene 4 digitos EN LA LINEA: ".$i;
+                                            $logs["NO_ES_FORMATO_SERIE_FACTURA"] = $this->EliminarDuplicidad( $logs["NO_ES_FORMATO_SERIE_FACTURA"], $serieFactura, $i);
                                         }
 
                                     }else{
                                         $respuesta = false;
                                         $mensaje = "";
-                                        $logs['TPC_NO_ENCONTRADO'][] = "El tpc no se encontro en los filtros realizados "."EN LA LINEA: ".$i;
+                                        // $logs['TPC_NO_ENCONTRADO'][] = "El tpc no se encontro en los filtros realizados "."EN LA LINEA: ".$i;
+                                        $logs["TPC_NO_ENCONTRADO"] = $this->EliminarDuplicidad( $logs["TPC_NO_ENCONTRADO"], $codigoFactura, $i);
                                     }
 
                                 }else{
                                     $respuesta = false;
                                     $mensaje = "";
-                                    $logs['NO_ES_FORMATO_CODIGO_FACTURA'][] = "El codigo del comprobante: ".$codigoFactura." no tiene 2 digitos EN LA LINEA: ".$i;
+                                    // $logs['NO_ES_FORMATO_CODIGO_FACTURA'][] = "El codigo del comprobante: ".$codigoFactura." no tiene 2 digitos EN LA LINEA: ".$i;
+                                    $logs["NO_ES_FORMATO_CODIGO_FACTURA"] = $this->EliminarDuplicidad( $logs["NO_ES_FORMATO_CODIGO_FACTURA"], $codigoFactura, $i);
                                 }
 
                             }else{
                                 $respuesta = false;
                                 $mensaje = "";
-                                $logs['CORRELATIVOS_FACTURAS_NO_ENCONTRADOS'][] = $ex_factura." EN LA LINEA: ".$i;
+                                $logs["CORRELATIVOS_FACTURAS_NO_ENCONTRADOS"] = $this->EliminarDuplicidad( $logs["CORRELATIVOS_FACTURAS_NO_ENCONTRADOS"], $ex_factura, $i);
                             }
 
                         }else{
@@ -548,13 +569,15 @@ class MetCargarFacturasSiController extends Controller
                             break;
                         }
                     }else{
-                        $logs['FECHAS_NO_CUMPLE_FORMATO'][] = $ex_fechafactura." LINEA :".$i;
+                        // $logs['FECHAS_NO_CUMPLE_FORMATO'][] = $ex_fechafactura." LINEA :".$i;
+                        $logs["FECHAS_NO_CUMPLE_FORMATO"] = $this->EliminarDuplicidad( $logs["FECHAS_NO_CUMPLE_FORMATO"], $ex_fechafactura, $i);
                         $respuesta = false;
                         $mensaje = "Lo sentimos, no se encontraron algunas fechas: ".$ex_fechafactura." LINEA :".$i;
                         break;
                     }
                 }else{
-                    $logs['FACTURAS_ANULADAS'][] = "Factura Anulada : ".$ex_fechafactura." se acaba de encontrar. EN LA LINEA: ".$i;
+                    // $logs['FACTURAS_ANULADAS'][] = "Factura Anulada : ".$ex_facturaanulada." se acaba de encontrar. EN LA LINEA: ".$i;
+                    $logs["FACTURAS_ANULADAS"] = $this->EliminarDuplicidad( $logs["FACTURAS_ANULADAS"], $ex_facturaanulada, $i);
                 }
 
             }

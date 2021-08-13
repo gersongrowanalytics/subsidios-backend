@@ -83,7 +83,7 @@ class MetCargarSOController extends Controller
                 if($fec){
 
                     if($i == 2){
-                        // fsofacturasso::where('fsoid', $fec->fecid)->delete();
+                        fsofacturasso::where('fsoid', $fec->fecid)->delete();
                     }
 
                     $pro = proproductos::where('prosku', $ex_codigoproducto)->first(['proid']);

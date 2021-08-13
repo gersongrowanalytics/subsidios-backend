@@ -14,6 +14,11 @@ class sdesubsidiosdetalles extends Model
         "fecid",
         "proid",
         "cliid",
+        
+        "sdezona",
+        "sdeterritorio",
+        "sdecliente",
+        
         "sdecodigosolicitante",
         "sdecodigodestinatario",
         "sdesectoruno",
@@ -43,6 +48,7 @@ class sdesubsidiosdetalles extends Model
         "sdeaprobado",
         "sdesac",
         "sdeencontrofactura",
-        "sdependiente"
+        "sdependiente",
+        "sdeeditado"
     ];
 }

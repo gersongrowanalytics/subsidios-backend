@@ -12,8 +12,6 @@ class MetMostrarSubsidiosSiController extends Controller
     public function MetMostrarSubsidiosSi(Request $request)
     {
 
-        $descargarSde = $this->ArmarExcelDescargaSubsidiosSi();
-
         $fechaInicio = $request['fechaInicio'];
         $fechaFinal  = $request['fechaFinal'];
 
@@ -21,6 +19,8 @@ class MetMostrarSubsidiosSiController extends Controller
             $fechaInicio = date("Y-m-d", strtotime($fechaInicio));
             $fechaFinal  = date("Y-m-d", strtotime($fechaFinal));
         }
+
+        $descargarSde = $this->ArmarExcelDescargaSubsidiosSi($fechaInicio,$fechaFinal );
 
         // $sumSde = sdesubsidiosdetalles::join('cliclientes as cli', 'cli.cliid', 'sdesubsidiosdetalles.cliid')
         //                             ->join('fecfechas as fec', 'fec.fecid', 'sdesubsidiosdetalles.fecid')
@@ -35,11 +35,12 @@ class MetMostrarSubsidiosSiController extends Controller
         $zonas = sdesubsidiosdetalles::join('cliclientes as cli', 'cli.cliid', 'sdesubsidiosdetalles.cliid')
                                     ->join('fecfechas as fec', 'fec.fecid', 'sdesubsidiosdetalles.fecid')
                                     ->where(function ($query) use($fechaInicio, $fechaFinal) {
-                                        if($fechaInicio != null){
+                                        // if($fechaInicio != null){
                                             $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
-                                        }
+                                        // }
                                     })
                                     ->distinct('cli.clizona')
+                                    ->orderBy('clizonacodigo', 'DESC')
                                     // ->where('sdestatus', '!=', null)
                                     ->get([
                                         'cli.clizona'
@@ -70,9 +71,9 @@ class MetMostrarSubsidiosSiController extends Controller
                                     ->where('clizona', $zon['clizona'])
                                     // ->where('sdestatus', '!=', null)
                                     ->where(function ($query) use($fechaInicio, $fechaFinal) {
-                                        if($fechaInicio != null){
+                                        // if($fechaInicio != null){
                                             $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
-                                        }
+                                        // }
                                     })
                                     ->orderBy('sdestatus' , 'DESC')
                                     ->get([
@@ -94,7 +95,9 @@ class MetMostrarSubsidiosSiController extends Controller
                                         'sdebultosacordados',
                                         'fecfecha',
                                         'sdependiente',
-                                        'sdesac'
+                                        'sdesac',
+                                        'sdesector',
+                                        'sdeterritorio'
                                     ]);
 
             foreach($sdes as $posicionSde => $sde){
@@ -143,8 +146,14 @@ class MetMostrarSubsidiosSiController extends Controller
 
     }
 
-    private function ArmarExcelDescargaSubsidiosSi()
+    private function ArmarExcelDescargaSubsidiosSi($fechaInicio, $fechaFinal)
     {
+
+        if($fechaInicio != null){
+            $fechaInicio = date("Y-m-d", strtotime($fechaInicio));
+            $fechaFinal  = date("Y-m-d", strtotime($fechaFinal));
+        }
+
         $nuevoArray = array(
             array(
                 "columns" => [],
@@ -156,6 +165,11 @@ class MetMostrarSubsidiosSiController extends Controller
                                         ->join('proproductos as pro', 'pro.proid', 'sdesubsidiosdetalles.proid')
                                         ->join('catcategorias as cat', 'cat.catid', 'pro.catid')
                                         ->join('fecfechas as fec', 'fec.fecid', 'sdesubsidiosdetalles.fecid')
+                                        ->where(function ($query) use($fechaInicio, $fechaFinal) {
+                                            // if($fechaInicio != null){
+                                                $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
+                                            // }
+                                        })
                                         ->get([
                                             'sdesubsidiosdetalles.sdeid',
                                             'fecanionumero',
@@ -189,7 +203,8 @@ class MetMostrarSubsidiosSiController extends Controller
                                             "sdediferenciaahorro",
                                             "sdeaprobado",
                                             "prosku",
-                                            "cliclientesac"
+                                            "cliclientesac",
+                                            "sdeterritorio"
                                         ]);
 
         foreach($descargarSdes as $posicionSde => $descargarSde){
@@ -200,6 +215,10 @@ class MetMostrarSubsidiosSiController extends Controller
                                                 'fsifactura',
                                                 'sfsvalorizado'
                                             ]);
+
+            $sfssSuma = sfssubsidiosfacturassi::join('fsifacturassi as fsi', 'fsi.fsiid', 'sfssubsidiosfacturassi.fsiid')
+                                            ->where('sdeid', $descargarSde->sdeid)
+                                            ->sum('sfsvalorizado');
 
             if($posicionSde == 0){
                 $arrayTitulos = array(
@@ -236,92 +255,6 @@ class MetMostrarSubsidiosSiController extends Controller
                 );
 
                 $nuevoArray[0]['columns'] = $arrayTitulos;
-
-                // $arrayFilaExcel = array(
-                //     array("value" => ""),
-                //     array(
-                //         "value" => "AÑO",
-                //         "style" => array(
-                //             "font" => array(
-                //                 "sz" => "9",
-                //                 "bold" => true,
-                //                 "color" => array(
-                //                     "rgb" => "FFFFFFFF"
-                //                 )
-                //             ),
-                //             "fill" => array(
-                //                 "patternType" => 'solid',
-                //                 "fgColor" => array(
-                //                     "rgb" => "FF000000"
-                //                 )
-                //             )
-                            
-                //         )
-                //     ),
-                //     array(
-                //         "value" => $descargarSde->fecanionumero, 
-                //         "style" => array(
-                //             "font" => array(
-                //                 "sz" => "9",
-                //                 "bold" => true,
-                //                 "color" => array(
-                //                     "rgb" => "FFFFFFFF"
-                //                 )
-                //             ),
-                //             "fill" => array(
-                //                 "patternType" => 'solid',
-                //                 "fgColor" => array(
-                //                     "rgb" => "FF000000"
-                //                 )
-                //             )
-                            
-                //         )
-                //     ),
-                // );
-                // $nuevoArray[0]['data'][] = $arrayFilaExcel;
-
-                // $arrayFilaExcel = array(
-                //     array("value" => ""),
-                //     array(
-                //         "value" => "MES",
-                //         "style" => array(
-                //             "font" => array(
-                //                 "sz" => "9",
-                //                 "bold" => true,
-                //                 "color" => array(
-                //                     "rgb" => "FFFFFFFF"
-                //                 )
-                //             ),
-                //             "fill" => array(
-                //                 "patternType" => 'solid',
-                //                 "fgColor" => array(
-                //                     "rgb" => "FF000000"
-                //                 )
-                //             )
-                            
-                //         )
-                //     ),
-                //     array(
-                //         "value" => $descargarSde->fecmesabreviacion,
-                //         "style" => array(
-                //             "font" => array(
-                //                 "sz" => "9",
-                //                 "bold" => true,
-                //                 "color" => array(
-                //                     "rgb" => "FFFFFFFF"
-                //                 )
-                //             ),
-                //             "fill" => array(
-                //                 "patternType" => 'solid',
-                //                 "fgColor" => array(
-                //                     "rgb" => "FF000000"
-                //                 )
-                //             )
-                            
-                //         )
-                //     ),
-                // );
-                // $nuevoArray[0]['data'][] = $arrayFilaExcel;
 
                 $arrayFilaExcel = array(
                     // array("value" => ""),
@@ -843,7 +776,7 @@ class MetMostrarSubsidiosSiController extends Controller
                     ),
 
                     array(
-                        "value" => "SAC",
+                        "value" => "APROBADO",
                         "style" => array(
                             "font" => array(
                                 "sz" => "9",
@@ -862,29 +795,91 @@ class MetMostrarSubsidiosSiController extends Controller
                         )
                     ),
 
-                    // array(
-                    //     "value" => "PK",
-                    //     "style" => array(
-                    //         "font" => array(
-                    //             "sz" => "9",
-                    //             "bold" => true,
-                    //             "color" => array(
-                    //                 "rgb" => "FFFFFFFF"
-                    //             )
-                    //         ),
-                    //         "fill" => array(
-                    //             "patternType" => 'solid',
-                    //             "fgColor" => array(
-                    //                 "rgb" => "FF222B35"
-                    //             )
-                    //         )
+                    array(
+                        "value" => "TOTAL LIQUIDADO",
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                                "color" => array(
+                                    "rgb" => "FFFFFFFF"
+                                )
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => "FF004FB8"
+                                )
+                            )
                             
-                    //     )
-                    // ),
+                        )
+                    ),
 
+                    array(
+                        "value" => "FALTA LIQUIDAR",
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                                "color" => array(
+                                    "rgb" => "FFFFFFFF"
+                                )
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => "FF004FB8"
+                                )
+                            )
+                            
+                        )
+                    ),
+                );
 
+                for($i = 0; $i < 23; $i++){
+                    $pos = $i+1;
 
-                ); 
+                    $arrayFilaExcel[] = array(
+                        "value" => "FACTURA N°".$pos,
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                                "color" => array(
+                                    "rgb" => "FFFFFFFF"
+                                )
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => "FF004FB8"
+                                )
+                            )
+                            
+                        )
+                    );
+
+                    $arrayFilaExcel[] = array(
+                        "value" => "VALORIZADO N°".$pos,
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                                "color" => array(
+                                    "rgb" => "FFFFFFFF"
+                                )
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => "FF004FB8"
+                                )
+                            )
+                            
+                        )
+                    );
+                    
+                }
 
                 $nuevoArray[0]['data'][] = $arrayFilaExcel;
             }
@@ -937,7 +932,7 @@ class MetMostrarSubsidiosSiController extends Controller
                     )
                 ),
                 array(
-                    "value" => $descargarSde->clizona, 
+                    "value" => $descargarSde->sdeterritorio, 
                     "style" => array(
                         "font" => array(
                             "sz" => "9",
@@ -1116,16 +1111,6 @@ class MetMostrarSubsidiosSiController extends Controller
                         )
                     )
                 ),
-
-                // array(
-                //     "value" => floatval($rep->repimporte), 
-                //     "style" => array(
-                //         "font" => array(
-                //             "sz" => "10"
-                //         ),
-                //         "numFmt" => "#,##0.00"
-                //     )
-                // ),
                 array(
                     "value" => floatval($descargarSde->sdepcsapfinal), 
                     "style" => array(
@@ -1301,7 +1286,7 @@ class MetMostrarSubsidiosSiController extends Controller
                     )
                 ),
                 array(
-                    "value" => $descargarSde->sdeaprobado, 
+                    "value" => $descargarSde->sdeaprobado == 1 ?"Validados" :"No Validados", 
                     "style" => array(
                         "font" => array(
                             "sz" => "9",
@@ -1316,7 +1301,7 @@ class MetMostrarSubsidiosSiController extends Controller
                     )
                 ),
                 array(
-                    "value" => $descargarSde->cliclientesac, 
+                    "value" => $descargarSde->cliclientesac == 1 ? "Manual" :"Automatico", 
                     "style" => array(
                         "font" => array(
                             "sz" => "9",
@@ -1330,21 +1315,40 @@ class MetMostrarSubsidiosSiController extends Controller
                         )
                     )
                 ),
-                // array(
-                //     "value" => $descargarSde->sdecodigodestinatario.$descargarSde->prosku.$descargarSde->sderucsubcliente,
-                //     "style" => array(
-                //         "font" => array(
-                //             "sz" => "9",
-                //             "bold" => true,
-                //         ),
-                //         "fill" => array(
-                //             "patternType" => 'solid',
-                //             "fgColor" => array(
-                //                 "rgb" => "FFF2F2F2"
-                //             )
-                //         )
-                //     )
-                // ),
+
+                array(
+                    "value" => floatval($sfssSuma),
+                    "style" => array(
+                        "font" => array(
+                            "sz" => "9",
+                            "bold" => true,
+                        ),
+                        "fill" => array(
+                            "patternType" => 'solid',
+                            "fgColor" => array(
+                                "rgb" => "FFF2F2F2"
+                            )
+                        ),
+                        "numFmt" => "#,##0.00"
+                    )
+                ),
+
+                array(
+                    "value" => floatval($descargarSde->sdemontoareconocerreal - $sfssSuma),
+                    "style" => array(
+                        "font" => array(
+                            "sz" => "9",
+                            "bold" => true,
+                        ),
+                        "fill" => array(
+                            "patternType" => 'solid',
+                            "fgColor" => array(
+                                "rgb" => "FFF2F2F2"
+                            )
+                        ),
+                        "numFmt" => "#,##0.00"
+                    )
+                ),
             );
 
             foreach($sfss as $posicionSfs => $sfs){

@@ -23,6 +23,7 @@ class CreateFecfechasTable extends Migration
             $table->string('fecdiatexto');
             $table->string('fecmestexto');
             $table->string('fecaniotexto');
+            $table->boolean('fecmesabierto')->default(0);
 
             $table->timestamps();
         });

@@ -36,12 +36,11 @@ class MetMostrarSubsidiosSoController extends Controller
         $zonas = sdesubsidiosdetalles::join('cliclientes as cli', 'cli.cliid', 'sdesubsidiosdetalles.cliid')
                                     ->join('fecfechas as fec', 'fec.fecid', 'sdesubsidiosdetalles.fecid')
                                     ->where(function ($query) use($fechaInicio, $fechaFinal) {
-                                        if($fechaInicio != null){
-                                            $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
-                                        }
+                                        $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
                                     })
                                     // ->where('sdestatus', '!=', null)
                                     ->distinct('cli.clizona')
+                                    ->orderBy('clizonacodigo', 'DESC')
                                     ->get([
                                         'cli.clizona',
                                         // 'sdestatus'
@@ -71,9 +70,9 @@ class MetMostrarSubsidiosSoController extends Controller
                                     ->where('clizona', $zon['clizona'])
                                     // ->where('sdestatus', '!=', null)
                                     ->where(function ($query) use($fechaInicio, $fechaFinal) {
-                                        if($fechaInicio != null){
+                                        // if($fechaInicio != null){
                                             $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
-                                        }
+                                        // }
                                     })
                                     ->orderBy('sdestatus' , 'DESC')
                                     ->get([
@@ -91,7 +90,9 @@ class MetMostrarSubsidiosSoController extends Controller
                                         'sdestatus',
                                         'sdediferenciaahorro',
                                         'sdebultosacordados',
-                                        'sdesac'
+                                        'sdesac',
+                                        'sdesector',
+                                        'sdeterritorio'
                                     ]);
 
             $zonas[$posicionZon]['data'] = $sdes;
@@ -121,10 +122,11 @@ class MetMostrarSubsidiosSoController extends Controller
                                         ->join('catcategorias as cat', 'cat.catid', 'pro.catid')
                                         ->join('fecfechas as fec', 'fec.fecid', 'sdesubsidiosdetalles.fecid')
                                         ->where(function ($query) use($fechaInicio, $fechaFinal) {
-                                            if($fechaInicio != null){
+                                            // if($fechaInicio != null){
                                                 $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
-                                            }
+                                            // }
                                         })
+                                        ->orderby('cli.cliid')
                                         ->get([
                                             'fecanionumero',
                                             'fecmesabreviacion',
@@ -157,7 +159,8 @@ class MetMostrarSubsidiosSoController extends Controller
                                             "sdediferenciaahorro",
                                             "sdeaprobado",
                                             "prosku",
-                                            "cliclientesac"
+                                            "cliclientesac",
+                                            "sdeterritorio"
                                         ]);
 
         foreach($descargarSdes as $posicionSde => $descargarSde){
@@ -843,7 +846,47 @@ class MetMostrarSubsidiosSoController extends Controller
                     ),
 
                     array(
-                        "value" => "SAC",
+                        "value" => "APLICATIVO",
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                                "color" => array(
+                                    "rgb" => "FFFFFFFF"
+                                )
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => "FF004FB8"
+                                )
+                            )
+                            
+                        )
+                    ),
+
+                    array(
+                        "value" => "DIFERENCIA DE AHORRO EN BULTOS",
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                                "color" => array(
+                                    "rgb" => "FFFFFFFF"
+                                )
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => "FF004FB8"
+                                )
+                            )
+                            
+                        )
+                    ),
+
+                    array(
+                        "value" => "DIFERENCIA DE AHORRO EN SOLES",
                         "style" => array(
                             "font" => array(
                                 "sz" => "9",
@@ -935,7 +978,7 @@ class MetMostrarSubsidiosSoController extends Controller
                     )
                 ),
                 array(
-                    "value" => $descargarSde->clizona, 
+                    "value" => $descargarSde->sdeterritorio, 
                     "style" => array(
                         "font" => array(
                             "sz" => "9",
@@ -1115,7 +1158,7 @@ class MetMostrarSubsidiosSoController extends Controller
                     )
                 ),
                 array(
-                    "value" => $descargarSde->sdepcsapfinal, 
+                    "value" => floatval($descargarSde->sdepcsapfinal), 
                     "style" => array(
                         "font" => array(
                             "sz" => "9",
@@ -1126,11 +1169,12 @@ class MetMostrarSubsidiosSoController extends Controller
                             "fgColor" => array(
                                 "rgb" => "FFF2F2F2"
                             )
-                        )
+                        ),
+                        "numFmt" => "#,##0.00"
                     )
                 ),
                 array(
-                    "value" => $descargarSde->sdedscto, 
+                    "value" => floatval($descargarSde->sdedscto), 
                     "style" => array(
                         "font" => array(
                             "sz" => "9",
@@ -1141,11 +1185,12 @@ class MetMostrarSubsidiosSoController extends Controller
                             "fgColor" => array(
                                 "rgb" => "FFF2F2F2"
                             )
-                        )
+                        ),
+                        "numFmt" => "#,##0.00"
                     )
                 ),
                 array(
-                    "value" => $descargarSde->sdepcsubsidiado, 
+                    "value" => floatval($descargarSde->sdepcsubsidiado), 
                     "style" => array(
                         "font" => array(
                             "sz" => "9",
@@ -1156,11 +1201,12 @@ class MetMostrarSubsidiosSoController extends Controller
                             "fgColor" => array(
                                 "rgb" => "FFF2F2F2"
                             )
-                        )
+                        ),
+                        "numFmt" => "#,##0.00"
                     )
                 ),
                 array(
-                    "value" => $descargarSde->sdemup, 
+                    "value" => floatval($descargarSde->sdemup), 
                     "style" => array(
                         "font" => array(
                             "sz" => "9",
@@ -1171,11 +1217,12 @@ class MetMostrarSubsidiosSoController extends Controller
                             "fgColor" => array(
                                 "rgb" => "FFF2F2F2"
                             )
-                        )
+                        ),
+                        "numFmt" => "#,##0.00"
                     )
                 ),
                 array(
-                    "value" => $descargarSde->sdepvpigv, 
+                    "value" => floatval($descargarSde->sdepvpigv), 
                     "style" => array(
                         "font" => array(
                             "sz" => "9",
@@ -1186,11 +1233,12 @@ class MetMostrarSubsidiosSoController extends Controller
                             "fgColor" => array(
                                 "rgb" => "FFF2F2F2"
                             )
-                        )
+                        ),
+                        "numFmt" => "#,##0.00"
                     )
                 ),
                 array(
-                    "value" => $descargarSde->sdedsctodos, 
+                    "value" => floatval($descargarSde->sdedsctodos), 
                     "style" => array(
                         "font" => array(
                             "sz" => "9",
@@ -1201,7 +1249,8 @@ class MetMostrarSubsidiosSoController extends Controller
                             "fgColor" => array(
                                 "rgb" => "FFF2F2F2"
                             )
-                        )
+                        ),
+                        "numFmt" => "#,##0.00"
                     )
                 ),
                 array(
@@ -1235,7 +1284,108 @@ class MetMostrarSubsidiosSoController extends Controller
                     )
                 ),
                 array(
-                    "value" => $descargarSde->sdebultosacordados, 
+                    "value" => floatval($descargarSde->sdebultosacordados), 
+                    "style" => array(
+                        "font" => array(
+                            "sz" => "9",
+                            "bold" => true,
+                        ),
+                        "fill" => array(
+                            "patternType" => 'solid',
+                            "fgColor" => array(
+                                "rgb" => "FFF2F2F2"
+                            )
+                        ),
+                        "numFmt" => "#,##0.00"
+                    )
+                ),
+
+
+                array(
+                    "value" => floatval($descargarSde->sdecantidadbultos), 
+                    "style" => array(
+                        "font" => array(
+                            "sz" => "9",
+                            "bold" => true,
+                        ),
+                        "fill" => array(
+                            "patternType" => 'solid',
+                            "fgColor" => array(
+                                "rgb" => "FFF2F2F2"
+                            )
+                        ),
+                        "numFmt" => "#,##0.00"
+                    )
+                ),
+
+                array(
+                    "value" => floatval($descargarSde->sdemontoareconocer), 
+                    "style" => array(
+                        "font" => array(
+                            "sz" => "9",
+                            "bold" => true,
+                        ),
+                        "fill" => array(
+                            "patternType" => 'solid',
+                            "fgColor" => array(
+                                "rgb" => "FFF2F2F2"
+                            )
+                        ),
+                        "numFmt" => "#,##0.00"
+                    )
+                ),
+
+
+
+                array(
+                    "value" => floatval($descargarSde->sdecantidadbultosreal), 
+                    "style" => array(
+                        "font" => array(
+                            "sz" => "9",
+                            "bold" => true,
+                        ),
+                        "fill" => array(
+                            "patternType" => 'solid',
+                            "fgColor" => array(
+                                "rgb" => "FFF2F2F2"
+                            )
+                        ),
+                        "numFmt" => "#,##0.00"
+                    )
+                ),
+                array(
+                    "value" => floatval($descargarSde->sdemontoareconocerreal), 
+                    "style" => array(
+                        "font" => array(
+                            "sz" => "9",
+                            "bold" => true,
+                        ),
+                        "fill" => array(
+                            "patternType" => 'solid',
+                            "fgColor" => array(
+                                "rgb" => "FFF2F2F2"
+                            )
+                        ),
+                        "numFmt" => "#,##0.00"
+                    )
+                ),
+                array(
+                    "value" => $descargarSde->sdeaprobado == 1 ?"Validados" :"No Validados", 
+                    "style" => array(
+                        "font" => array(
+                            "sz" => "9",
+                            "bold" => true,
+                        ),
+                        "fill" => array(
+                            "patternType" => 'solid',
+                            "fgColor" => array(
+                                "rgb" => "FFF2F2F2"
+                            )
+                        )
+                    )
+                ),
+                array(
+                    "value" => $descargarSde->cliclientesac == 1 ? "Manual" :"Automatico", 
                     "style" => array(
                         "font" => array(
                             "sz" => "9",
@@ -1252,7 +1402,7 @@ class MetMostrarSubsidiosSoController extends Controller
 
 
                 array(
-                    "value" => $descargarSde->sdecantidadbultos, 
+                    "value" => floatval($descargarSde->sdecantidadbultos - $descargarSde->sdecantidadbultosreal), 
                     "style" => array(
                         "font" => array(
                             "sz" => "9",
@@ -1263,12 +1413,13 @@ class MetMostrarSubsidiosSoController extends Controller
                             "fgColor" => array(
                                 "rgb" => "FFF2F2F2"
                             )
-                        )
+                        ),
+                        "numFmt" => "#,##0.00"
                     )
                 ),
 
                 array(
-                    "value" => $descargarSde->sdemontoareconocer, 
+                    "value" => floatval($descargarSde->sdemontoareconocer - $descargarSde->sdemontoareconocerreal),
                     "style" => array(
                         "font" => array(
                             "sz" => "9",
@@ -1279,70 +1430,8 @@ class MetMostrarSubsidiosSoController extends Controller
                             "fgColor" => array(
                                 "rgb" => "FFF2F2F2"
                             )
-                        )
-                    )
-                ),
-
-
-
-                array(
-                    "value" => $descargarSde->sdecantidadbultosreal, 
-                    "style" => array(
-                        "font" => array(
-                            "sz" => "9",
-                            "bold" => true,
                         ),
-                        "fill" => array(
-                            "patternType" => 'solid',
-                            "fgColor" => array(
-                                "rgb" => "FFF2F2F2"
-                            )
-                        )
-                    )
-                ),
-                array(
-                    "value" => $descargarSde->sdemontoareconocerreal, 
-                    "style" => array(
-                        "font" => array(
-                            "sz" => "9",
-                            "bold" => true,
-                        ),
-                        "fill" => array(
-                            "patternType" => 'solid',
-                            "fgColor" => array(
-                                "rgb" => "FFF2F2F2"
-                            )
-                        )
-                    )
-                ),
-                array(
-                    "value" => $descargarSde->sdeaprobado, 
-                    "style" => array(
-                        "font" => array(
-                            "sz" => "9",
-                            "bold" => true,
-                        ),
-                        "fill" => array(
-                            "patternType" => 'solid',
-                            "fgColor" => array(
-                                "rgb" => "FFF2F2F2"
-                            )
-                        )
-                    )
-                ),
-                array(
-                    "value" => $descargarSde->cliclientesac, 
-                    "style" => array(
-                        "font" => array(
-                            "sz" => "9",
-                            "bold" => true,
-                        ),
-                        "fill" => array(
-                            "patternType" => 'solid',
-                            "fgColor" => array(
-                                "rgb" => "FFF2F2F2"
-                            )
-                        )
+                        "numFmt" => "#,##0.00"
                     )
                 ),
                 // array(

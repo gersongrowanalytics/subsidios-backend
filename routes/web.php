@@ -43,6 +43,10 @@ $router->get('/seed', 'Prueba\PruebaController@EjecutarSeeds');
 
             $router->post('/si/facturas', 'Validaciones\Modulos\CargaArchivos\SI\CargarFacturasSiController@ValCargarFacturasSi');
             $router->post('/si/estado-sunat-facturas', 'Validaciones\Modulos\CargaArchivos\SI\CargarEstadoSunatSiController@ValCargarEstadoSunatSi');
+
+            $router->post('/so/subsidios-so-plantilla', 'Validaciones\Modulos\CargaArchivos\SO\CargarSubsidiosController@ValCargarSubsidiosPlantilla');
+            $router->post('/so/subsidios-so-automaticos-manuales', 'Validaciones\Modulos\CargaArchivos\SO\CargarSubsidiosController@ValCargarSubsidios');
+
         });
 
         $router->group(['prefix' => 'subsidiosSo'], function () use ($router) {
@@ -71,6 +75,12 @@ $router->get('/seed', 'Prueba\PruebaController@EjecutarSeeds');
         $router->group(['prefix' => 'facturas'], function () use ($router) {
             $router->post('/mostrar', 'Validaciones\Modulos\Facturas\MostrarFacturasController@ValMostrarFacturas');
             $router->post('/mostrar/reconocimiento', 'Validaciones\Modulos\Facturas\MostrarSubsidiosAsignadosController@ValMostrarSubsidiosAsignados');
+        });
+
+        $router->group(['prefix' => 'home'], function () use ($router) {
+
+            $router->post('/mostrar/estados-pendientes', 'Validaciones\Modulos\Home\Mostrar\MostrarEstadosPendientesController@ValMostrarEstadosPendientes');
+
         });
 
 

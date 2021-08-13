@@ -198,10 +198,13 @@ class MetLogicaSubsidiosSiController extends Controller
         //     "fdssaldo" => 
         // ]);
 
+        // sfssubsidiosfacturassi::where('')->delete() YA LO ELIMINO MAS ARRIBA DE EJECUTAR LA FUNCION
+
         sdesubsidiosdetalles::where('fecid', $fecid)
                             ->where('sdeaprobado', true)
                             ->update([
-                                "sdependiente" => 1
+                                "sdependiente" => 1,
+                                "sdeencontrofactura" => 0
                             ]);
 
         $fdss = fdsfacturassidetalles::all();
