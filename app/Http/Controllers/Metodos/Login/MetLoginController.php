@@ -38,6 +38,7 @@ class MetLoginController extends Controller
                                 'usuusuario',
                                 'usucorreo',
                                 'usutoken',
+                                'usucontrasenia',
                                 'tpu.tpuid',
                                 'tpuprivilegio',
                                 'tpunombre'
