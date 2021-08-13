@@ -24,8 +24,24 @@ class MetLoginController extends Controller
         $contrasenia = $request['contrasenia'];
 
         $usu = usuusuarios::join('perpersonas as per', 'per.perid', 'usuusuarios.perid')
+                            ->join('tputiposusuarios as tpu', 'tpu.tpuid', 'usuusuarios.tpuid')
                             ->where('usuusuario', $usuario)
-                            ->first();
+                            ->first([
+                                'usuid',
+                                'per.perid',
+                                'pernumerodocumentoidentidad',
+                                'pernombrecompleto',
+                                'pernombre',
+                                'perapellidopaterno',
+                                'perapellidomaterno',
+                                'usucodigo',
+                                'usuusuario',
+                                'usucorreo',
+                                'usutoken',
+                                'tpu.tpuid',
+                                'tpuprivilegio',
+                                'tpunombre'
+                            ]);
 
         if($usu){
             if (Hash::check($contrasenia, $usu->usucontrasenia)) {
