@@ -13,7 +13,9 @@ use App\Models\proproductos;
 use App\Models\cliclientes;
 use App\Models\fsofacturasso;
 use App\Models\sdesubsidiosdetalles;
-
+use App\Models\areareasestados;
+use App\Models\espestadospendientes;
+use \DateTime;
 
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
@@ -25,6 +27,8 @@ class MetCargarSOController extends Controller
 
         date_default_timezone_set("America/Lima");
         $fechaActual = date('Y-m-d');
+
+        $fecid = 0;
 
         $logs = array(
             "MENSAJE" => "",
@@ -84,6 +88,7 @@ class MetCargarSOController extends Controller
 
                     if($i == 2){
                         fsofacturasso::where('fsoid', $fec->fecid)->delete();
+                        $fecid = $fec->fecid;
                     }
 
                     $pro = proproductos::where('prosku', $ex_codigoproducto)->first(['proid']);
@@ -126,6 +131,48 @@ class MetCargarSOController extends Controller
                     break;
                 }
             }
+
+
+            // 
+
+            // AGREGAR REGISTRO
+
+            $espe = espestadospendientes::where('fecid', $fecid)
+                                        ->where('espbasedato', "Sell Out (Efectivo)")
+                                        ->first();
+
+            if($espe){
+                $espe->espfechactualizacion = $fechaActual;
+
+                $date1 = new DateTime($fechaActual);
+                $fecha_carga_real = date("Y-m-d", strtotime($espe->espfechaprogramado));
+                $date2 = new DateTime($fecha_carga_real);
+
+                $diff = $date1->diff($date2);
+
+                if($diff->days > 0){
+                    $espe->espdiaretraso = $diff->days;
+                }else{
+                    $espe->espdiaretraso = "0";
+                }
+
+                $espe->update();
+
+
+                $aree = areareasestados::where('areid', $espe->areid)-first();
+                if($aree){
+                    if($aree->areporcentaje == "50"){
+                        $aree->areporcentaje = "100";
+                    }else if($aree->areporcentaje == "100"){
+                        $aree->areporcentaje = "100";
+                    }else{
+                        $aree->areporcentaje = "50";
+                    }
+                }
+            }
+
+            // 
+            
 
             // $this->Alinear();
 

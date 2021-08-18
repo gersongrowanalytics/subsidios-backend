@@ -18,9 +18,13 @@ class MetMostrarEstadosPendientesController extends Controller
         $fechaInicio = $request['fechaInicio'];
         $fechaFinal  = $request['fechaFinal'];
 
-        if($fechaInicio != null){
-            $fechaInicio = date("Y-m-d", strtotime($fechaInicio));
-            $fechaFinal  = date("Y-m-d", strtotime($fechaFinal));
+        // if($fechaInicio != null){
+        //     $fechaInicio = date("Y-m-d", strtotime($fechaInicio));
+            
+        // }
+        
+        if($fechaFinal != null){
+            $fechaFinal = date("Y-m", strtotime($fechaFinal));
         }
 
         $tprs = tprtipospromociones::get();
@@ -33,7 +37,8 @@ class MetMostrarEstadosPendientesController extends Controller
                                         ->where('tpr.tprid', $tpr->tprid)
                                         ->where(function ($query) use($fechaInicio, $fechaFinal) {
                                             // if($fechaInicio != null){
-                                                $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
+                                                // $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
+                                                $query->where('fecfecha', $fechaFinal."-01");
                                             // }
                                         })
                                         ->distinct('are.areid')

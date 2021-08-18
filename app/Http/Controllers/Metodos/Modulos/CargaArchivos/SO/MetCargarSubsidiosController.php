@@ -12,8 +12,11 @@ use App\Models\fecfechas;
 use App\Models\proproductos;
 use App\Models\cliclientes;
 use App\Models\sdesubsidiosdetalles;
+use App\Models\espestadospendientes;
+use App\Models\areareasestados;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
+use \DateTime;
 
 class MetCargarSubsidiosController extends Controller
 {
@@ -59,9 +62,6 @@ class MetCargarSubsidiosController extends Controller
 
             $logs['NUMERO_LINEAS_EXCEL'] = $numRows;
 
-            // $ex_anio = $objPHPExcel->getActiveSheet()->getCell('A2')->getCalculatedValue();
-            // $ex_mes  = $objPHPExcel->getActiveSheet()->getCell('B3')->getCalculatedValue();
-
             $ex_anio = $objPHPExcel->getActiveSheet()->getCell('C2')->getCalculatedValue();
             $ex_mes  = $objPHPExcel->getActiveSheet()->getCell('C3')->getCalculatedValue();
 
@@ -80,10 +80,6 @@ class MetCargarSubsidiosController extends Controller
                                     // ->delete();
 
                 for ($i=6; $i <= $numRows ; $i++) {
-
-
-                    // $ex_anio                = $objPHPExcel->getActiveSheet()->getCell('A'.$i)->getCalculatedValue();
-                    // $ex_mes                 = $objPHPExcel->getActiveSheet()->getCell('B'.$i)->getCalculatedValue();
 
                     $ex_zona                = $objPHPExcel->getActiveSheet()->getCell('B'.$i)->getCalculatedValue();
                     $ex_territorio          = $objPHPExcel->getActiveSheet()->getCell('C'.$i)->getCalculatedValue();
@@ -131,10 +127,103 @@ class MetCargarSubsidiosController extends Controller
                     // $pro = true;
     
                     if($pro){
-                        $cli = cliclientes::where('clicodigoshipto', $ex_codigodestinatario)->first(['cliid', 'cliclientesac']);
+                        $cli = cliclientes::where('clicodigoshipto', $ex_codigodestinatario)
+                                            ->first(['cliid', 'cliclientesac', 'clicodigoshipto', 'clishipto']);
                         // $cli = true;
     
                         if($cli){
+
+                            // 
+
+                            $esp = espestadospendientes::where('espbasedato', "Subsidio Reconocido (Plantilla)")
+                                                        ->where('fecid', $fec->fecid)
+                                                        ->first();
+
+                            if($esp){
+
+                                
+
+                                $espe = espestadospendientes::where('espbasedato', $cli->clishipto)
+                                                            ->where('fecid', $fec->fecid)
+                                                            ->where('areid', $esp->areid)
+                                                            ->first();
+
+                                if($espe){
+
+                                    $espe->espfechactualizacion = $fechaActual;
+                                    if($espe->espfechaprogramado == null){
+                                        $espe->espdiaretraso = "0";
+                                    }else{
+
+                                        $fecha_carga_real = date("Y-m-d", strtotime($espe->espfechaprogramado));
+
+                                        $date1 = new DateTime($fechaActual);
+                                        $date2 = new DateTime($fecha_carga_real);
+
+                                        if($date1 > $date2){
+                                            $diff = $date1->diff($date2);
+    
+                                            if($diff->days > 0){
+                                                $espe->espdiaretraso = $diff->days;
+                                            }else{
+                                                $espe->espdiaretraso = "0";
+                                            }
+    
+                                        }else{
+                                            $espe->espdiaretraso = "0";
+                                        }
+                                    }
+
+                                    $espe->update();
+
+                                }else{
+                                    $espn = new espestadospendientes;
+                                    $espn->fecid = $fec->fecid;
+                                    $espn->perid = 2; // POR DEFECTO ES 2
+                                    $espn->areid = $esp->areid;
+
+                                    if($cli->cliclientesac == 1){
+                                        $espn->espfechaprogramado = $esp->espfechaprogramado;
+                                    }else{
+                                        $espn->espfechaprogramado = "2021-08-11";
+                                    }
+
+                                    $espn->espchacargareal = null;
+                                    $espn->espfechactualizacion = $fechaActual;
+                                    $espn->espbasedato = $cli->clishipto;
+                                    $espn->espresponsable = "Equipo SAC";
+
+                                    $date1 = new DateTime($fechaActual);
+                                    $fecha_carga_real = date("Y-m-d", strtotime($espn->espfechaprogramado));
+                                    $date2 = new DateTime($fecha_carga_real);
+
+                                    if($date1 > $date2){
+                                        $diff = $date1->diff($date2);
+
+                                        if($diff->days > 0){
+                                            $espn->espdiaretraso = $diff->days;
+                                        }else{
+                                            $espn->espdiaretraso = "0";
+                                        }
+
+                                    }else{
+                                        $espn->espdiaretraso = "0";
+                                    }
+
+                                    $espn->save();
+
+                                    $aree = areareasestados::where('areid', $esp->areid)->first();
+
+                                    if($aree){
+                                        $aree->areporcentaje = $aree->areporcentaje + 1;
+                                        $aree->update();
+                                    }
+
+                                }   
+                            }
+
+                            // 
+
 
                             $sdee = sdesubsidiosdetalles::where('fecid', $fec->fecid)
                                                     ->where('sdedestrucsap', $ex_destrucsap)
@@ -214,6 +303,32 @@ class MetCargarSubsidiosController extends Controller
                         $logs["PRODUCTOS_NO_ENCONTRADOS"] = $this->EliminarDuplicidad( $logs["PRODUCTOS_NO_ENCONTRADOS"], $ex_codigouni, $i);
                     }
     
+                }
+
+                $espe = espestadospendientes::where('espbasedato', "Subsidio Reconocido (Plantilla)")
+                                            ->where('fecid', $fec->fecid)
+                                            ->first();
+
+                if($espe){
+                    $espe->espfechactualizacion = $fechaActual;
+
+                    $date1 = new DateTime($fechaActual);
+                    $fecha_carga_real = date("Y-m-d", strtotime($espe->espfechaprogramado));
+                    $date2 = new DateTime($fecha_carga_real);
+                    
+                    if($date1 > $date2){
+                        $diff = $date1->diff($date2);
+
+                        if($diff->days > 0){
+                            $espe->espdiaretraso = $diff->days;
+                        }else{
+                            $espe->espdiaretraso = "0";
+                        }
+                    }else{
+                        $espe->espdiaretraso = "0";
+                    }
+
+                    $espe->update();
                 }
 
             }else{

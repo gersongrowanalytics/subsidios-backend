@@ -13,8 +13,11 @@ use App\Models\proproductos;
 use App\Models\cliclientes;
 use App\Models\sdesubsidiosdetalles;
 use App\Models\sfssubsidiosfacturassi;
+use App\Models\espestadospendientes;
+use App\Models\areareasestados;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
+use \DateTime;
 
 class MetCargarSubsidiosPlantillaController extends Controller
 {
@@ -245,6 +248,52 @@ class MetCargarSubsidiosPlantillaController extends Controller
                     }
     
                 }
+
+
+                // AGREGAR REGISTRO
+
+                $espe = espestadospendientes::where('fecid', $fec->fecid)
+                                            ->where('espbasedato', "Subsidio Aprobado (Plantilla)")
+                                            ->first();
+
+                if($espe){
+                    $espe->espfechactualizacion = $fechaActual;
+
+                    $date1 = new DateTime($fechaActual);
+                    $fecha_carga_real = date("Y-m-d", strtotime($espe->espfechaprogramado));
+                    $date2 = new DateTime($fecha_carga_real);
+
+                    $diff = $date2->diff($date1);
+                    // $diff = $date1->diff($date2);
+
+                    if($diff->days > 0){
+                        $espe->espdiaretraso = $diff->days;
+                    }else{
+                        $espe->espdiaretraso = "0";
+                    }
+
+                    $espe->update();
+
+
+                    $aree = areareasestados::where('areid', $espe->areid)->first();
+
+                    if($aree){
+
+                        $espcount = espestadospendientes::where('fecid', $fec->fecid)
+                                            ->where('espbasedato', "Subsidio Aprobado (Plantilla)")
+                                            ->where('espfechactualizacion', '!=', null)
+                                            ->count();
+
+                        if($espcount == 1){
+                            $aree->areporcentaje = "50";
+                        }else{
+                            $aree->areporcentaje = "100";
+                        }
+
+                        $aree->update();
+                    }
+                }
+
 
             }else{
                 $respuesta = false;

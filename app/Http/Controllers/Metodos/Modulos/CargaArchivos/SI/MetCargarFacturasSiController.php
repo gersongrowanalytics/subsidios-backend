@@ -23,6 +23,9 @@ use App\Models\fsifacturassi;
 use App\Models\fdsfacturassidetalles;
 use App\Models\ndsnotascreditossidetalles;
 use App\Models\sfssubsidiosfacturassi;
+use App\Models\espestadospendientes;
+use App\Models\areareasestados;
+use \DateTime;
 
 class MetCargarFacturasSiController extends Controller
 {
@@ -31,7 +34,7 @@ class MetCargarFacturasSiController extends Controller
 
         date_default_timezone_set("America/Lima");
         $fechaActual = date('Y-m-d');
-
+        $fecid = 0;
         $logs = array(
             "MENSAJE" => "",
             "NUMERO_LINEAS_EXCEL" => 0,
@@ -153,6 +156,9 @@ class MetCargarFacturasSiController extends Controller
                         if($fec){
 
                             if($i == 2){
+
+                                $fecid = $fec->fecid;
+
                                 ndsnotascreditossidetalles::where('fecid', $fec->fecid)->delete();
                                 nsinotascreditossi::where('fecid', $fec->fecid)->delete();
                                 fdsfacturassidetalles::where('fecid', $fec->fecid)->delete();
@@ -581,6 +587,52 @@ class MetCargarFacturasSiController extends Controller
                 }
 
             }
+
+            // 
+
+            // AGREGAR REGISTRO
+
+            $espe = espestadospendientes::where('fecid', $fecid)
+                                        ->where('espbasedato', "Sell In (Factura Efectiva)")
+                                        ->first();
+
+            if($espe){
+                $espe->espfechactualizacion = $fechaActual;
+
+                $date1 = new DateTime($fechaActual);
+                $fecha_carga_real = date("Y-m-d", strtotime($espe->espfechaprogramado));
+                $date2 = new DateTime($fecha_carga_real);
+
+                $diff = $date1->diff($date2);
+
+                if($diff->days > 0){
+                    $espe->espdiaretraso = $diff->days;
+                }else{
+                    $espe->espdiaretraso = "0";
+                }
+
+                $espe->update();
+
+
+                $aree = areareasestados::where('areid', $espe->areid)->first();
+                if($aree){
+                    
+                    $espcount = espestadospendientes::where('fecid', $fec->fecid)
+                                        ->where('espbasedato', "Sell In (Factura Efectiva)")
+                                        ->where('espfechactualizacion', '!=', null)
+                                        ->count();
+
+                    if($espcount == 1){
+                        $aree->areporcentaje = "50";
+                    }else{
+                        $aree->areporcentaje = "100";
+                    }
+
+                    $aree->update();
+                }
+            }
+
+            //
 
         }else{
             $respuesta = false;

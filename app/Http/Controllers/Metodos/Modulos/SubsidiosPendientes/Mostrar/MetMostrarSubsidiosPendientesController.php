@@ -104,7 +104,8 @@ class MetMostrarSubsidiosPendientesController extends Controller
                                         'sdependiente',
                                         'sderucsubcliente',
                                         'sdesubsidiosdetalles.sdecodigodestinatario',
-                                        'sdesector'
+                                        'sdesector',
+                                        'sdeterritorio'
                                     ]);
 
             foreach($sdes as $posicionSde => $sde){

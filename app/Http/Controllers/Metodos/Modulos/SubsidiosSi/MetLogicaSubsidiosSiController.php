@@ -56,6 +56,7 @@ class MetLogicaSubsidiosSiController extends Controller
 
         $sdes = sdesubsidiosdetalles::where('fecid', $fecid)
                                     ->where('sdeaprobado', true)
+                                    ->where('sdemontoareconocerreal', '!=',0)
                                     ->get();
 
         sfssubsidiosfacturassi::where('fecid', $fecid)->delete();
@@ -152,6 +153,17 @@ class MetLogicaSubsidiosSiController extends Controller
                 $sdee->update();
 
             }else{
+
+                if($dataObtenida["esPendiente"] == true){
+                    $logs["SUBSIDIOS_PENDIENTES"][] = "Subsidios pendientes al sde: ".$sde->sdeid;
+                }else{
+                    $logs["SUBSIDIOS"][] = "Subsidios sde: ".$sde->sdeid;
+                }
+
+                $sdee = sdesubsidiosdetalles::find($sde->sdeid);
+                $sdee->sdependiente = $dataObtenida["esPendiente"];
+                $sdee->update();
+
                 $logs["NO_SE_ENCONTRARON_FACTURAS"][] = "No se encontro facturas para asignar al sde: ".$sde->sdeid;
             }
 
@@ -203,7 +215,7 @@ class MetLogicaSubsidiosSiController extends Controller
         sdesubsidiosdetalles::where('fecid', $fecid)
                             ->where('sdeaprobado', true)
                             ->update([
-                                "sdependiente" => 1,
+                                "sdependiente" => 0,
                                 "sdeencontrofactura" => 0
                             ]);
 
@@ -420,7 +432,7 @@ class MetLogicaSubsidiosSiController extends Controller
 
             if($encontrofactura == false){
                 
-                $espendiente = true;
+                // $espendiente = true;
 
                 $fds = fdsfacturassidetalles::where('proid', $proid)
                                     // ->where('fecid', $mes)
@@ -481,6 +493,9 @@ class MetLogicaSubsidiosSiController extends Controller
                         $fds->fdssaldo = $fds->fdssaldo - $sdemontoareconocerreal;
                         $fds->fdsreconocer = $fds->fdsreconocer + $sdemontoareconocerreal;
                         $fds->update();
+
+                        $espendiente = false;
+
                     }else{
                         $idFacturaEncontrada[] = $fds->fdsid;
                         if($fds->fdssaldo > 0){
