@@ -89,8 +89,12 @@ class MetCargarSubsidiosPlantillaController extends Controller
                 sdesubsidiosdetalles::where('fecid', $fec->fecid)
                                     // ->where('sdesac', 0)
                                     ->update(["sdeeditado" => 0]);
+                
+                $pksde = 49880;
+
 
                 for ($i=6; $i <= $numRows ; $i++) {
+                    $pksde = $pksde + 1;
 
                     // $ex_anio                = $objPHPExcel->getActiveSheet()->getCell('A'.$i)->getCalculatedValue();
                     // $ex_mes                 = $objPHPExcel->getActiveSheet()->getCell('B'.$i)->getCalculatedValue();
@@ -195,7 +199,11 @@ class MetCargarSubsidiosPlantillaController extends Controller
                                 $sdee->update();
 
                             }else{
+
+
+
                                 $sden = new sdesubsidiosdetalles;
+                                $sden->sdeid = $pksde;
                                 $sden->fecid = $fec->fecid;
                                 $sden->proid = $pro->proid;
                                 $sden->cliid = $cli->cliid;
