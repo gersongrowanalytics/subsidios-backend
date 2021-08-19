@@ -117,7 +117,7 @@ class MetCargarEstadoSunatSiController extends Controller
             $fec = fecfechas::where('fecmesabierto', true)->first(['fecid']);
             $fecid = $fec->fecid;
 
-            $espe = espestadospendientes::where('fecid', $fecidUsada)
+            $espe = espestadospendientes::where('fecid', $fecid)
                                         ->where('espbasedato', "Operaciones Sunat")
                                         ->first();
 
