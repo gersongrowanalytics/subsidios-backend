@@ -283,16 +283,6 @@ class MetCargarSubsidiosPlantillaController extends Controller
 
                                 $sden->save();
                             }
-
-                            sfssubsidiosfacturassi::join('sdesubsidiosdetalles as sde', 'sde.sdeid', 'sfssubsidiosfacturassi.sdeid')
-                                                    ->where('sde.fecid', $fec->fecid)
-                                                    ->where('sdeeditado', 0)
-                                                    ->delete();
-
-                            sdesubsidiosdetalles::where('fecid', $fec->fecid)
-                                    ->where('sdeeditado', 0)
-                                    ->delete();
-
     
                         }else{
                             $respuesta = false;
@@ -308,6 +298,18 @@ class MetCargarSubsidiosPlantillaController extends Controller
                     }
     
                 }
+
+
+                // LIMPIAR INFORMACIÓN 
+
+                sfssubsidiosfacturassi::join('sdesubsidiosdetalles as sde', 'sde.sdeid', 'sfssubsidiosfacturassi.sdeid')
+                                        ->where('sde.fecid', $fec->fecid)
+                                        ->where('sdeeditado', 0)
+                                        ->delete();
+
+                sdesubsidiosdetalles::where('fecid', $fec->fecid)
+                                    ->where('sdeeditado', 0)
+                                    ->delete();
 
 
                 // AGREGAR REGISTRO
