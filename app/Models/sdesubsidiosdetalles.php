@@ -8,6 +8,7 @@ class sdesubsidiosdetalles extends Model
 {
     protected $table = 'sdesubsidiosdetalles';
     protected $primaryKey = 'sdeid';
+    public $incrementing = true;
 
     protected $fillable = [
         "sdeid",
