@@ -386,19 +386,19 @@ class MetCargarSubsidiosPlantillaController extends Controller
             "logs" => $logs,
         ]);
 
-        $AuditoriaController = new AuditoriaController;
-        $registrarAuditoria  = $AuditoriaController->registrarAuditoria(
-            $usutoken, // token
-            $usu->usuid, // usuid
-            null, // audip
-            $fichero_subido, // audjsonentrada
-            $requestsalida,// audjsonsalida
-            'CARGAR DATA DE PLANTILLAS SUBSIDIOS SO', //auddescripcion
-            'IMPORTAR', // audaccion
-            '/modulo/cargaArchivos/so/subsidios-so-plantilla', //audruta
-            $pkis, // audpk
-            $logs // log
-        );
+        // $AuditoriaController = new AuditoriaController;
+        // $registrarAuditoria  = $AuditoriaController->registrarAuditoria(
+        //     $usutoken, // token
+        //     $usu->usuid, // usuid
+        //     null, // audip
+        //     $fichero_subido, // audjsonentrada
+        //     $requestsalida,// audjsonsalida
+        //     'CARGAR DATA DE PLANTILLAS SUBSIDIOS SO', //auddescripcion
+        //     'IMPORTAR', // audaccion
+        //     '/modulo/cargaArchivos/so/subsidios-so-plantilla', //audruta
+        //     $pkis, // audpk
+        //     $logs // log
+        // );
 
         return $requestsalida;
     }
