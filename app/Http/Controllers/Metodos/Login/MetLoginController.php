@@ -79,7 +79,8 @@ class MetLoginController extends Controller
             'respuesta' => $respuesta,
             'mensaje'   => $mensaje,
             'datos'     => $datos,
-            'fecha'     => $fechaDisponible
+            'fecha'     => $fechaDisponible,
+            'subsidiospendientes' => true
         ]);
     }
 }
