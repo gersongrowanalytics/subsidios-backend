@@ -10,6 +10,7 @@ class areareasestados extends Model
     protected $primaryKey = 'areid';
 
     protected $fillable = [
+        'areid', 
         'tprid', 
         'areicono',
         'arenombre',

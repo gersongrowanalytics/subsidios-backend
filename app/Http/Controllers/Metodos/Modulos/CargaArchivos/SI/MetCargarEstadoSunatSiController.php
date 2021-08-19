@@ -139,16 +139,34 @@ class MetCargarEstadoSunatSiController extends Controller
                 $espe->update();
 
 
-                $aree = areareasestados::where('areid', $espe->areid)-first();
+                $aree = areareasestados::where('areid', $espe->areid)->first();
+
                 if($aree){
-                    if($aree->areporcentaje == "50"){
-                        $aree->areporcentaje = "100";
-                    }else if($aree->areporcentaje == "100"){
-                        $aree->areporcentaje = "100";
-                    }else{
+
+                    $espcount = espestadospendientes::where('fecid', $fecid)
+                                        ->where('espbasedato', "Sell In (Factura Efectiva)")
+                                        ->where('espfechactualizacion', '!=', null)
+                                        ->count();
+
+                    if($espcount == 1){
                         $aree->areporcentaje = "50";
+                    }else{
+                        $aree->areporcentaje = "100";
                     }
+
+                    $aree->update();
                 }
+
+                // $aree = areareasestados::where('areid', $espe->areid)-first();
+                // if($aree){
+                //     if($aree->areporcentaje == "50"){
+                //         $aree->areporcentaje = "100";
+                //     }else if($aree->areporcentaje == "100"){
+                //         $aree->areporcentaje = "100";
+                //     }else{
+                //         $aree->areporcentaje = "50";
+                //     }
+                // }
             }
 
             //
