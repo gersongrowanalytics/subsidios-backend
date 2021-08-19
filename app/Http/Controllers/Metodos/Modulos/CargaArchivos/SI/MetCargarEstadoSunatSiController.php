@@ -118,7 +118,7 @@ class MetCargarEstadoSunatSiController extends Controller
             $fecid = $fec->fecid;
 
             $espe = espestadospendientes::where('fecid', $fecidUsada)
-                                        ->where('espbasedato', "Sell In (Factura Efectiva)")
+                                        ->where('espbasedato', "Operaciones Sunat")
                                         ->first();
 
             if($espe){
@@ -144,7 +144,7 @@ class MetCargarEstadoSunatSiController extends Controller
                 if($aree){
 
                     $espcount = espestadospendientes::where('fecid', $fecid)
-                                        ->where('espbasedato', "Sell In (Factura Efectiva)")
+                                        ->where('espbasedato', "Operaciones Sunat")
                                         ->where('espfechactualizacion', '!=', null)
                                         ->count();
 
