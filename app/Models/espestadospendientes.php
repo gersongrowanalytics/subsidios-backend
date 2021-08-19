@@ -10,6 +10,7 @@ class espestadospendientes extends Model
     protected $primaryKey = 'espid';
 
     protected $fillable = [
+        'espid',
         'fecid',
         'perid',
         'areid',

@@ -10,6 +10,7 @@ class audauditorias extends Model
     protected $primaryKey = 'audid';
 
     protected $fillable = [
+        'audid', 
         'audip', 
         'audjsonentrada',
         'audjsonsalida',

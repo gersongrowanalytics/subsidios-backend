@@ -177,7 +177,12 @@ class MetCargarSubsidiosController extends Controller
                                     $espe->update();
 
                                 }else{
+
+                                    $espultimo = espestadospendientes::orderby('espid', 'desc')->first();
+                                    $pkid = $espultimo->espid + 1;
+
                                     $espn = new espestadospendientes;
+                                    $espn->espid = $pkid;
                                     $espn->fecid = $fec->fecid;
                                     $espn->perid = 2; // POR DEFECTO ES 2
                                     $espn->areid = $esp->areid;

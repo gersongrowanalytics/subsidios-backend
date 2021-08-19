@@ -90,7 +90,8 @@ class MetCargarSubsidiosPlantillaController extends Controller
                                     // ->where('sdesac', 0)
                                     ->update(["sdeeditado" => 0]);
                 
-                $pksde = 49880;
+                $sdeultimo = sdesubsidiosdetalles::orderby('sdeid', 'desc')->first();
+                $pksde = $sdeultimo->sdeid + 1;
 
 
                 for ($i=6; $i <= $numRows ; $i++) {
@@ -245,45 +246,46 @@ class MetCargarSubsidiosPlantillaController extends Controller
 
 
                                 // PARAMETROS UTILIZADOS PARA CARGAR DATA HISTORICA
-                                if($ex_cantidadbultos){
 
-                                    if(is_numeric($ex_cantidadbultos)){
-                                        $sden->sdecantidadbultos  = $ex_cantidadbultos;
-                                        $sden->sdemontoareconocer = $ex_cantidadbultos * $sden->sdedsctodos;
-                                    }else{
-                                        $sden->sdecantidadbultos  = 0;
-                                        $sden->sdemontoareconocer = 0;    
-                                    }
+                                // if($ex_cantidadbultos){
 
-                                }else{
-                                    $sden->sdecantidadbultos  = 0;
-                                    $sden->sdemontoareconocer = 0;
-                                }
+                                //     if(is_numeric($ex_cantidadbultos)){
+                                //         $sden->sdecantidadbultos  = $ex_cantidadbultos;
+                                //         $sden->sdemontoareconocer = $ex_cantidadbultos * $sden->sdedsctodos;
+                                //     }else{
+                                //         $sden->sdecantidadbultos  = 0;
+                                //         $sden->sdemontoareconocer = 0;    
+                                //     }
 
-                                $sden->sdeaprobado = true;
+                                // }else{
+                                //     $sden->sdecantidadbultos  = 0;
+                                //     $sden->sdemontoareconocer = 0;
+                                // }
 
-                                if($ex_cantidadbultosreal){
+                                // $sden->sdeaprobado = true;
 
-                                    if(is_numeric($ex_cantidadbultosreal)){
-                                        $sden->sdecantidadbultosreal  = $ex_cantidadbultosreal;
-                                        $sden->sdemontoareconocerreal = $ex_cantidadbultosreal * $sden->sdedsctodos;
-                                    }else{
-                                        $sden->sdecantidadbultosreal  = 0;
-                                        $sden->sdemontoareconocerreal = 0;
-                                    }
+                                // if($ex_cantidadbultosreal){
 
-                                }else{
-                                    $sden->sdecantidadbultosreal  = 0;
-                                    $sden->sdemontoareconocerreal = 0;
-                                }
+                                //     if(is_numeric($ex_cantidadbultosreal)){
+                                //         $sden->sdecantidadbultosreal  = $ex_cantidadbultosreal;
+                                //         $sden->sdemontoareconocerreal = $ex_cantidadbultosreal * $sden->sdedsctodos;
+                                //     }else{
+                                //         $sden->sdecantidadbultosreal  = 0;
+                                //         $sden->sdemontoareconocerreal = 0;
+                                //     }
 
-                                if($ex_cantidadbultos == $ex_cantidadbultosreal){
-                                    $sden->sdestatus = "OK";
-                                }else{
-                                    $sden->sdestatus = "ERROR CANTIDADES";
-                                }
+                                // }else{
+                                //     $sden->sdecantidadbultosreal  = 0;
+                                //     $sden->sdemontoareconocerreal = 0;
+                                // }
 
-                                $sden->sdediferenciaahorro = $ex_diferenciaahorrocliente;
+                                // if($ex_cantidadbultos == $ex_cantidadbultosreal){
+                                //     $sden->sdestatus = "OK";
+                                // }else{
+                                //     $sden->sdestatus = "ERROR CANTIDADES";
+                                // }
+
+                                // $sden->sdediferenciaahorro = $ex_diferenciaahorrocliente;
 
                                 //FINAL PARAMETROS UTILIZADOS PARA CARGAR DATA HISTORICA
 
@@ -386,19 +388,19 @@ class MetCargarSubsidiosPlantillaController extends Controller
             "logs" => $logs,
         ]);
 
-        // $AuditoriaController = new AuditoriaController;
-        // $registrarAuditoria  = $AuditoriaController->registrarAuditoria(
-        //     $usutoken, // token
-        //     $usu->usuid, // usuid
-        //     null, // audip
-        //     $fichero_subido, // audjsonentrada
-        //     $requestsalida,// audjsonsalida
-        //     'CARGAR DATA DE PLANTILLAS SUBSIDIOS SO', //auddescripcion
-        //     'IMPORTAR', // audaccion
-        //     '/modulo/cargaArchivos/so/subsidios-so-plantilla', //audruta
-        //     $pkis, // audpk
-        //     $logs // log
-        // );
+        $AuditoriaController = new AuditoriaController;
+        $registrarAuditoria  = $AuditoriaController->registrarAuditoria(
+            $usutoken, // token
+            $usu->usuid, // usuid
+            null, // audip
+            $fichero_subido, // audjsonentrada
+            $requestsalida,// audjsonsalida
+            'CARGAR DATA DE PLANTILLAS SUBSIDIOS SO', //auddescripcion
+            'IMPORTAR', // audaccion
+            '/modulo/cargaArchivos/so/subsidios-so-plantilla', //audruta
+            $pkis, // audpk
+            $logs // log
+        );
 
         return $requestsalida;
     }

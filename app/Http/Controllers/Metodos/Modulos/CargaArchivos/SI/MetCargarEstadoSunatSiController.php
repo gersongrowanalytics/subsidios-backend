@@ -57,62 +57,65 @@ class MetCargarEstadoSunatSiController extends Controller
             
             $encontrofecha = false;
 
-            for ($i=2; $i <= $numRows; $i++) {
+            // for ($i=2; $i <= $numRows; $i++) {
 
-                $ex_anio  = $objPHPExcel->getActiveSheet()->getCell('A'.$i)->getCalculatedValue();
-                $ex_mes   = $objPHPExcel->getActiveSheet()->getCell('B'.$i)->getCalculatedValue();
-                $ex_documentocomprobante  = $objPHPExcel->getActiveSheet()->getCell('C'.$i)->getCalculatedValue();
-                $ex_estadocomprobante     = $objPHPExcel->getActiveSheet()->getCell('F'.$i)->getCalculatedValue();
+            //     $ex_anio  = $objPHPExcel->getActiveSheet()->getCell('A'.$i)->getCalculatedValue();
+            //     $ex_mes   = $objPHPExcel->getActiveSheet()->getCell('B'.$i)->getCalculatedValue();
+            //     $ex_documentocomprobante  = $objPHPExcel->getActiveSheet()->getCell('C'.$i)->getCalculatedValue();
+            //     $ex_estadocomprobante     = $objPHPExcel->getActiveSheet()->getCell('F'.$i)->getCalculatedValue();
 
-                $fecid = 0;
+            //     $fecid = 0;
 
-                if($i == 2){
-                    $fec = fecfechas::where('fecmesabreviacion', $ex_mes)
-                                ->where('fecanionumero', $ex_anio)
-                                ->where('fecdianumero', "1")
-                                ->first();
+            //     if($i == 2){
+            //         $fec = fecfechas::where('fecmesabreviacion', $ex_mes)
+            //                     ->where('fecanionumero', $ex_anio)
+            //                     ->where('fecdianumero', "1")
+            //                     ->first();
 
-                    if($fec){
-                        $fecid = $fec->fecid;
-                        $fecidUsada = $fec->fecid;
-                        $encontrofecha = true;
+            //         if($fec){
+            //             $fecid = $fec->fecid;
+            //             $fecidUsada = $fec->fecid;
+            //             $encontrofecha = true;
 
-                        $fsi = fsifacturassi::where('fecid', $fecid)->update(['fsisunataprobado' => 1]);
+            //             $fsi = fsifacturassi::where('fecid', $fecid)->update(['fsisunataprobado' => 1]);
 
-                    }else{
-                        $encontrofecha = false;
-                        $fecid = 0;
-                    }
-                }
+            //         }else{
+            //             $encontrofecha = false;
+            //             $fecid = 0;
+            //         }
+            //     }
 
-                if($encontrofecha == true){
+            //     if($encontrofecha == true){
 
-                    $estadosunataprobado = 1;
+            //         $estadosunataprobado = 1;
 
-                    if($ex_estadocomprobante == "NO ACEPTADO"){
-                        $estadosunataprobado = 0;
-                    }
+            //         if($ex_estadocomprobante == "NO ACEPTADO"){
+            //             $estadosunataprobado = 0;
+            //         }
 
-                    $fsi = fsifacturassi::where('fsifactura', $ex_documentocomprobante)->first();
+            //         $fsi = fsifacturassi::where('fsifactura', $ex_documentocomprobante)->first();
 
-                    if($fsi){
-                        $fsi->fsisunataprobado = $estadosunataprobado;
-                        $fsi->update();
-                    }else{
-                        $logs["NO_SE_ENCONTRO_DOCUMENTO"][] = "NO SE ENCONTRO EL DOCUMENTO: ".$ex_documentocomprobante." EN LA LINEA: ".$i;
-                    }
+            //         if($fsi){
+            //             $fsi->fsisunataprobado = $estadosunataprobado;
+            //             $fsi->update();
+            //         }else{
+            //             $logs["NO_SE_ENCONTRO_DOCUMENTO"][] = "NO SE ENCONTRO EL DOCUMENTO: ".$ex_documentocomprobante." EN LA LINEA: ".$i;
+            //         }
 
-                }else{
-                    $respuesta = false;
-                    $mensaje  = "No se encontro la fecha seleccionada";
-                    $logs["NO_SE_ENCONTRO_FECHA"][] = "Fecha Mes: ".$ex_mes.", EN EL AÑO: ".$ex_anio." EN LA LINEA: ".$i;
-                    break;
-                }
-            }
+            //     }else{
+            //         $respuesta = false;
+            //         $mensaje  = "No se encontro la fecha seleccionada";
+            //         $logs["NO_SE_ENCONTRO_FECHA"][] = "Fecha Mes: ".$ex_mes.", EN EL AÑO: ".$ex_anio." EN LA LINEA: ".$i;
+            //         break;
+            //     }
+            // }
 
             // 
 
             // AGREGAR REGISTRO
+            
+            $fec = fecfechas::where('fecmesabierto', true)->first(['fecid']);
+            $fecid = $fec->fecid;
 
             $espe = espestadospendientes::where('fecid', $fecidUsada)
                                         ->where('espbasedato', "Sell In (Factura Efectiva)")
