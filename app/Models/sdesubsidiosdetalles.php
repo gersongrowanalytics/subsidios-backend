@@ -10,7 +10,7 @@ class sdesubsidiosdetalles extends Model
     protected $primaryKey = 'sdeid';
 
     protected $fillable = [
-        // "subid",
+        "sdeid",
         "fecid",
         "proid",
         "cliid",
@@ -51,4 +51,6 @@ class sdesubsidiosdetalles extends Model
         "sdependiente",
         "sdeeditado"
     ];
+
+
 }
