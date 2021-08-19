@@ -37,8 +37,8 @@ class AuditoriaController extends Controller
             }
         }
 
-        $audultimo = audauditorias::orderby('auid', 'desc')->first();
-        $pkid = $audultimo->auid + 1;
+        $audultimo = audauditorias::orderby('audid', 'desc')->first();
+        $pkid = $audultimo->audid + 1;
 
         $audauditorias = new audauditorias;
         $audauditorias->audid           = $pkid;
