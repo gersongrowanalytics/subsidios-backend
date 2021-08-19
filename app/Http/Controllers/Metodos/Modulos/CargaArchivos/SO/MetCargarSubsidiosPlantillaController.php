@@ -125,6 +125,19 @@ class MetCargarSubsidiosPlantillaController extends Controller
                     $ex_inicio = date("Y-m", strtotime($ex_inicio->date));
 
                     $ex_bultosacordados     = $objPHPExcel->getActiveSheet()->getCell('X'.$i)->getCalculatedValue();
+
+                    //  ---------------
+                    
+                    $ex_cantidadbultos      = $objPHPExcel->getActiveSheet()->getCell('Y'.$i)->getCalculatedValue();
+                    $ex_montoareconocer     = $objPHPExcel->getActiveSheet()->getCell('Z'.$i)->getCalculatedValue();
+
+                    // CAMPOS OTORGADOS POR SAC
+                    $ex_cantidadbultosreal  = $objPHPExcel->getActiveSheet()->getCell('AA'.$i)->getCalculatedValue();
+                    $ex_montoareconocerreal = $objPHPExcel->getActiveSheet()->getCell('AB'.$i)->getCalculatedValue();
+
+                    $ex_status              = $objPHPExcel->getActiveSheet()->getCell('AC'.$i)->getCalculatedValue();
+                    $ex_diferenciaahorrocliente = $objPHPExcel->getActiveSheet()->getCell('AD'.$i)->getCalculatedValue();
+    
                     
     
                     $pro = proproductos::where('prosku', $ex_codigouni)->first(['proid']);
@@ -220,6 +233,53 @@ class MetCargarSubsidiosPlantillaController extends Controller
                                 }else{
                                     $sden->sdesac = false;
                                 }
+
+
+
+                                // PARAMETROS UTILIZADOS PARA CARGAR DATA HISTORICA
+                                if($ex_cantidadbultos){
+
+                                    if(is_numeric($ex_cantidadbultos)){
+                                        $sden->sdecantidadbultos  = $ex_cantidadbultos;
+                                        $sden->sdemontoareconocer = $ex_cantidadbultos * $sden->sdedsctodos;
+                                    }else{
+                                        $sden->sdecantidadbultos  = 0;
+                                        $sden->sdemontoareconocer = 0;    
+                                    }
+
+                                }else{
+                                    $sden->sdecantidadbultos  = 0;
+                                    $sden->sdemontoareconocer = 0;
+                                }
+
+                                $sden->sdeaprobado = true;
+
+                                if($ex_cantidadbultosreal){
+
+                                    if(is_numeric($ex_cantidadbultosreal)){
+                                        $sden->sdecantidadbultosreal  = $ex_cantidadbultosreal;
+                                        $sden->sdemontoareconocerreal = $ex_cantidadbultosreal * $sden->sdedsctodos;
+                                    }else{
+                                        $sden->sdecantidadbultosreal  = 0;
+                                        $sden->sdemontoareconocerreal = 0;
+                                    }
+
+                                }else{
+                                    $sden->sdecantidadbultosreal  = 0;
+                                    $sden->sdemontoareconocerreal = 0;
+                                }
+
+                                if($ex_cantidadbultos == $ex_cantidadbultosreal){
+                                    $sden->sdestatus = "OK";
+                                }else{
+                                    $sden->sdestatus = "ERROR CANTIDADES";
+                                }
+
+                                $sden->sdediferenciaahorro = $ex_diferenciaahorrocliente;
+
+                                //FINAL PARAMETROS UTILIZADOS PARA CARGAR DATA HISTORICA
+
+
 
                                 $sden->save();
                             }
