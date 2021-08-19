@@ -10,6 +10,7 @@ class fecfechas extends Model
     protected $primaryKey = 'fecid';
 
     protected $fillable = [
+        "fecid",
         "fecfecha",
         "fecmesabreviacion",
         "fecdianumero",
