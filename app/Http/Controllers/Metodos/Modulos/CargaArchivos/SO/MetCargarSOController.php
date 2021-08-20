@@ -99,7 +99,11 @@ class MetCargarSOController extends Controller
 
                         if($cli){
 
+                            $fsoultimo = fsofacturasso::orderby('fsoid', 'desc')->first();
+                            $pkid = $fsoultimo->fsoid + 1;
+
                             $fson = new fsofacturasso;
+                            $fson->fsoid            = $pkid;
                             $fson->fecid            = $fec->fecid;
                             $fson->cliid            = $cli->cliid;
                             $fson->proid            = $pro->proid;

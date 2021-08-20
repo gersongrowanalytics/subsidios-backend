@@ -10,6 +10,7 @@ class fsofacturasso extends Model
     protected $primaryKey = 'fsoid';
 
     protected $fillable = [
+        "fsoid",
         "fecid",
         "cliid",
         "proid",
