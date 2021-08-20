@@ -81,8 +81,9 @@ class MetCargarSOController extends Controller
                 $ex_codigofecha = json_decode($ex_codigofecha);
                 $ex_codigofecha = date("Y-m", strtotime($ex_codigofecha->date));
 
-                $fec = fecfechas::where('fecfecha', 'LIKE', "%".$ex_codigofecha."%")
-                            ->first(['fecid']);
+                // $fec = fecfechas::where('fecfecha', 'LIKE', "%".$ex_codigofecha."%")
+                //             ->first(['fecid']);
+                $fec = fecfechas::where('fecmesabierto', true)->first(['fecid']);
                 
                 if($fec){
 
