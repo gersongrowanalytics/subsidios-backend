@@ -30,7 +30,7 @@ $router->get('/seed', 'Prueba\PruebaController@EjecutarSeeds');
 
     $router->group(['prefix' => 'modulo'], function () use ($router) {
 
-        $router->post('/salvacion/asignar-zonas', 'SalvacionController@HabilitarZonas');
+        $router->get('/salvacion/asignar-zonas', 'SalvacionController@HabilitarZonas');
 
 
         $router->group(['prefix' => 'cargaArchivos'], function () use ($router) {
