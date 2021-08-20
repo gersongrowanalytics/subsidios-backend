@@ -64,73 +64,73 @@ class MetCargarSOController extends Controller
 
             $logs['NUMERO_LINEAS_EXCEL'] = $numRows;
 
-            // fsofacturasso::where('fsoid', '>', '0')->delete();
+            fsofacturasso::where('fsoid', '>', '0')->delete();
 
-            // for ($i=2; $i <= $numRows ; $i++) {
-            //     $ex_codigo              = $objPHPExcel->getActiveSheet()->getCell('A'.$i)->getCalculatedValue();
-            //     // $ex_codigodistribuidor  = $objPHPExcel->getActiveSheet()->getCell('B'.$i)->getCalculatedValue();
-            //     $ex_codigofecha     = $objPHPExcel->getActiveSheet()->getCell('B'.$i)->getCalculatedValue();
-            //     $ex_codigocliente   = $objPHPExcel->getActiveSheet()->getCell('C'.$i)->getCalculatedValue();
-            //     $ex_codigoproducto  = $objPHPExcel->getActiveSheet()->getCell('D'.$i)->getCalculatedValue();
-            //     $ex_ruc             = $objPHPExcel->getActiveSheet()->getCell('E'.$i)->getCalculatedValue();
-            //     $ex_cantidadbultos  = $objPHPExcel->getActiveSheet()->getCell('F'.$i)->getCalculatedValue();
-            //     $ex_ventasinigv     = $objPHPExcel->getActiveSheet()->getCell('G'.$i)->getCalculatedValue();
+            for ($i=2; $i <= $numRows ; $i++) {
+                $ex_codigo              = $objPHPExcel->getActiveSheet()->getCell('A'.$i)->getCalculatedValue();
+                // $ex_codigodistribuidor  = $objPHPExcel->getActiveSheet()->getCell('B'.$i)->getCalculatedValue();
+                $ex_codigofecha     = $objPHPExcel->getActiveSheet()->getCell('B'.$i)->getCalculatedValue();
+                $ex_codigocliente   = $objPHPExcel->getActiveSheet()->getCell('C'.$i)->getCalculatedValue();
+                $ex_codigoproducto  = $objPHPExcel->getActiveSheet()->getCell('D'.$i)->getCalculatedValue();
+                $ex_ruc             = $objPHPExcel->getActiveSheet()->getCell('E'.$i)->getCalculatedValue();
+                $ex_cantidadbultos  = $objPHPExcel->getActiveSheet()->getCell('F'.$i)->getCalculatedValue();
+                $ex_ventasinigv     = $objPHPExcel->getActiveSheet()->getCell('G'.$i)->getCalculatedValue();
 
-            //     $ex_codigofecha = Date::excelToDateTimeObject($ex_codigofecha);
-            //     $ex_codigofecha = json_encode($ex_codigofecha);
-            //     $ex_codigofecha = json_decode($ex_codigofecha);
-            //     $ex_codigofecha = date("Y-m", strtotime($ex_codigofecha->date));
+                $ex_codigofecha = Date::excelToDateTimeObject($ex_codigofecha);
+                $ex_codigofecha = json_encode($ex_codigofecha);
+                $ex_codigofecha = json_decode($ex_codigofecha);
+                $ex_codigofecha = date("Y-m", strtotime($ex_codigofecha->date));
 
-            //     $fec = fecfechas::where('fecfecha', 'LIKE', "%".$ex_codigofecha."%")
-            //                 ->first(['fecid']);
+                $fec = fecfechas::where('fecfecha', 'LIKE', "%".$ex_codigofecha."%")
+                            ->first(['fecid']);
                 
-            //     if($fec){
+                if($fec){
 
-            //         if($i == 2){
-            //             fsofacturasso::where('fsoid', $fec->fecid)->delete();
-            //             $fecid = $fec->fecid;
-            //         }
+                    if($i == 2){
+                        fsofacturasso::where('fsoid', $fec->fecid)->delete();
+                        $fecid = $fec->fecid;
+                    }
 
-            //         $pro = proproductos::where('prosku', $ex_codigoproducto)->first(['proid']);
+                    $pro = proproductos::where('prosku', $ex_codigoproducto)->first(['proid']);
 
-            //         if($pro){
+                    if($pro){
 
-            //             $cli = cliclientes::where('clicodigoshipto', $ex_codigo)->first(['cliid']);
+                        $cli = cliclientes::where('clicodigoshipto', $ex_codigo)->first(['cliid']);
 
-            //             if($cli){
+                        if($cli){
 
-            //                 $fson = new fsofacturasso;
-            //                 $fson->fecid            = $fec->fecid;
-            //                 $fson->cliid            = $cli->cliid;
-            //                 $fson->proid            = $pro->proid;
-            //                 $fson->fsoruc           = $ex_ruc;
-            //                 $fson->fsocantidadbulto = $ex_cantidadbultos;
-            //                 if($ex_ventasinigv){
-            //                     $fson->fsoventasinigv   = $ex_ventasinigv;
-            //                 }else{
-            //                     $fson->fsoventasinigv   = 0;
-            //                 }
-            //                 $fson->save();
+                            $fson = new fsofacturasso;
+                            $fson->fecid            = $fec->fecid;
+                            $fson->cliid            = $cli->cliid;
+                            $fson->proid            = $pro->proid;
+                            $fson->fsoruc           = $ex_ruc;
+                            $fson->fsocantidadbulto = $ex_cantidadbultos;
+                            if($ex_ventasinigv){
+                                $fson->fsoventasinigv   = $ex_ventasinigv;
+                            }else{
+                                $fson->fsoventasinigv   = 0;
+                            }
+                            $fson->save();
 
-            //             }else{
-            //                 $respuesta = false;
-            //                 $mensaje = "Lo sentimos, hubieron algunos codigos de solicitante que no se encontraron registrados, recomendamos actualizar la maestra de clientes e intentar nuevamente gracias.";
-            //                 $logs["CLIENTES_NO_ENCONTRADOS"] = $this->EliminarDuplicidad( $logs["CLIENTES_NO_ENCONTRADOS"], $ex_codigo, $i);
-            //             }
+                        }else{
+                            $respuesta = false;
+                            $mensaje = "Lo sentimos, hubieron algunos codigos de solicitante que no se encontraron registrados, recomendamos actualizar la maestra de clientes e intentar nuevamente gracias.";
+                            $logs["CLIENTES_NO_ENCONTRADOS"] = $this->EliminarDuplicidad( $logs["CLIENTES_NO_ENCONTRADOS"], $ex_codigo, $i);
+                        }
 
-            //         }else{
-            //             $respuesta = false;
-            //             $mensaje = "Lo sentimos, hubieron algunos skus que no se encontraron registrados, recomendamos actualizar la maestra de productos e intentar nuevamente gracias.";
-            //             $logs["PRODUCTOS_NO_ENCONTRADOS"] = $this->EliminarDuplicidad( $logs["PRODUCTOS_NO_ENCONTRADOS"], $ex_codigoproducto, $i);
-            //         } 
+                    }else{
+                        $respuesta = false;
+                        $mensaje = "Lo sentimos, hubieron algunos skus que no se encontraron registrados, recomendamos actualizar la maestra de productos e intentar nuevamente gracias.";
+                        $logs["PRODUCTOS_NO_ENCONTRADOS"] = $this->EliminarDuplicidad( $logs["PRODUCTOS_NO_ENCONTRADOS"], $ex_codigoproducto, $i);
+                    } 
 
-            //     }else{
-            //         $respuesta = false;
-            //         $mensaje = "Lo sentimos, el mes o año asignado no se encuentra en los registros, recomendamos actualizar la maestra de fechas e intentar nuevamente gracias";
-            //         $logs["FECHA_NO_REGISTRADA"] = "FECHA: ".$ex_codigofecha;
-            //         break;
-            //     }
-            // }
+                }else{
+                    $respuesta = false;
+                    $mensaje = "Lo sentimos, el mes o año asignado no se encuentra en los registros, recomendamos actualizar la maestra de fechas e intentar nuevamente gracias";
+                    $logs["FECHA_NO_REGISTRADA"] = "FECHA: ".$ex_codigofecha;
+                    break;
+                }
+            }
 
 
             // 
