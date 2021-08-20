@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\sdesubsidiosdetalles;
 use App\Models\sfssubsidiosfacturassi;
+use App\Models\zonzonas;
 
 class MetMostrarSubsidiosSiController extends Controller
 {
@@ -23,7 +24,7 @@ class MetMostrarSubsidiosSiController extends Controller
         $descargarSde = $this->ArmarExcelDescargaSubsidiosSi($fechaInicio,$fechaFinal );
 
 
-        $zonas = sdesubsidiosdetalles::join('cliclientes as cli', 'cli.cliid', 'sdesubsidiosdetalles.cliid')
+        $zons = sdesubsidiosdetalles::join('cliclientes as cli', 'cli.cliid', 'sdesubsidiosdetalles.cliid')
                                     ->join('fecfechas as fec', 'fec.fecid', 'sdesubsidiosdetalles.fecid')
                                     ->where(function ($query) use($fechaInicio, $fechaFinal) {
                                         // if($fechaInicio != null){
@@ -36,6 +37,18 @@ class MetMostrarSubsidiosSiController extends Controller
                                     ->get([
                                         'cli.clizona'
                                     ]);
+
+        $zonas = zonzonas::where(function ($query) use($zons) {
+                            if(sizeof($zons) > 0){
+                                foreach($zons as $zona){
+                                    $query->orwhere('zonnombre', $zona->clizona);
+                                }
+                            }
+                        })
+                        ->orderBy('zonorden', 'desc')
+                        ->get([
+                            'zonnombre as clizona'
+                        ]);
 
         foreach($zonas as $posicionZon => $zon){
 
