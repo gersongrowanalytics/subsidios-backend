@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\tprtipospromociones;
 use App\Models\areareasestados;
 use App\Models\espestadospendientes;
+use \DateTime;
 
 class MetMostrarEstadosPendientesController extends Controller
 {
@@ -49,6 +50,15 @@ class MetMostrarEstadosPendientesController extends Controller
                                             'areporcentaje',
                                         ]);
 
+            $aresn = array(
+                array(),
+                array(),
+                array(),
+            );
+
+            $fechaActual = date('Y-m-d');
+            $date1 = new DateTime($fechaActual);
+
             foreach($ares as $posicionAre => $are){
 
                 $esps = espestadospendientes::where('areid', $are->areid)
@@ -61,11 +71,47 @@ class MetMostrarEstadosPendientesController extends Controller
                                                 'espdiaretraso'
                                             ]);
 
+                foreach($esps as $posicionEsp => $esp){
+                    
+                    $diaRetraso = $esp->espdiaretraso;
+
+                    if($esp->espfechactualizacion == null){
+
+                        $fecha_carga_real = date("Y-m-d", strtotime($esp->espfechaprogramado));
+                        
+                        $date2 = new DateTime($fecha_carga_real);
+
+                        if($date1 > $date2){
+                            $diff = $date1->diff($date2);
+
+                            if($diff->days > 0){
+                                $diaRetraso = $diff->days;
+                            }else{
+                                $diaRetraso = "0";
+                            }
+
+                        }else{
+                            $diaRetraso = "0";
+                        }
+                    }
+
+                    $esps[$posicionEsp]['espdiaretraso'] = $diaRetraso;
+
+                }
+
                 $ares[$posicionAre]['esps'] = $esps;
 
+                if($are->arenombre == "SAC Sell Out"){
+                    $aresn[2] = $ares[$posicionAre];
+                }else if($are->arenombre == "SAC Sell In"){
+                    $aresn[1] = $ares[$posicionAre];
+                }else{
+                    $aresn[0] = $ares[$posicionAre];
+                }
             }
 
-            $tprs[$posicionTpr]['ares'] = $ares;
+            // $tprs[$posicionTpr]['ares'] = $ares;
+            $tprs[$posicionTpr]['ares'] = $aresn;
 
             if($posicionTpr == 0){
                 $tprs[$posicionTpr]['seleccionado'] = true; 
