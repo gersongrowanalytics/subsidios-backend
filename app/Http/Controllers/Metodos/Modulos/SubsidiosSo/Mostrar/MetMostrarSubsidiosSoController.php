@@ -43,7 +43,7 @@ class MetMostrarSubsidiosSoController extends Controller
                                 }
                             }
                         })
-                        ->orderBy('zonorden')
+                        ->orderBy('zonorden', 'desc')
                         ->get([
                             'zonnombre as clizona'
                         ]);
