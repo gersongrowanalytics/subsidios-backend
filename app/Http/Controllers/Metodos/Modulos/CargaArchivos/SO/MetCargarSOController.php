@@ -64,7 +64,7 @@ class MetCargarSOController extends Controller
 
             $logs['NUMERO_LINEAS_EXCEL'] = $numRows;
 
-            fsofacturasso::where('fsoid', '>', '0')->delete();
+            // fsofacturasso::where('fsoid', '>', '0')->delete();
 
             for ($i=2; $i <= $numRows ; $i++) {
                 $ex_codigo              = $objPHPExcel->getActiveSheet()->getCell('A'.$i)->getCalculatedValue();
@@ -87,7 +87,7 @@ class MetCargarSOController extends Controller
                 if($fec){
 
                     if($i == 2){
-                        fsofacturasso::where('fsoid', $fec->fecid)->delete();
+                        fsofacturasso::where('fecid', $fec->fecid)->delete();
                         $fecid = $fec->fecid;
                     }
 
