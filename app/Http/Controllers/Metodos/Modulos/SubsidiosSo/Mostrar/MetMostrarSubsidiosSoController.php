@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Metodos\Modulos\SubsidiosSo\Mostrar;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\sdesubsidiosdetalles;
+use App\Models\zonzonas;
 
 class MetMostrarSubsidiosSoController extends Controller
 {
