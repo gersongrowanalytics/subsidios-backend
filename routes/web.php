@@ -30,6 +30,9 @@ $router->get('/seed', 'Prueba\PruebaController@EjecutarSeeds');
 
     $router->group(['prefix' => 'modulo'], function () use ($router) {
 
+        $router->post('/salvacion/asignar-zonas', 'SalvacionController@HabilitarZonas');
+
+
         $router->group(['prefix' => 'cargaArchivos'], function () use ($router) {
             $router->post('/facturas', 'Validaciones\Modulos\CargaArchivos\CargarFacturasController@CargarFacturas');
             $router->post('/productos', 'Validaciones\Modulos\CargaArchivos\CargarMaestraProductosController@CargarMaestraProductos');

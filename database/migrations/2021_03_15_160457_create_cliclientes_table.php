@@ -15,6 +15,7 @@ class CreateCliclientesTable extends Migration
     {
         Schema::create('cliclientes', function (Blueprint $table) {
             $table->increments('cliid');
+            $table->unsignedInteger('zonid');
             $table->string('clinombre');
             $table->string('clicodigo')->nullable();
             $table->string('clicodigoshipto')->nullable();
@@ -38,6 +39,8 @@ class CreateCliclientesTable extends Migration
             $table->string('cliidentificadoraplicativo')->nullable();
             $table->string('cliclientesac')->default(0);
             $table->timestamps();
+
+            $table->foreign('zonid')->references('zonid')->on('zonzonas');
         });
     }
 
