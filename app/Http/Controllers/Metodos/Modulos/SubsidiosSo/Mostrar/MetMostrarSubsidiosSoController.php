@@ -40,7 +40,7 @@ class MetMostrarSubsidiosSoController extends Controller
         $zonas = zonzonas::where(function ($query) use($zons) {
                             if(sizeof($zons) > 0){
                                 foreach($zons as $zona){
-                                    $query->whereBetween('zonnombre', $zona->zonnombre);
+                                    $query->where('zonnombre', $zona->zonnombre);
                                 }
                             }
                         })
