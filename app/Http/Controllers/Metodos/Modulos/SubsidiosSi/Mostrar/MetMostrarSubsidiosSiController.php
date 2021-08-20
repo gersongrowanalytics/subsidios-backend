@@ -68,6 +68,7 @@ class MetMostrarSubsidiosSiController extends Controller
                                         'sdestatus',
                                         'sdediferenciaahorro',
                                         'sdebultosacordados',
+                                        'fec.fecid',
                                         'fecfecha',
                                         'sdependiente',
                                         'sdesac',
@@ -76,7 +77,29 @@ class MetMostrarSubsidiosSiController extends Controller
                                     ]);
 
             foreach($sdes as $posicionSde => $sde){
-                $sfss = sfssubsidiosfacturassi::join('fsifacturassi as fsi', 'fsi.fsiid', 'sfssubsidiosfacturassi.fsiid')
+
+                if($sde->fecid <= 1103){ // MENOR A JULIO 2021
+
+                    $sfss = array(
+                        array(
+                            "fsifactura"    => "F",
+                            "fsipedido"     => "0",
+                            "sfsvalorizado" => $sde->sdemontoareconocerreal,
+                            "fecfecha"      => $sde->fecfecha,
+                            "fdsreconocer"  => $sde->sdemontoareconocerreal,
+                            "fdssaldo"      => "0",
+                            "fdstreintaporciento" => $sde->sdemontoareconocerreal,
+                            "fdsnotacredito"      => 0,
+                            "fdsvalorneto"        => $sde->sdemontoareconocerreal,
+                            "sfssaldoanterior"    => $sde->sdemontoareconocerreal,
+                            "sfssaldonuevo"       => 0,
+                        )
+                    );
+
+                    $sumsfsvalorizado = $sde->sdemontoareconocerreal;
+
+                }else{
+                    $sfss = sfssubsidiosfacturassi::join('fsifacturassi as fsi', 'fsi.fsiid', 'sfssubsidiosfacturassi.fsiid')
                                             ->join('fdsfacturassidetalles as fds', 'fds.fdsid', 'sfssubsidiosfacturassi.fdsid')
                                             ->join('fecfechas as fec', 'fec.fecid', 'fsi.fecid')
                                             ->where('sdeid', $sde->sdeid)
@@ -94,13 +117,14 @@ class MetMostrarSubsidiosSiController extends Controller
                                                 'sfssaldonuevo'
                                             ]);
 
-                $sdes[$posicionSde]['facturas'] = $sfss;
-
-                $sumsfsvalorizado = sfssubsidiosfacturassi::join('fsifacturassi as fsi', 'fsi.fsiid', 'sfssubsidiosfacturassi.fsiid')
+                    $sumsfsvalorizado = sfssubsidiosfacturassi::join('fsifacturassi as fsi', 'fsi.fsiid', 'sfssubsidiosfacturassi.fsiid')
                                             ->join('fdsfacturassidetalles as fds', 'fds.fdsid', 'sfssubsidiosfacturassi.fdsid')
                                             ->join('fecfechas as fec', 'fec.fecid', 'fsi.fecid')
                                             ->where('sdeid', $sde->sdeid)
                                             ->sum('sfsvalorizado');
+                }
+
+                $sdes[$posicionSde]['facturas'] = $sfss;
 
                 $sdes[$posicionSde]['sumsfsvalorizado'] = $sumsfsvalorizado;
             }
@@ -1367,5 +1391,17 @@ class MetMostrarSubsidiosSiController extends Controller
         }
 
         return $nuevoArray;
+    }
+
+    public function AsignarValorizadoAutomatico($fecid)
+    {
+
+        $sdes = sdesubsidiosdetalles::where('fecid', $fecid)->get();
+
+        // foreach($sdes as $sde){
+        //     new sfssubsidiosfacturassi
+        // }
+
+
     }
 }

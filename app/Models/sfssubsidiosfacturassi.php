@@ -10,6 +10,7 @@ class sfssubsidiosfacturassi extends Model
     protected $primaryKey = 'sfsid';
 
     protected $fillable = [
+        "sfsid",
         "fecid",
         "sdeid",
         "fsiid",
