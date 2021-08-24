@@ -67,7 +67,8 @@ class MetMostrarSubsidiosSoController extends Controller
                                             $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
                                         // }
                                     })
-                                    ->orderBy('sdestatus' , 'DESC')
+                                    // ->orderBy('sdestatus' , 'DESC')
+                                    ->orderBy('clinombre' , 'DESC')
                                     ->get([
                                         'cli.cliid',
                                         'clizona',

@@ -25,6 +25,7 @@ $router->get('/propro', function () use ($router) {
 $router->post('/login', 'Validaciones\Login\LoginController@ValLogin');
 
 $router->get('/seed', 'Prueba\PruebaController@EjecutarSeeds');
+$router->post('/enviar-correo', 'Validaciones\RecuperarContrasenia\RecuperarContraseniaController@ValRecuperarContrasenia');
 
 // $router->group(['middleware' => ['permisos']], function() use($router) {
 
