@@ -99,6 +99,25 @@ class MetCargarFacturasSiController extends Controller
 
             $logs['NUMERO_LINEAS_EXCEL'] = $numRows;
 
+
+            $secultimo = secseriescomprobantes::orderby('secid', 'desc')->first();
+            $pksec = $secultimo->secid + 1;
+
+            $fdsultimo = fdsfacturassidetalles::orderby('fdsid', 'desc')->first();
+            $pkfds = $fdsultimo->fdsid + 1;
+            
+            $fsiultimo = fsifacturassi::orderby('fsiid', 'desc')->first();
+            $pkfsi = $fsiultimo->fsiid + 1;
+            
+            
+            $ndsultimo = ndsnotascreditossidetalles::orderby('ndsid', 'desc')->first();
+            $pknds = $ndsultimo->ndsid + 1;
+
+            $nsiultimo = nsinotascreditossi::orderby('nsiid', 'desc')->first();
+            $pknsi = $nsiultimo->nsiid + 1;
+            
+
+
             for ($i=2; $i <= $numRows; $i++) {
 
                 $ex_anio      = $objPHPExcel->getActiveSheet()->getCell('A'.$i)->getCalculatedValue();
@@ -254,6 +273,7 @@ class MetCargarFacturasSiController extends Controller
                                                     $secn->secserie       = $serieDocumento;
                                                     $secn->secdescripcion = "NUEVA SERIE";
                                                     if($secn->save()){
+                                                        $pksec = $pksec + 1;
                                                         $encontroSec = true;
                                                         $secidDocumento = $secn->secid;
                                                         // $logs['NUEVA_SERIE_CREADA'][] = "La serie : ".$serieDocumento." se acaba de registrar en nuestros servidores. EN LA LINEA: ".$i;
@@ -311,6 +331,7 @@ class MetCargarFacturasSiController extends Controller
                                                                     
 
                                                                     if($fdsn->save()){
+                                                                        $pkfds = $pkfds + 1;
                                                                         $fsi->fsivalorneto = $fsi->fsivalorneto + $ex_valorneto;
                                                                         $fsi->fsivalornetodolares = $fsi->fsivalornetodolares + $ex_valornetodolares;
                                                                         $fsi->update();
@@ -341,6 +362,7 @@ class MetCargarFacturasSiController extends Controller
                                                                 $fsin->fsipedido         = $ex_pedido;
                                                                 $fsin->fsipedidooriginal = $ex_pedidooriginal;
                                                                 if($fsin->save()){
+                                                                    $pkfsi = $pkfsi + 1;
                                                                     $pro = proproductos::where('prosku', $ex_material)->first();
 
                                                                     if($pro){
@@ -360,6 +382,8 @@ class MetCargarFacturasSiController extends Controller
                                                                         $fdsn->fdssaldo            = ($ex_valorneto*30)/100;;
                                                                         $fdsn->fdsreconocer        = 0;
                                                                         $fdsn->save();
+
+                                                                        $pkfds = $pkfds + 1;
 
                                                                     }else{
                                                                         $respuesta = false;
@@ -406,6 +430,7 @@ class MetCargarFacturasSiController extends Controller
                                                                         $ndsn->ndspedido      = $ex_pedido;
                                                                         $ndsn->ndspedidooriginal = $ex_pedidooriginal;
                                                                         if($ndsn->save()){
+                                                                            $pknds = $pknds + 1;
                                                                             $nsi->nsivalorneto = $nsi->nsivalorneto + $ex_valorneto;
                                                                             $nsi->nsivalornetodolares = $nsi->nsivalornetodolares + $ex_valornetodolares;
                                                                             $nsi->update();
@@ -462,7 +487,7 @@ class MetCargarFacturasSiController extends Controller
                                                                 $nsin->nsivalorneto   = $ex_valorneto;
                                                                 $nsin->nsivalornetodolares = $ex_valornetodolares;
                                                                 if($nsin->save()){
-
+                                                                    $pknsi = $pknsi + 1;
                                                                     $fsi = fsifacturassi::where('fsipedido', $ex_pedidooriginal)->first();
 
                                                                     if($fsi){
@@ -484,6 +509,7 @@ class MetCargarFacturasSiController extends Controller
                                                                             $ndsn->ndspedido      = $ex_pedido;
                                                                             $ndsn->ndspedidooriginal = $ex_pedidooriginal;
                                                                             if($ndsn->save()){
+                                                                                $pknds = $pknds + 1;
                                                                                 // $fds = fdsfacturassidetalles::where('fsiid', $fsi->fsiid)
                                                                                 //                             ->where('proid', $pro->proid)
                                                                                 //                             ->first();
