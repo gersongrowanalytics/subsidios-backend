@@ -152,9 +152,9 @@ class MetCargarFacturasSiController extends Controller
                     }
 
                     if($encontroFecha == true){
-                        $fecfechaFecha = $arrayFecha[2]."/".$arrayFecha[1]."/01";
+                        $fecfechaFecha = $arrayFecha[2]."-".$arrayFecha[1]."-01";
 
-                        $fec = fecfechas::where('fecfecha', $fecfechaFecha)->first();
+                        $fec = fecfechas::where('fecfecha', "$fecfechaFecha")->first();
 
                         if($fec){
 
