@@ -301,9 +301,9 @@ class MetCargarMaestraClientesController extends Controller
             null, // audip
             $fichero_subido, // audjsonentrada
             $requestsalida,// audjsonsalida
-            'CARGAR DATA DE PRODUCTOS AL SISTEMA ', //auddescripcion
+            'CARGAR DATA DE CLIENTES AL SISTEMA ', //auddescripcion
             'IMPORTAR', // audaccion
-            '/modulo/cargaArchivos/productos', //audruta
+            '/modulo/cargaArchivos/clientes', //audruta
             $pkis, // audpk
             $logs // log
         );
