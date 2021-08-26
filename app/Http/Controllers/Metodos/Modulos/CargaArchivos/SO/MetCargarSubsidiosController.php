@@ -128,7 +128,7 @@ class MetCargarSubsidiosController extends Controller
     
                     if($pro){
                         $cli = cliclientes::where('clicodigoshipto', $ex_codigodestinatario)
-                                            ->first(['cliid', 'cliclientesac', 'clicodigoshipto', 'clishipto']);
+                                            ->first(['cliid', 'cliclientesac', 'clicodigoshipto', 'clishipto', 'clihml']);
                         // $cli = true;
     
                         if($cli){
@@ -143,9 +143,11 @@ class MetCargarSubsidiosController extends Controller
 
                                 
 
-                                $espe = espestadospendientes::where('espbasedato', $cli->clishipto)
+                                // $espe = espestadospendientes::where('espbasedato', $cli->clishipto)
+                                $espe = espestadospendientes::where('espbasedato', $cli->clihml)
                                                             ->where('fecid', $fec->fecid)
-                                                            ->where('areid', $esp->areid)
+                                                            // ->where('areid', $esp->areid)
+                                                            ->where('areid', 11)
                                                             ->first();
 
                                 if($espe){
@@ -185,7 +187,8 @@ class MetCargarSubsidiosController extends Controller
                                     $espn->espid = $pkid;
                                     $espn->fecid = $fec->fecid;
                                     $espn->perid = 2; // POR DEFECTO ES 2
-                                    $espn->areid = $esp->areid;
+                                    // $espn->areid = $esp->areid;
+                                    $espn->areid = 11;
 
                                     if($cli->cliclientesac == 1){
                                         $espn->espfechaprogramado = $esp->espfechaprogramado;
@@ -195,7 +198,8 @@ class MetCargarSubsidiosController extends Controller
 
                                     $espn->espchacargareal = null;
                                     $espn->espfechactualizacion = $fechaActual;
-                                    $espn->espbasedato = $cli->clishipto;
+                                    // $espn->espbasedato = $cli->clishipto;
+                                    $espn->espbasedato = $cli->clihml;
                                     $espn->espresponsable = "Equipo SAC";
 
                                     $date1 = new DateTime($fechaActual);

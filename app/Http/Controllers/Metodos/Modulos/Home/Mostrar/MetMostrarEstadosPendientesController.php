@@ -54,6 +54,7 @@ class MetMostrarEstadosPendientesController extends Controller
                 array(),
                 array(),
                 array(),
+                array(),
             );
 
             $fechaActual = date('Y-m-d');
@@ -106,7 +107,9 @@ class MetMostrarEstadosPendientesController extends Controller
 
                 $ares[$posicionAre]['esps'] = $esps;
 
-                if($are->arenombre == "SAC Sell Out"){
+                if($are->arenombre == "SAC Sell Out Detalle"){
+                    $aresn[3] = $ares[$posicionAre];
+                }else if($are->arenombre == "SAC Sell Out"){
                     $aresn[2] = $ares[$posicionAre];
                 }else if($are->arenombre == "SAC Sell In"){
                     $aresn[1] = $ares[$posicionAre];
