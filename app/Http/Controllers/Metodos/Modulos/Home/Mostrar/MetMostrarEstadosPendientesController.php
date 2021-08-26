@@ -61,14 +61,19 @@ class MetMostrarEstadosPendientesController extends Controller
 
             foreach($ares as $posicionAre => $are){
 
-                $esps = espestadospendientes::where('areid', $are->areid)
+                $esps = espestadospendientes::join('perpersonas as per', 'per.perid', 'espestadospendientes.perid')
+                                            ->where('areid', $are->areid)
                                             ->get([
                                                 'espfechaprogramado',
                                                 'espchacargareal',
                                                 'espfechactualizacion',
                                                 'espbasedato',
                                                 'espresponsable',
-                                                'espdiaretraso'
+                                                'espdiaretraso',
+                                                'pernombrecompleto',
+                                                'pernombre',
+                                                'perapellidopaterno',
+                                                'perapellidomaterno',
                                             ]);
 
                 foreach($esps as $posicionEsp => $esp){
