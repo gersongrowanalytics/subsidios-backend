@@ -151,7 +151,8 @@ class MetMostrarEstadosPendientesController extends Controller
                                                         'perapellidomaterno',
                                                         'zon.zonnombre',
                                                         'clihml',
-                                                        'clisuchml'
+                                                        'clisuchml',
+                                                        'clitv'
                                                     ]);
 
             foreach($espsDistribuidoras as $posicionEsp => $esp){
