@@ -99,6 +99,24 @@ class MetCargarFacturasSiController extends Controller
 
             $logs['NUMERO_LINEAS_EXCEL'] = $numRows;
 
+
+            $secultimo = secseriescomprobantes::orderby('secid', 'desc')->first();
+            $pksec = $secultimo->secid + 1;
+
+            $fdsultimo = fdsfacturassidetalles::orderby('fdsid', 'desc')->first();
+            $pkfds = $fdsultimo->fdsid + 1;
+            
+            $fsiultimo = fsifacturassi::orderby('fsiid', 'desc')->first();
+            $pkfsi = $fsiultimo->fsiid + 1;
+            
+            
+            $ndsultimo = ndsnotascreditossidetalles::orderby('ndsid', 'desc')->first();
+            $pknds = $ndsultimo->ndsid + 1;
+
+            $nsiultimo = nsinotascreditossi::orderby('nsiid', 'desc')->first();
+            $pknsi = $nsiultimo->nsiid + 1;
+
+
             for ($i=2; $i <= $numRows; $i++) {
 
                 $ex_anio      = $objPHPExcel->getActiveSheet()->getCell('A'.$i)->getCalculatedValue();
@@ -121,8 +139,8 @@ class MetCargarFacturasSiController extends Controller
 
                 $pos = strpos($ex_facturaanulada, "X");
 
-                // if($ex_facturaanulada != "X"){
-                if($pos !== false){
+                if($ex_facturaanulada != "X"){
+                // if($pos !== false){
                     $encontroFecha = false;
 
                     $arrayFecha = explode(".", $ex_fechafactura);
@@ -168,21 +186,6 @@ class MetCargarFacturasSiController extends Controller
                                 fsifacturassi::where('fecid', $fec->fecid)->delete();
                                 sfssubsidiosfacturassi::where('fecid', $fec->fecid)->delete();
 
-                                $secultimo = secseriescomprobantes::orderby('secid', 'desc')->first();
-                                $pksec = $secultimo->secid + 1;
-
-                                $fdsultimo = fdsfacturassidetalles::orderby('fdsid', 'desc')->first();
-                                $pkfds = $fdsultimo->fdsid + 1;
-                                
-                                $fsiultimo = fsifacturassi::orderby('fsiid', 'desc')->first();
-                                $pkfsi = $fsiultimo->fsiid + 1;
-                                
-                                
-                                $ndsultimo = ndsnotascreditossidetalles::orderby('ndsid', 'desc')->first();
-                                $pknds = $ndsultimo->ndsid + 1;
-
-                                $nsiultimo = nsinotascreditossi::orderby('nsiid', 'desc')->first();
-                                $pknsi = $nsiultimo->nsiid + 1;
                             }
 
                             $fecidDocumento = $fec->fecid;
