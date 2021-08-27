@@ -129,10 +129,10 @@ class MetMostrarEstadosPendientesController extends Controller
 
             $espsDistribuidoras = espestadospendientes::join('perpersonas as per', 'per.perid', 'espestadospendientes.perid')
                                                     ->join('areareasestados as are', 'are.areid', 'espestadospendientes.areid')
-                                                    ->join('cliclientes as cli', 'cli.cliid', 'espestadospendientes.cliid')
-                                                    ->join('zonzonas as zon', 'zon.zonid', 'cli.zonid')
                                                     ->join('tprtipospromociones as tpr', 'tpr.tprid', 'are.tprid')
                                                     ->join('fecfechas as fec', 'fec.fecid', 'espestadospendientes.fecid')
+                                                    ->leftjoin('cliclientes as cli', 'cli.cliid', 'espestadospendientes.cliid')
+                                                    ->leftjoin('zonzonas as zon', 'zon.zonid', 'cli.zonid')
                                                     ->where('are.arenombre', 'SAC Sell Out Detalle')
                                                     ->where('tpr.tprid', $tpr->tprid)
                                                     ->where(function ($query) use($fechaInicio, $fechaFinal) {
