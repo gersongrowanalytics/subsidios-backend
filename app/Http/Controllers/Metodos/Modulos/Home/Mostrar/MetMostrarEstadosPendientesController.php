@@ -15,6 +15,7 @@ class MetMostrarEstadosPendientesController extends Controller
     {
 
         $data = [];
+        $espsDistribuidoras = [];
 
         $fechaInicio = $request['fechaInicio'];
         $fechaFinal  = $request['fechaFinal'];
@@ -125,12 +126,75 @@ class MetMostrarEstadosPendientesController extends Controller
                 $tprs[$posicionTpr]['seleccionado'] = true; 
             }
 
+
+            $espsDistribuidoras = espestadospendientes::join('perpersonas as per', 'per.perid', 'espestadospendientes.perid')
+                                                    ->join('areareasestados as are', 'are.areid', 'espestadospendientes.areid')
+                                                    ->join('cliclientes as cli', 'cli.cliid', 'espestadospendientes.cliid')
+                                                    ->join('zonzonas as zon', 'zon.zonid', 'cli.zonid')
+                                                    ->where('are.arenombre', 'SAC Sell Out Detalle')
+                                                    ->where('tpr.tprid', $tpr->tprid)
+                                                    ->where(function ($query) use($fechaInicio, $fechaFinal) {
+                                                        $query->where('fecfecha', $fechaFinal."-01");
+                                                    })
+                                                    ->get([
+                                                        'espfechaprogramado',
+                                                        'espchacargareal',
+                                                        'espfechactualizacion',
+                                                        'espbasedato',
+                                                        'espresponsable',
+                                                        'espdiaretraso',
+                                                        'pernombrecompleto',
+                                                        'pernombre',
+                                                        'perapellidopaterno',
+                                                        'perapellidomaterno',
+                                                        'zon.zonnombre',
+                                                        'clihml',
+                                                        'clisuchml'
+                                                    ]);
+
+            foreach($espsDistribuidoras as $posicionEsp => $esp){
+                    
+                    $diaRetraso = $esp->espdiaretraso;
+
+                    if($esp->espfechactualizacion == null){
+
+                        $fecha_carga_real = date("Y-m-d", strtotime($esp->espfechaprogramado));
+                        
+                        $date2 = new DateTime($fecha_carga_real);
+
+                        if($date1 > $date2){
+                            $diff = $date1->diff($date2);
+
+                            if($diff->days > 0){
+                                $diaRetraso = $diff->days;
+                            }else{
+                                $diaRetraso = "0";
+                            }
+
+                        }else{
+                            $diaRetraso = "0";
+                        }
+                    }
+
+                    $espsDistribuidoras[$posicionEsp]['espdiaretraso'] = $diaRetraso;
+
+            }
+
         }
 
         $data = $tprs;
 
+
+
+
+
+
+
+
+
         $requestsalida = response()->json([
             "datos" => $data,
+            "espsDistribuidoras" => $espsDistribuidoras
         ]);
 
         return $requestsalida;

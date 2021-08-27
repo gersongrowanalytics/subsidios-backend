@@ -141,13 +141,18 @@ class MetCargarSubsidiosController extends Controller
 
                             if($esp){
 
-                                
+                                $are = espestadospendientes::join('areareasestados as are', 'are.areid', 'espestadospendientes.areid')
+                                                        ->where('fecid', $fec->fecid)
+                                                        ->where('are.arenombre', "SAC Sell Out Detalle")
+                                                        ->first([
+                                                            'are.areid'
+                                                        ]);
 
                                 // $espe = espestadospendientes::where('espbasedato', $cli->clishipto)
-                                $espe = espestadospendientes::where('espbasedato', $cli->clihml)
+                                $espe = espestadospendientes::where('cliid', $cli->cliid)
                                                             ->where('fecid', $fec->fecid)
                                                             // ->where('areid', $esp->areid)
-                                                            ->where('areid', 11)
+                                                            ->where('areid', $are->areid)
                                                             ->first();
 
                                 if($espe){
@@ -185,10 +190,11 @@ class MetCargarSubsidiosController extends Controller
 
                                     $espn = new espestadospendientes;
                                     $espn->espid = $pkid;
+                                    $espn->cliid = $cli->cliid;
                                     $espn->fecid = $fec->fecid;
                                     $espn->perid = 2; // POR DEFECTO ES 2
-                                    // $espn->areid = $esp->areid;
-                                    $espn->areid = 11;
+                                    $espn->areid = $are->areid;
+                                    // $espn->areid = 11;
 
                                     if($cli->cliclientesac == 1){
                                         $espn->espfechaprogramado = $esp->espfechaprogramado;
@@ -199,7 +205,7 @@ class MetCargarSubsidiosController extends Controller
                                     $espn->espchacargareal = null;
                                     $espn->espfechactualizacion = $fechaActual;
                                     // $espn->espbasedato = $cli->clishipto;
-                                    $espn->espbasedato = $cli->clihml;
+                                    $espn->espbasedato = "";
                                     $espn->espresponsable = "Equipo SAC";
 
                                     $date1 = new DateTime($fechaActual);
