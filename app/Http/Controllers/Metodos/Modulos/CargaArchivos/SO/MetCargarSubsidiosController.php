@@ -122,200 +122,204 @@ class MetCargarSubsidiosController extends Controller
 
                     $ex_status              = $objPHPExcel->getActiveSheet()->getCell('AC'.$i)->getCalculatedValue();
                     $ex_diferenciaahorrocliente = $objPHPExcel->getActiveSheet()->getCell('AD'.$i)->getCalculatedValue();
-    
-                    $pro = proproductos::where('prosku', $ex_codigouni)->first(['proid']);
-                    // $pro = true;
-    
-                    if($pro){
-                        $cli = cliclientes::where('clicodigoshipto', $ex_codigodestinatario)
-                                            ->first(['cliid', 'cliclientesac', 'clicodigoshipto', 'clishipto', 'clihml']);
-                        // $cli = true;
-    
-                        if($cli){
+                    
+                    if(isset($ex_codigouni)){
+                        $pro = proproductos::where('prosku', $ex_codigouni)->first(['proid']);
+                        // $pro = true;
+        
+                        if($pro){
+                            $cli = cliclientes::where('clicodigoshipto', $ex_codigodestinatario)
+                                                ->first(['cliid', 'cliclientesac', 'clicodigoshipto', 'clishipto', 'clihml']);
+                            // $cli = true;
+        
+                            if($cli){
 
-                            // 
+                                // 
 
-                            $esp = espestadospendientes::where('espbasedato', "Subsidio Reconocido (Plantilla)")
-                                                        ->where('fecid', $fec->fecid)
-                                                        ->first();
-
-                            if($esp){
-
-                                $are = espestadospendientes::join('areareasestados as are', 'are.areid', 'espestadospendientes.areid')
-                                                        ->where('fecid', $fec->fecid)
-                                                        ->where('are.arenombre', "SAC Sell Out Detalle")
-                                                        ->first([
-                                                            'are.areid'
-                                                        ]);
-
-                                // $espe = espestadospendientes::where('espbasedato', $cli->clishipto)
-                                $espe = espestadospendientes::where('cliid', $cli->cliid)
+                                $esp = espestadospendientes::where('espbasedato', "Subsidio Reconocido (Plantilla)")
                                                             ->where('fecid', $fec->fecid)
-                                                            // ->where('areid', $esp->areid)
-                                                            ->where('areid', $are->areid)
                                                             ->first();
 
-                                if($espe){
+                                if($esp){
 
-                                    $espe->espfechactualizacion = $fechaActual;
-                                    if($espe->espfechaprogramado == null){
-                                        $espe->espdiaretraso = "0";
+                                    $are = espestadospendientes::join('areareasestados as are', 'are.areid', 'espestadospendientes.areid')
+                                                            ->where('fecid', $fec->fecid)
+                                                            ->where('are.arenombre', "SAC Sell Out Detalle")
+                                                            ->first([
+                                                                'are.areid'
+                                                            ]);
+
+                                    // $espe = espestadospendientes::where('espbasedato', $cli->clishipto)
+                                    $espe = espestadospendientes::where('cliid', $cli->cliid)
+                                                                ->where('fecid', $fec->fecid)
+                                                                // ->where('areid', $esp->areid)
+                                                                ->where('areid', $are->areid)
+                                                                ->first();
+
+                                    if($espe){
+
+                                        $espe->espfechactualizacion = $fechaActual;
+                                        if($espe->espfechaprogramado == null){
+                                            $espe->espdiaretraso = "0";
+                                        }else{
+
+                                            $fecha_carga_real = date("Y-m-d", strtotime($espe->espfechaprogramado));
+
+                                            $date1 = new DateTime($fechaActual);
+                                            $date2 = new DateTime($fecha_carga_real);
+
+                                            if($date1 > $date2){
+                                                $diff = $date1->diff($date2);
+        
+                                                if($diff->days > 0){
+                                                    $espe->espdiaretraso = $diff->days;
+                                                }else{
+                                                    $espe->espdiaretraso = "0";
+                                                }
+        
+                                            }else{
+                                                $espe->espdiaretraso = "0";
+                                            }
+                                        }
+
+                                        $espe->update();
+
                                     }else{
 
-                                        $fecha_carga_real = date("Y-m-d", strtotime($espe->espfechaprogramado));
+                                        $espultimo = espestadospendientes::orderby('espid', 'desc')->first();
+                                        $pkid = $espultimo->espid + 1;
+
+                                        $espn = new espestadospendientes;
+                                        $espn->espid = $pkid;
+                                        $espn->cliid = $cli->cliid;
+                                        $espn->fecid = $fec->fecid;
+                                        $espn->perid = 2; // POR DEFECTO ES 2
+                                        $espn->areid = $are->areid;
+                                        // $espn->areid = 11;
+
+                                        if($cli->cliclientesac == 1){
+                                            $espn->espfechaprogramado = $esp->espfechaprogramado;
+                                        }else{
+                                            $espn->espfechaprogramado = "2021-08-11";
+                                        }
+
+                                        $espn->espchacargareal = null;
+                                        $espn->espfechactualizacion = $fechaActual;
+                                        // $espn->espbasedato = $cli->clishipto;
+                                        $espn->espbasedato = "";
+                                        $espn->espresponsable = "Equipo SAC";
 
                                         $date1 = new DateTime($fechaActual);
+                                        $fecha_carga_real = date("Y-m-d", strtotime($espn->espfechaprogramado));
                                         $date2 = new DateTime($fecha_carga_real);
 
                                         if($date1 > $date2){
                                             $diff = $date1->diff($date2);
-    
+
                                             if($diff->days > 0){
-                                                $espe->espdiaretraso = $diff->days;
+                                                $espn->espdiaretraso = $diff->days;
                                             }else{
-                                                $espe->espdiaretraso = "0";
+                                                $espn->espdiaretraso = "0";
                                             }
-    
-                                        }else{
-                                            $espe->espdiaretraso = "0";
-                                        }
-                                    }
 
-                                    $espe->update();
-
-                                }else{
-
-                                    $espultimo = espestadospendientes::orderby('espid', 'desc')->first();
-                                    $pkid = $espultimo->espid + 1;
-
-                                    $espn = new espestadospendientes;
-                                    $espn->espid = $pkid;
-                                    $espn->cliid = $cli->cliid;
-                                    $espn->fecid = $fec->fecid;
-                                    $espn->perid = 2; // POR DEFECTO ES 2
-                                    $espn->areid = $are->areid;
-                                    // $espn->areid = 11;
-
-                                    if($cli->cliclientesac == 1){
-                                        $espn->espfechaprogramado = $esp->espfechaprogramado;
-                                    }else{
-                                        $espn->espfechaprogramado = "2021-08-11";
-                                    }
-
-                                    $espn->espchacargareal = null;
-                                    $espn->espfechactualizacion = $fechaActual;
-                                    // $espn->espbasedato = $cli->clishipto;
-                                    $espn->espbasedato = "";
-                                    $espn->espresponsable = "Equipo SAC";
-
-                                    $date1 = new DateTime($fechaActual);
-                                    $fecha_carga_real = date("Y-m-d", strtotime($espn->espfechaprogramado));
-                                    $date2 = new DateTime($fecha_carga_real);
-
-                                    if($date1 > $date2){
-                                        $diff = $date1->diff($date2);
-
-                                        if($diff->days > 0){
-                                            $espn->espdiaretraso = $diff->days;
                                         }else{
                                             $espn->espdiaretraso = "0";
                                         }
 
-                                    }else{
-                                        $espn->espdiaretraso = "0";
-                                    }
+                                        $espn->save();
 
-                                    $espn->save();
+                                        $aree = areareasestados::where('areid', $esp->areid)->first();
 
-                                    $aree = areareasestados::where('areid', $esp->areid)->first();
+                                        if($aree){
+                                            $aree->areporcentaje = $aree->areporcentaje + 1;
+                                            $aree->update();
+                                        }
 
-                                    if($aree){
-                                        $aree->areporcentaje = $aree->areporcentaje + 1;
-                                        $aree->update();
-                                    }
-
-                                }   
-                            }
-
-                            // 
-
-
-                            $sdee = sdesubsidiosdetalles::where('fecid', $fec->fecid)
-                                                    ->where('sdedestrucsap', $ex_destrucsap)
-                                                    ->first();
-
-                            if($sdee){
-                                
-                                if($ex_cantidadbultos){
-
-                                    if(is_numeric($ex_cantidadbultos)){
-                                        $sdee->sdecantidadbultos  = $ex_cantidadbultos;
-                                        $sdee->sdemontoareconocer = $ex_cantidadbultos * $sdee->sdedsctodos;
-                                    }else{
-                                        $sdee->sdecantidadbultos  = 0;
-                                        $sdee->sdemontoareconocer = 0;    
-                                    }
-
-                                }else{
-                                    $sdee->sdecantidadbultos  = 0;
-                                    $sdee->sdemontoareconocer = 0;
+                                    }   
                                 }
 
-                                if($cli->cliclientesac == 1){
-                                    $sdee->sdesac = true;
-                                    $sdee->sdeaprobado = true;
+                                // 
 
-                                    if($ex_cantidadbultosreal){
 
-                                        if(is_numeric($ex_cantidadbultosreal)){
-                                            $sdee->sdecantidadbultosreal  = $ex_cantidadbultosreal;
-                                            $sdee->sdemontoareconocerreal = $ex_cantidadbultosreal * $sdee->sdedsctodos;
+                                $sdee = sdesubsidiosdetalles::where('fecid', $fec->fecid)
+                                                        ->where('sdedestrucsap', $ex_destrucsap)
+                                                        ->first();
+
+                                if($sdee){
+                                    
+                                    if($ex_cantidadbultos){
+
+                                        if(is_numeric($ex_cantidadbultos)){
+                                            $sdee->sdecantidadbultos  = $ex_cantidadbultos;
+                                            $sdee->sdemontoareconocer = $ex_cantidadbultos * $sdee->sdedsctodos;
+                                        }else{
+                                            $sdee->sdecantidadbultos  = 0;
+                                            $sdee->sdemontoareconocer = 0;    
+                                        }
+
+                                    }else{
+                                        $sdee->sdecantidadbultos  = 0;
+                                        $sdee->sdemontoareconocer = 0;
+                                    }
+
+                                    if($cli->cliclientesac == 1){
+                                        $sdee->sdesac = true;
+                                        $sdee->sdeaprobado = true;
+
+                                        if($ex_cantidadbultosreal){
+
+                                            if(is_numeric($ex_cantidadbultosreal)){
+                                                $sdee->sdecantidadbultosreal  = $ex_cantidadbultosreal;
+                                                $sdee->sdemontoareconocerreal = $ex_cantidadbultosreal * $sdee->sdedsctodos;
+                                            }else{
+                                                $sdee->sdecantidadbultosreal  = 0;
+                                                $sdee->sdemontoareconocerreal = 0;
+                                            }
+
                                         }else{
                                             $sdee->sdecantidadbultosreal  = 0;
                                             $sdee->sdemontoareconocerreal = 0;
                                         }
 
+                                        if($ex_cantidadbultos == $ex_cantidadbultosreal){
+                                            $sdee->sdestatus = "OK";
+                                        }else{
+                                            $sdee->sdestatus = "ERROR CANTIDADES";
+                                        }
+
+                                        // $sdee->sdestatus = $ex_status;
+                                        $sdee->sdediferenciaahorro = $ex_diferenciaahorrocliente;
+        
                                     }else{
+                                        $sdee->sdesac = false;
+                                        $sdee->sdeaprobado = false;
+
                                         $sdee->sdecantidadbultosreal  = 0;
                                         $sdee->sdemontoareconocerreal = 0;
                                     }
 
-                                    if($ex_cantidadbultos == $ex_cantidadbultosreal){
-                                        $sdee->sdestatus = "OK";
-                                    }else{
-                                        $sdee->sdestatus = "ERROR CANTIDADES";
-                                    }
-
-                                    // $sdee->sdestatus = $ex_status;
-                                    $sdee->sdediferenciaahorro = $ex_diferenciaahorrocliente;
-    
+                                    $sdee->update();
+                                    
                                 }else{
-                                    $sdee->sdesac = false;
-                                    $sdee->sdeaprobado = false;
-
-                                    $sdee->sdecantidadbultosreal  = 0;
-                                    $sdee->sdemontoareconocerreal = 0;
+                                    $respuesta = false;
+                                    $mensaje = "Lo sentimos, hubieron algunos subsidios que no se encontraron en la plantilla";
+                                    $logs["SUBSIDIOS_NO_ENCONTRADOS"] = $this->EliminarDuplicidad( $logs["SUBSIDIOS_NO_ENCONTRADOS"], $ex_destrucsap, $i);
                                 }
-
-                                $sdee->update();
-                                
+        
                             }else{
                                 $respuesta = false;
-                                $mensaje = "Lo sentimos, hubieron algunos subsidios que no se encontraron en la plantilla";
-                                $logs["SUBSIDIOS_NO_ENCONTRADOS"] = $this->EliminarDuplicidad( $logs["SUBSIDIOS_NO_ENCONTRADOS"], $ex_destrucsap, $i);
+                                $mensaje = "Lo sentimos, hubieron algunos codigos de solicitante que no se encontraron registrados, recomendamos actualizar la maestra de clientes e intentar nuevamente gracias.";
+                                // $logs["CLIENTES_NO_ENCONTRADOS"][] = array("codigocliente" => $ex_codigodestinatario, "linea" => $i);
+                                $logs["CLIENTES_NO_ENCONTRADOS"] = $this->EliminarDuplicidad( $logs["CLIENTES_NO_ENCONTRADOS"], $ex_codigodestinatario, $i);
                             }
-    
+        
                         }else{
                             $respuesta = false;
-                            $mensaje = "Lo sentimos, hubieron algunos codigos de solicitante que no se encontraron registrados, recomendamos actualizar la maestra de clientes e intentar nuevamente gracias.";
-                            // $logs["CLIENTES_NO_ENCONTRADOS"][] = array("codigocliente" => $ex_codigodestinatario, "linea" => $i);
-                            $logs["CLIENTES_NO_ENCONTRADOS"] = $this->EliminarDuplicidad( $logs["CLIENTES_NO_ENCONTRADOS"], $ex_codigodestinatario, $i);
+                            $mensaje = "Lo sentimos, hubieron algunos skus que no se encontraron registrados, recomendamos actualizar la maestra de productos e intentar nuevamente gracias.";
+                            $logs["PRODUCTOS_NO_ENCONTRADOS"] = $this->EliminarDuplicidad( $logs["PRODUCTOS_NO_ENCONTRADOS"], $ex_codigouni, $i);
                         }
-    
                     }else{
-                        $respuesta = false;
-                        $mensaje = "Lo sentimos, hubieron algunos skus que no se encontraron registrados, recomendamos actualizar la maestra de productos e intentar nuevamente gracias.";
-                        $logs["PRODUCTOS_NO_ENCONTRADOS"] = $this->EliminarDuplicidad( $logs["PRODUCTOS_NO_ENCONTRADOS"], $ex_codigouni, $i);
+
                     }
     
                 }
