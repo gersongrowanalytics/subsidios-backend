@@ -43,6 +43,7 @@ class MetMostrarEstadosPendientesController extends Controller
                                                 $query->where('fecfecha', $fechaFinal."-01");
                                             // }
                                         })
+                                        ->where('are.areid', '!=', 11)
                                         ->distinct('are.areid')
                                         ->get([
                                             'are.areid',
