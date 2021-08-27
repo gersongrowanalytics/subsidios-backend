@@ -240,35 +240,35 @@ class MetCargarMaestraClientesController extends Controller
                             }
 
                         }else{
-                            $clin = new cliclientes;
-                            $clin->clinombre        = $clinombreSuc;
-                            $clin->clicodigo        = $clicodigoSuc;
-                            $clin->clicodigoshipto  = $clicodigoshiptoSuc;
-                            $clin->clishipto        = $clishiptoSuc;
-                            $clin->clihml           = $clihmlSuc;
-                            $clin->clisuchml        = $clisuchmlSuc;
-                            $clin->clidepartamento  = $clidepartamentoSuc;
-                            $clin->cligrupohml      = $cligrupohmlSuc;
-                            $clin->clitv            = $clitvSuc;
-                            $clin->clizona          = $clizonaSuc;
-                            $clin->cliregion        = $cliregionSuc;
-                            $clin->clicanal         = $clicanalSuc;
-                            $clin->clitipoatencion  = $clitipoatencionSuc;
-                            $clin->clicanalatencion = $clicanalatencionSuc;
-                            $clin->clisegmentoclientefinal = $clisegmentoclientefinalSuc;
-                            $clin->clisubsegmento       = $clisubsegmentoSuc;
-                            $clin->clisegmentoregional  = $clisegmentoregionalSuc;
-                            $clin->cligerenteregional   = $cligerenteregionalSuc;
-                            $clin->cligerentezona       = $cligerentezonaSuc;
-                            $clin->cliejecutivo         = $cliejecutivoSuc;
-                            $clin->cliidentificadoraplicativo = $cliidentificadoraplicativoSuc;
-                            $clin->cliclientesac = $essac;
-                            if($clin->save()){
-                                $logs["NUEVOS_SUCURSAL"][] = array(
-                                    "sucid" => $clin->cliid,
-                                    "soldto" => $clin->clicodigo,
-                                );
-                            }
+                            // $clin = new cliclientes;
+                            // $clin->clinombre        = $clinombreSuc;
+                            // $clin->clicodigo        = $clicodigoSuc;
+                            // $clin->clicodigoshipto  = $clicodigoshiptoSuc;
+                            // $clin->clishipto        = $clishiptoSuc;
+                            // $clin->clihml           = $clihmlSuc;
+                            // $clin->clisuchml        = $clisuchmlSuc;
+                            // $clin->clidepartamento  = $clidepartamentoSuc;
+                            // $clin->cligrupohml      = $cligrupohmlSuc;
+                            // $clin->clitv            = $clitvSuc;
+                            // $clin->clizona          = $clizonaSuc;
+                            // $clin->cliregion        = $cliregionSuc;
+                            // $clin->clicanal         = $clicanalSuc;
+                            // $clin->clitipoatencion  = $clitipoatencionSuc;
+                            // $clin->clicanalatencion = $clicanalatencionSuc;
+                            // $clin->clisegmentoclientefinal = $clisegmentoclientefinalSuc;
+                            // $clin->clisubsegmento       = $clisubsegmentoSuc;
+                            // $clin->clisegmentoregional  = $clisegmentoregionalSuc;
+                            // $clin->cligerenteregional   = $cligerenteregionalSuc;
+                            // $clin->cligerentezona       = $cligerentezonaSuc;
+                            // $clin->cliejecutivo         = $cliejecutivoSuc;
+                            // $clin->cliidentificadoraplicativo = $cliidentificadoraplicativoSuc;
+                            // $clin->cliclientesac = $essac;
+                            // if($clin->save()){
+                            //     $logs["NUEVOS_SUCURSAL"][] = array(
+                            //         "sucid" => $clin->cliid,
+                            //         "soldto" => $clin->clicodigo,
+                            //     );
+                            // }
                         }
                     }
 
