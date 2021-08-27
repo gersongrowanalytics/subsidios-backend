@@ -241,70 +241,70 @@ class MetCargarSubsidiosController extends Controller
                                 // 
 
 
-                                // $sdee = sdesubsidiosdetalles::where('fecid', $fec->fecid)
-                                //                         ->where('sdedestrucsap', $ex_destrucsap)
-                                //                         ->first();
+                                $sdee = sdesubsidiosdetalles::where('fecid', $fec->fecid)
+                                                        ->where('sdedestrucsap', $ex_destrucsap)
+                                                        ->first();
 
-                                // if($sdee){
+                                if($sdee){
                                     
-                                //     if($ex_cantidadbultos){
+                                    if($ex_cantidadbultos){
 
-                                //         if(is_numeric($ex_cantidadbultos)){
-                                //             $sdee->sdecantidadbultos  = $ex_cantidadbultos;
-                                //             $sdee->sdemontoareconocer = $ex_cantidadbultos * $sdee->sdedsctodos;
-                                //         }else{
-                                //             $sdee->sdecantidadbultos  = 0;
-                                //             $sdee->sdemontoareconocer = 0;    
-                                //         }
+                                        if(is_numeric($ex_cantidadbultos)){
+                                            $sdee->sdecantidadbultos  = $ex_cantidadbultos;
+                                            $sdee->sdemontoareconocer = $ex_cantidadbultos * $sdee->sdedsctodos;
+                                        }else{
+                                            $sdee->sdecantidadbultos  = 0;
+                                            $sdee->sdemontoareconocer = 0;    
+                                        }
 
-                                //     }else{
-                                //         $sdee->sdecantidadbultos  = 0;
-                                //         $sdee->sdemontoareconocer = 0;
-                                //     }
+                                    }else{
+                                        $sdee->sdecantidadbultos  = 0;
+                                        $sdee->sdemontoareconocer = 0;
+                                    }
 
-                                //     if($cli->cliclientesac == 1){
-                                //         $sdee->sdesac = true;
-                                //         $sdee->sdeaprobado = true;
+                                    if($cli->cliclientesac == 1){
+                                        $sdee->sdesac = true;
+                                        $sdee->sdeaprobado = true;
 
-                                //         if($ex_cantidadbultosreal){
+                                        if($ex_cantidadbultosreal){
 
-                                //             if(is_numeric($ex_cantidadbultosreal)){
-                                //                 $sdee->sdecantidadbultosreal  = $ex_cantidadbultosreal;
-                                //                 $sdee->sdemontoareconocerreal = $ex_cantidadbultosreal * $sdee->sdedsctodos;
-                                //             }else{
-                                //                 $sdee->sdecantidadbultosreal  = 0;
-                                //                 $sdee->sdemontoareconocerreal = 0;
-                                //             }
+                                            if(is_numeric($ex_cantidadbultosreal)){
+                                                $sdee->sdecantidadbultosreal  = $ex_cantidadbultosreal;
+                                                $sdee->sdemontoareconocerreal = $ex_cantidadbultosreal * $sdee->sdedsctodos;
+                                            }else{
+                                                $sdee->sdecantidadbultosreal  = 0;
+                                                $sdee->sdemontoareconocerreal = 0;
+                                            }
 
-                                //         }else{
-                                //             $sdee->sdecantidadbultosreal  = 0;
-                                //             $sdee->sdemontoareconocerreal = 0;
-                                //         }
+                                        }else{
+                                            $sdee->sdecantidadbultosreal  = 0;
+                                            $sdee->sdemontoareconocerreal = 0;
+                                        }
 
-                                //         if($ex_cantidadbultos == $ex_cantidadbultosreal){
-                                //             $sdee->sdestatus = "OK";
-                                //         }else{
-                                //             $sdee->sdestatus = "ERROR CANTIDADES";
-                                //         }
+                                        if($ex_cantidadbultos == $ex_cantidadbultosreal){
+                                            $sdee->sdestatus = "OK";
+                                        }else{
+                                            $sdee->sdestatus = "ERROR CANTIDADES";
+                                        }
 
-                                //         // $sdee->sdestatus = $ex_status;
-                                //         $sdee->sdediferenciaahorro = $ex_diferenciaahorrocliente;
+                                        // $sdee->sdestatus = $ex_status;
+                                        $sdee->sdediferenciaahorro = $ex_diferenciaahorrocliente;
         
-                                //     }else{
-                                //         $sdee->sdesac = false;
-                                //         $sdee->sdeaprobado = false;
+                                    }else{
+                                        $sdee->sdesac = false;
+                                        $sdee->sdeaprobado = false;
 
-                                //         $sdee->sdecantidadbultosreal  = 0;
-                                //         $sdee->sdemontoareconocerreal = 0;
-                                //     }
+                                        $sdee->sdecantidadbultosreal  = 0;
+                                        $sdee->sdemontoareconocerreal = 0;
+                                    }
 
-                                //     $sdee->update();
+                                    $sdee->update();
                                     
-                                // }else{
-                                //     $respuesta = false;
-                                //     $mensaje = "Lo sentimos, hubieron algunos subsidios que no se encontraron en la plantilla";
-                                //     $logs["SUBSIDIOS_NO_ENCONTRADOS"] = $this->EliminarDuplicidad( $logs["SUBSIDIOS_NO_ENCONTRADOS"], $ex_destrucsap, $i);
-                                // }
+                                }else{
+                                    $respuesta = false;
+                                    $mensaje = "Lo sentimos, hubieron algunos subsidios que no se encontraron en la plantilla";
+                                    $logs["SUBSIDIOS_NO_ENCONTRADOS"] = $this->EliminarDuplicidad( $logs["SUBSIDIOS_NO_ENCONTRADOS"], $ex_destrucsap, $i);
+                                }
         
                             }else{
                                 $respuesta = false;
