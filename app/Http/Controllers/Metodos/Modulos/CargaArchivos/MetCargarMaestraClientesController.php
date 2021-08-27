@@ -294,19 +294,19 @@ class MetCargarMaestraClientesController extends Controller
             "logs" => $logs,
         ]);
 
-        $AuditoriaController = new AuditoriaController;
-        $registrarAuditoria  = $AuditoriaController->registrarAuditoria(
-            $usutoken, // token
-            $usu->usuid, // usuid
-            null, // audip
-            $fichero_subido, // audjsonentrada
-            $requestsalida,// audjsonsalida
-            'CARGAR DATA DE CLIENTES AL SISTEMA ', //auddescripcion
-            'IMPORTAR', // audaccion
-            '/modulo/cargaArchivos/clientes', //audruta
-            $pkis, // audpk
-            $logs // log
-        );
+        // $AuditoriaController = new AuditoriaController;
+        // $registrarAuditoria  = $AuditoriaController->registrarAuditoria(
+        //     $usutoken, // token
+        //     $usu->usuid, // usuid
+        //     null, // audip
+        //     $fichero_subido, // audjsonentrada
+        //     $requestsalida,// audjsonsalida
+        //     'CARGAR DATA DE CLIENTES AL SISTEMA ', //auddescripcion
+        //     'IMPORTAR', // audaccion
+        //     '/modulo/cargaArchivos/clientes', //audruta
+        //     $pkis, // audpk
+        //     $logs // log
+        // );
 
         return $requestsalida;
     }
