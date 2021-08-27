@@ -42,8 +42,8 @@ class MetCargarSubsidiosController extends Controller
         $datos          = [];
         $mensajeDetalle = "";
 
-        $usutoken = $request->header('api_token');
-        // $usutoken = "TOKENESPECIFICOUNIFODEVGERSONGROW1845475#LD72";
+        // $usutoken = $request->header('api_token');
+        $usutoken = "TOKENESPECIFICOUNIFODEVGERSONGROW1845475#LD72";
         $reiniciartodo  = $request['reiniciartodo'];
         $archivo  = $_FILES['file']['name'];
 

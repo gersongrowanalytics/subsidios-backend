@@ -180,11 +180,11 @@ class MetCargarFacturasSiController extends Controller
 
                                 $fecid = $fec->fecid;
 
-                                ndsnotascreditossidetalles::where('fecid', $fec->fecid)->delete();
-                                nsinotascreditossi::where('fecid', $fec->fecid)->delete();
-                                fdsfacturassidetalles::where('fecid', $fec->fecid)->delete();
-                                fsifacturassi::where('fecid', $fec->fecid)->delete();
-                                sfssubsidiosfacturassi::where('fecid', $fec->fecid)->delete();
+                                // ndsnotascreditossidetalles::where('fecid', $fec->fecid)->delete();
+                                // nsinotascreditossi::where('fecid', $fec->fecid)->delete();
+                                // fdsfacturassidetalles::where('fecid', $fec->fecid)->delete();
+                                // fsifacturassi::where('fecid', $fec->fecid)->delete();
+                                // sfssubsidiosfacturassi::where('fecid', $fec->fecid)->delete();
 
                             }
 
