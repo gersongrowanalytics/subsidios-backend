@@ -138,7 +138,7 @@ class MetMostrarEstadosPendientesController extends Controller
                                                     ->where(function ($query) use($fechaInicio, $fechaFinal) {
                                                         $query->where('fecfecha', $fechaFinal."-01");
                                                     })
-                                                    ->orderby('zonorden')
+                                                    ->orderby('zonorden', 'desc')
                                                     ->get([
                                                         'espfechaprogramado',
                                                         'espchacargareal',
