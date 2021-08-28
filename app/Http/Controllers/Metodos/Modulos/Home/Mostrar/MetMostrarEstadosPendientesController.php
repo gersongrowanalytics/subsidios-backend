@@ -138,7 +138,7 @@ class MetMostrarEstadosPendientesController extends Controller
                                                     ->where(function ($query) use($fechaInicio, $fechaFinal) {
                                                         $query->where('fecfecha', $fechaFinal."-01");
                                                     })
-                                                    ->orderby('clitv')
+                                                    ->orderby('clihml')
                                                     ->get([
                                                         'espfechaprogramado',
                                                         'espchacargareal',
