@@ -43,7 +43,7 @@ class MetCargarSubsidiosPlantillaController extends Controller
         $mensajeDetalle = "";
 
         $usutoken = $request->header('api_token');
-        if(isset($usutoken)){
+        if(!isset($usutoken)){
             $usutoken = "TOKENESPECIFICOUNIFODEVGERSONGROW1845475#LD72";
         }
         
