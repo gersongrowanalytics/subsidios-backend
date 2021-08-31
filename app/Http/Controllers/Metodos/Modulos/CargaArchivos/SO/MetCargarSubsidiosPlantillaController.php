@@ -47,6 +47,7 @@ class MetCargarSubsidiosPlantillaController extends Controller
             $usutoken = "TOKENESPECIFICOUNIFODEVGERSONGROW1845475#LD72";
         }
 
+        echo $usutoken;
         return $usutoken;
         
         // $reiniciartodo  = $request['reiniciartodo'];
