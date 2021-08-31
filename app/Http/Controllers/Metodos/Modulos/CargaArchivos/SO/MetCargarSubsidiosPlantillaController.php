@@ -46,9 +46,6 @@ class MetCargarSubsidiosPlantillaController extends Controller
         if(isset($usutoken)){
             $usutoken = "TOKENESPECIFICOUNIFODEVGERSONGROW1845475#LD72";
         }
-
-        echo $usutoken;
-        return $usutoken;
         
         // $reiniciartodo  = $request['reiniciartodo'];
         // $archivo  = $_FILES['file']['name'];
@@ -386,13 +383,14 @@ class MetCargarSubsidiosPlantillaController extends Controller
 
         // $logs["MENSAJE"] = $mensaje;
         
-        // $requestsalida = response()->json([
-        //     "respuesta"      => $respuesta,
-        //     "mensaje"        => $mensaje,
-        //     "datos"          => $datos,
-        //     "mensajeDetalle" => $mensajeDetalle,
-        //     "logs" => $logs,
-        // ]);
+        $requestsalida = response()->json([
+            "respuesta"      => $respuesta,
+            "mensaje"        => $mensaje,
+            "datos"          => $datos,
+            "mensajeDetalle" => $mensajeDetalle,
+            "logs" => $logs,
+            "usutoken" => $usutoken,
+        ]);
 
         // $AuditoriaController = new AuditoriaController;
         // $registrarAuditoria  = $AuditoriaController->registrarAuditoria(
@@ -408,7 +406,7 @@ class MetCargarSubsidiosPlantillaController extends Controller
         //     $logs // log
         // );
 
-        // return $requestsalida;
+        return $requestsalida;
     }
 
     private function EliminarDuplicidad($array, $dato, $linea)
