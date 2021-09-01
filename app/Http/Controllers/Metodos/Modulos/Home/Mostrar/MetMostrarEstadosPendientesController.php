@@ -172,7 +172,7 @@ class MetMostrarEstadosPendientesController extends Controller
                         
                         $date2 = new DateTime($fecha_carga_real);
 
-                        if($date1 > $date2){
+                        if($date1 >= $date2){
                             $diff = $date1->diff($date2);
 
                             if($diff->days > 0){
