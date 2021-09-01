@@ -172,18 +172,23 @@ class MetMostrarEstadosPendientesController extends Controller
                         
                         $date2 = new DateTime($fecha_carga_real);
 
-                        if($date1 >= $date2){
-                            $diff = $date1->diff($date2);
-
-                            if($diff->days > 0){
-                                $diaRetraso = $diff->days;
+                        if($date1 == $date2){
+                            $diaRetraso = "0";
+                        }else{
+                            if($date1 > $date2){
+                                $diff = $date1->diff($date2);
+    
+                                if($diff->days > 0){
+                                    $diaRetraso = $diff->days;
+                                }else{
+                                    $diaRetraso = "0";
+                                }
+    
                             }else{
                                 $diaRetraso = "0";
                             }
-
-                        }else{
-                            $diaRetraso = "0";
                         }
+                        
                     }
 
                     $espsDistribuidoras[$posicionEsp]['espdiaretraso'] = $diaRetraso;
