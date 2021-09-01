@@ -13,7 +13,9 @@ class MetMostrarEstadosPendientesController extends Controller
 {
     public function MetMostrarEstadosPendientes(Request $request)
     {
-
+        $date1 = "";
+        $date2 = "";
+        
         $data = [];
         $espsDistribuidoras = [];
 
@@ -209,7 +211,9 @@ class MetMostrarEstadosPendientesController extends Controller
 
         $requestsalida = response()->json([
             "datos" => $data,
-            "espsDistribuidoras" => $espsDistribuidoras
+            "espsDistribuidoras" => $espsDistribuidoras,
+            "date1" => $date1,
+            "date2" => $date2,
         ]);
 
         return $requestsalida;
