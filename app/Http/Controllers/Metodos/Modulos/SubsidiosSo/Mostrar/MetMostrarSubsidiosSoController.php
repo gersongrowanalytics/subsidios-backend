@@ -75,6 +75,7 @@ class MetMostrarSubsidiosSoController extends Controller
                                     ->get([
                                         'cli.cliid',
                                         'clizona',
+                                        'clisuchml',
                                         'clihml as clinombre',
                                         // 'clinombre',
                                         'sdesubcliente',
