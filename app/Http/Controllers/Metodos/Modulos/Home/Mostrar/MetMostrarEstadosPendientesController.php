@@ -29,8 +29,9 @@ class MetMostrarEstadosPendientesController extends Controller
         if($fechaFinal != null){
             $fechaFinal = date("Y-m", strtotime($fechaFinal));
         }else{
-            $fechaInicio = "2021-07-01";
-            $fechaFinal = "2021-07-31";
+            // $fechaInicio = "2021-07-01";
+            // $fechaFinal = "2021-07-01";
+            $fechaFinal = date("Y-m", strtotime("2021-07-01"));
         }
 
         $tprs = tprtipospromociones::get();
