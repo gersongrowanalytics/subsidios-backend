@@ -193,7 +193,7 @@ class MetCargarSubsidiosController extends Controller
                                         $espn->espid = $pkid;
                                         $espn->cliid = $cli->cliid;
                                         $espn->fecid = $fec->fecid;
-                                        $espn->perid = 2; // POR DEFECTO ES 2
+                                        $espn->perid = 8; // POR DEFECTO ES 2
                                         $espn->areid = $are->areid;
                                         // $espn->areid = 11;
 
@@ -207,7 +207,7 @@ class MetCargarSubsidiosController extends Controller
                                         $espn->espfechactualizacion = $fechaActual;
                                         // $espn->espbasedato = $cli->clishipto;
                                         $espn->espbasedato = "";
-                                        $espn->espresponsable = "Equipo SAC";
+                                        $espn->espresponsable = "SAC";
 
                                         $date1 = new DateTime($fechaActual);
                                         $fecha_carga_real = date("Y-m-d", strtotime($espn->espfechaprogramado));
