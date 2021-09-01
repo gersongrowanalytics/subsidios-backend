@@ -69,6 +69,7 @@ class MetMostrarSubsidiosSoController extends Controller
                                     })
                                     // ->orderBy('sdestatus' , 'DESC')
                                     ->orderBy('clihml' , 'DESC')
+                                    ->orderBy('sdesector' , 'DESC')
                                     ->orderBy('sdecantidadbultos' , 'DESC')
                                     ->get([
                                         'cli.cliid',
