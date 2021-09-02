@@ -67,7 +67,7 @@ class MetCargarFacturasSiController extends Controller
 
         // $usutoken = $request->header('api_token');
         $usutoken = "TOKENESPECIFICOUNIFODEVGERSONGROW1845475#LD72";
-        $archivo  = $_FILES['file']['name'];
+        $archivo  = "archivo";
 
         $usu = usuusuarios::where('usutoken', $usutoken)->first(['usuid', 'usuusuario']);
 
