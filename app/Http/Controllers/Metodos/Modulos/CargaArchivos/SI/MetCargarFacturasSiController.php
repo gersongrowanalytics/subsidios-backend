@@ -31,9 +31,9 @@ class MetCargarFacturasSiController extends Controller
 {
     public function MetCargarFacturasSi(Request $request)
     {
-        // @ini_set( 'upload_max_size' , '64M' );
-        // @ini_set( 'post_max_size', '128M');
-        // @ini_set( 'memory_limit', '256M' );
+        @ini_set( 'upload_max_size' , '64M' );
+        @ini_set( 'post_max_size', '128M');
+        @ini_set( 'memory_limit', '256M' );
         date_default_timezone_set("America/Lima");
         $fechaActual = date('Y-m-d');
         $fecid = 0;
