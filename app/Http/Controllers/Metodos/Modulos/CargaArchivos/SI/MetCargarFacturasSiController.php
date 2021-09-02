@@ -31,9 +31,9 @@ class MetCargarFacturasSiController extends Controller
 {
     public function MetCargarFacturasSi(Request $request)
     {
-        @ini_set( 'upload_max_size' , '64M' );
-        @ini_set( 'post_max_size', '128M');
-        @ini_set( 'memory_limit', '256M' );
+        // @ini_set( 'upload_max_size' , '64M' );
+        // @ini_set( 'post_max_size', '128M');
+        // @ini_set( 'memory_limit', '256M' );
         date_default_timezone_set("America/Lima");
         $fechaActual = date('Y-m-d');
         $fecid = 0;
@@ -67,13 +67,13 @@ class MetCargarFacturasSiController extends Controller
 
         // $usutoken = $request->header('api_token');
         $usutoken = "TOKENESPECIFICOUNIFODEVGERSONGROW1845475#LD72";
-        $archivo  = "archivo";
+        $archivo  = "sad";
 
         $usu = usuusuarios::where('usutoken', $usutoken)->first(['usuid', 'usuusuario']);
 
         $codigoArchivoAleatorio = mt_rand(0, mt_getrandmax())/mt_getrandmax();
 
-        $fichero_subido = base_path().'/public/Sistema/Modulos/CargaArchivos/SI/Facturas/'.basename($codigoArchivoAleatorio.'-'.$usu->usuid.'-'.$usu->usuusuario.'-'.$fechaActual.'-'.$_FILES['file']['name']);
+        $fichero_subido = base_path().'/public/Sistema/Modulos/CargaArchivos/SI/Facturas/'.basename($codigoArchivoAleatorio.'-'.$usu->usuid.'-'.$usu->usuusuario.'-'.$fechaActual.'-'."sad");
 
         if (move_uploaded_file($_FILES['file']['tmp_name'], $fichero_subido)) {
 
