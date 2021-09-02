@@ -57,12 +57,12 @@ class MetCargarSOController extends Controller
         $fichero_subido = base_path().'/public/Sistema/Modulos/CargaArchivos/SO/SO/'.basename($codigoArchivoAleatorio.'-'.$usu->usuid.'-'.$usu->usuusuario.'-'.$fechaActual.'-'.$_FILES['file']['name']);
 
         if (move_uploaded_file($_FILES['file']['tmp_name'], $fichero_subido)) {
-            $objPHPExcel    = IOFactory::load($fichero_subido);
-            $objPHPExcel->setActiveSheetIndex(0);
-            $numRows        = $objPHPExcel->setActiveSheetIndex(0)->getHighestRow();
-            $ultimaColumna  = $objPHPExcel->setActiveSheetIndex(0)->getHighestColumn();
+            // $objPHPExcel    = IOFactory::load($fichero_subido);
+            // $objPHPExcel->setActiveSheetIndex(0);
+            // $numRows        = $objPHPExcel->setActiveSheetIndex(0)->getHighestRow();
+            // $ultimaColumna  = $objPHPExcel->setActiveSheetIndex(0)->getHighestColumn();
 
-            $logs['NUMERO_LINEAS_EXCEL'] = $numRows;
+            // $logs['NUMERO_LINEAS_EXCEL'] = $numRows;
 
             // fsofacturasso::where('fsoid', '>', '0')->delete();
 
