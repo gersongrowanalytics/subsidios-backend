@@ -78,45 +78,45 @@ class MetCargarFacturasSiController extends Controller
         if (move_uploaded_file($_FILES['file']['tmp_name'], $fichero_subido)) {
 
             // OBTENER CODIGOS DE COMPROBANTES
-            $tpcEstaticos = array(
-                array(
-                    "id" => 0,
-                    "codigo" => "NO ES NINGUNO",
-                )
-            );
+            // $tpcEstaticos = array(
+            //     array(
+            //         "id" => 0,
+            //         "codigo" => "NO ES NINGUNO",
+            //     )
+            // );
 
-            // OBTENER SERIES DE COMPROBANTES
-            $secEstaticos = array(
-                array(
-                    "id" => 0,
-                    "tpcid" => "NO ES NINGUNO",
-                    "serie" => "NO ES NINGUNO",
-                )
-            );
+            // // OBTENER SERIES DE COMPROBANTES
+            // $secEstaticos = array(
+            //     array(
+            //         "id" => 0,
+            //         "tpcid" => "NO ES NINGUNO",
+            //         "serie" => "NO ES NINGUNO",
+            //     )
+            // );
 
-            $objPHPExcel    = IOFactory::load($fichero_subido);
-            $objPHPExcel->setActiveSheetIndex(0);
-            $numRows        = $objPHPExcel->setActiveSheetIndex(0)->getHighestRow();
-            $ultimaColumna  = $objPHPExcel->setActiveSheetIndex(0)->getHighestColumn();
+            // $objPHPExcel    = IOFactory::load($fichero_subido);
+            // $objPHPExcel->setActiveSheetIndex(0);
+            // $numRows        = $objPHPExcel->setActiveSheetIndex(0)->getHighestRow();
+            // $ultimaColumna  = $objPHPExcel->setActiveSheetIndex(0)->getHighestColumn();
 
-            $logs['NUMERO_LINEAS_EXCEL'] = $numRows;
+            // $logs['NUMERO_LINEAS_EXCEL'] = $numRows;
 
 
-            $secultimo = secseriescomprobantes::orderby('secid', 'desc')->first();
-            $pksec = $secultimo->secid + 1;
+            // $secultimo = secseriescomprobantes::orderby('secid', 'desc')->first();
+            // $pksec = $secultimo->secid + 1;
 
-            $fdsultimo = fdsfacturassidetalles::orderby('fdsid', 'desc')->first();
-            $pkfds = $fdsultimo->fdsid + 1;
+            // $fdsultimo = fdsfacturassidetalles::orderby('fdsid', 'desc')->first();
+            // $pkfds = $fdsultimo->fdsid + 1;
             
-            $fsiultimo = fsifacturassi::orderby('fsiid', 'desc')->first();
-            $pkfsi = $fsiultimo->fsiid + 1;
+            // $fsiultimo = fsifacturassi::orderby('fsiid', 'desc')->first();
+            // $pkfsi = $fsiultimo->fsiid + 1;
             
             
-            $ndsultimo = ndsnotascreditossidetalles::orderby('ndsid', 'desc')->first();
-            $pknds = $ndsultimo->ndsid + 1;
+            // $ndsultimo = ndsnotascreditossidetalles::orderby('ndsid', 'desc')->first();
+            // $pknds = $ndsultimo->ndsid + 1;
 
-            $nsiultimo = nsinotascreditossi::orderby('nsiid', 'desc')->first();
-            $pknsi = $nsiultimo->nsiid + 1;
+            // $nsiultimo = nsinotascreditossi::orderby('nsiid', 'desc')->first();
+            // $pknsi = $nsiultimo->nsiid + 1;
 
 
             // for ($i=2; $i <= $numRows; $i++) {
