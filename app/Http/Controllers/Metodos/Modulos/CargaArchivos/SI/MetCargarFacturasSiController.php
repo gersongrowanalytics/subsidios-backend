@@ -67,13 +67,13 @@ class MetCargarFacturasSiController extends Controller
 
         // $usutoken = $request->header('api_token');
         $usutoken = "TOKENESPECIFICOUNIFODEVGERSONGROW1845475#LD72";
-        $archivo  = "sad";
+        $archivo  = $_FILES['file']['name'];
 
         $usu = usuusuarios::where('usutoken', $usutoken)->first(['usuid', 'usuusuario']);
 
         $codigoArchivoAleatorio = mt_rand(0, mt_getrandmax())/mt_getrandmax();
 
-        $fichero_subido = base_path().'/public/Sistema/Modulos/CargaArchivos/SI/Facturas/'.basename($codigoArchivoAleatorio.'-'.$usu->usuid.'-'.$usu->usuusuario.'-'.$fechaActual.'-'."sad");
+        $fichero_subido = base_path().'/public/Sistema/Modulos/CargaArchivos/SI/Facturas/'.basename($codigoArchivoAleatorio.'-'.$usu->usuid.'-'.$usu->usuusuario.'-'.$fechaActual.'-'.$_FILES['file']['name']);
 
         if (move_uploaded_file($_FILES['file']['tmp_name'], $fichero_subido)) {
 
