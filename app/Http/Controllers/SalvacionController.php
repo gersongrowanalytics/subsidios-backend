@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\cliclientes;
 use App\Models\zonzonas;
+use App\Models\sdesubsidiosdetalles;
 
 class SalvacionController extends Controller
 {
@@ -29,5 +30,18 @@ class SalvacionController extends Controller
             $cli->update();
         }
 
+    }
+
+    public function ReinicarSubDtYReal($fecid)
+    {
+
+        $sdee = sdesubsidiosdetalles::where('fecid', $fecid)->update([
+            "sdecantidadbultos" => 0,
+            "sdemontoareconocer" => 0,
+            "sdecantidadbultosreal" => 0,
+            "sdemontoareconocerreal" => 0,
+            "sdestatus" => null,
+            "sdediferenciaahorro" => null,
+        ]);
     }
 }

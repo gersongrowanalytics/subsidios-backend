@@ -32,6 +32,7 @@ $router->post('/enviar-correo', 'Validaciones\RecuperarContrasenia\RecuperarCont
     $router->group(['prefix' => 'modulo'], function () use ($router) {
 
         $router->get('/salvacion/asignar-zonas', 'SalvacionController@HabilitarZonas');
+        $router->get('/salvacion/reiniciar-subsidos-data-dt/{fecid}', 'SalvacionController@ReinicarSubDtYReal');
 
 
         $router->group(['prefix' => 'cargaArchivos'], function () use ($router) {
