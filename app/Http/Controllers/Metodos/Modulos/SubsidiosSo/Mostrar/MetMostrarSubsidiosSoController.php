@@ -20,6 +20,8 @@ class MetMostrarSubsidiosSoController extends Controller
         if($fechaInicio != null){
             $fechaInicio = date("Y-m-d", strtotime($fechaInicio));
             $fechaFinal  = date("Y-m-d", strtotime($fechaFinal));
+        }else{
+
         }
 
         $descargarSde = $this->ArmarExcelDescargaSubsidiosSo($fechaInicio, $fechaFinal);
@@ -42,6 +44,8 @@ class MetMostrarSubsidiosSoController extends Controller
                                 foreach($zons as $zona){
                                     $query->orwhere('zonnombre', $zona->clizona);
                                 }
+                            }else{
+                                $query->where('zonnombre', "-");
                             }
                         })
                         ->orderBy('zonorden', 'desc')
