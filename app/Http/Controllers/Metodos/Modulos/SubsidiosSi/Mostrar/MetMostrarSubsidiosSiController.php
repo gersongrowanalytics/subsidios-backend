@@ -43,6 +43,8 @@ class MetMostrarSubsidiosSiController extends Controller
                                 foreach($zons as $zona){
                                     $query->orwhere('zonnombre', $zona->clizona);
                                 }
+                            }else{
+                                $query->where('zonnombre', "-");
                             }
                         })
                         ->orderBy('zonorden', 'desc')
