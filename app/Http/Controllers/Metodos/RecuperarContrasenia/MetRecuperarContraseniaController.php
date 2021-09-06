@@ -22,9 +22,10 @@ class MetRecuperarContraseniaController extends Controller
         $usu = usuusuarios::where('usucorreo', $correo)->first();
 
         if($usu){
-            $nuevoToken    = Str::random(60);
-            $usu->usutoken = $nuevoToken;
-            $usu->update();
+            $nuevoToken    = $usu->usutoken;
+            // $nuevoToken    = Str::random(60);
+            // $usu->usutoken = $nuevoToken;
+            // $usu->update();
 
             $data = ['token' => $nuevoToken];
             Mail::to($correo)->send(new MailRecuperarContrasenaOutlook($data));
