@@ -10,6 +10,8 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use App\Models\usuusuarios;
 use App\Models\cliclientes;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\MailCargaArchivoOutlook;
 
 class MetCargarMaestraClientesController extends Controller
 {
@@ -30,7 +32,7 @@ class MetCargarMaestraClientesController extends Controller
         $pkis = array();
 
         $respuesta      = true;
-        $mensaje        = "";
+        $mensaje        = "El archivo se subio correctamente";
         $datos          = [];
         $mensajeDetalle = "";
         $mensajedev     = "";
@@ -44,8 +46,16 @@ class MetCargarMaestraClientesController extends Controller
 
             $codigoArchivoAleatorio = mt_rand(0, mt_getrandmax())/mt_getrandmax();
 
-            $fichero_subido = base_path().'/public/Sistema/Modulos/CargaArchivos/Clientes/'.basename($codigoArchivoAleatorio.'-'.$usu->usuid.'-'.$usu->usuusuario.'-'.$fechaActual.'-'.$_FILES['file']['name']);
+            $ubicacionArchivo = '/Sistema/Modulos/CargaArchivos/Clientes/'.basename($codigoArchivoAleatorio.'-'.$usu->usuid.'-'.$usu->usuusuario.'-'.$fechaActual.'-'.$_FILES['file']['name']);
+            $fichero_subido = base_path().'/public'.$ubicacionArchivo;
+
             if (move_uploaded_file($_FILES['file']['tmp_name'], $fichero_subido)) {
+                
+                $data = [
+                    'archivo' => $_FILES['file']['name'], "tipo" => "Maestra de Clientes", "usuario" => $usu->usuusuario,
+                    "url_archivo" => env('APP_URL').$ubicacionArchivo
+                ];
+                Mail::to(env('USUARIO_ENVIAR_MAIL'))->send(new MailCargaArchivoOutlook($data));
 
                 $objPHPExcel    = IOFactory::load($fichero_subido);
                 $objPHPExcel->setActiveSheetIndex(0);

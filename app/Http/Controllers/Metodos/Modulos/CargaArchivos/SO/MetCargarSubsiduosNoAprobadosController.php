@@ -34,7 +34,7 @@ class MetCargarSubsiduosNoAprobadosController extends Controller
         $pkis = array();
 
         $respuesta      = true;
-        $mensaje        = "";
+        $mensaje        = "El archivo se subio correctamente";
         $datos          = [];
         $mensajeDetalle = "";
 

@@ -21,6 +21,8 @@ use App\Models\ntcnotascreditos;
 use App\Models\ncdnotascreditosdetalles;
 use App\Models\proproductos;
 use App\Models\fecfechas;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\MailCargaArchivoOutlook;
 
 class MetCargarFacturasController extends Controller
 {
@@ -49,7 +51,7 @@ class MetCargarFacturasController extends Controller
         $pkis = array();
 
         $respuesta      = true;
-        $mensaje        = "";
+        $mensaje        = "El archivo se subio correctamente";
         $datos          = [];
         $mensajeDetalle = "";
 
@@ -62,8 +64,16 @@ class MetCargarFacturasController extends Controller
 
         $codigoArchivoAleatorio = mt_rand(0, mt_getrandmax())/mt_getrandmax();
 
-        $fichero_subido = base_path().'/public/Sistema/Modulos/CargaArchivos/Facturas/'.basename($codigoArchivoAleatorio.'-'.$usu->usuid.'-'.$usu->usuusuario.'-'.$fechaActual.'-'.$_FILES['file']['name']);
+        $ubicacionArchivo = '/Sistema/Modulos/CargaArchivos/Facturas/'.basename($codigoArchivoAleatorio.'-'.$usu->usuid.'-'.$usu->usuusuario.'-'.$fechaActual.'-'.$_FILES['file']['name']);
+        $fichero_subido = base_path().'/public'.$ubicacionArchivo;
+
         if (move_uploaded_file($_FILES['file']['tmp_name'], $fichero_subido)) {
+
+            $data = [
+                'archivo' => $_FILES['file']['name'], "tipo" => "Cargar Facturas", "usuario" => $usu->usuusuario,
+                "url_archivo" => env('APP_URL').$ubicacionArchivo
+            ];
+            Mail::to(env('USUARIO_ENVIAR_MAIL'))->send(new MailCargaArchivoOutlook($data));
 
             $borrarFacturas     = false;
             $borrarNotasCredito = false;

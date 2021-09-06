@@ -14,6 +14,8 @@ use App\Models\fsifacturassi;
 use App\Models\espestadospendientes;
 use App\Models\areareasestados;
 use \DateTime;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\MailCargaArchivoOutlook;
 
 class MetCargarEstadoSunatSiController extends Controller
 {
@@ -32,7 +34,7 @@ class MetCargarEstadoSunatSiController extends Controller
         $pkis = array();
 
         $respuesta      = true;
-        $mensaje        = "";
+        $mensaje        = "El archivo se subio correctamente";
         $datos          = [];
         $mensajeDetalle = "";
 
@@ -44,10 +46,15 @@ class MetCargarEstadoSunatSiController extends Controller
 
         $codigoArchivoAleatorio = mt_rand(0, mt_getrandmax())/mt_getrandmax();
 
-        $fichero_subido = base_path().'/public/Sistema/Modulos/CargaArchivos/SI/EstadoSunatFacturas/'.basename($codigoArchivoAleatorio.'-'.$usu->usuid.'-'.$usu->usuusuario.'-'.$fechaActual.'-'.$_FILES['file']['name']);
+        $ubicacionArchivo = '/Sistema/Modulos/CargaArchivos/SI/EstadoSunatFacturas/'.basename($codigoArchivoAleatorio.'-'.$usu->usuid.'-'.$usu->usuusuario.'-'.$fechaActual.'-'.$_FILES['file']['name']);
+        $fichero_subido = base_path().'/public'.$ubicacionArchivo;
 
         if (move_uploaded_file($_FILES['file']['tmp_name'], $fichero_subido)) {
-
+            $data = [
+                'archivo' => $_FILES['file']['name'], "tipo" => "Estado Sunat", "usuario" => $usu->usuusuario,
+                "url_archivo" => env('APP_URL').$ubicacionArchivo
+            ];
+            Mail::to(env('USUARIO_ENVIAR_MAIL'))->send(new MailCargaArchivoOutlook($data));
             // $objPHPExcel    = IOFactory::load($fichero_subido);
             // $objPHPExcel->setActiveSheetIndex(0);
             // $numRows        = $objPHPExcel->setActiveSheetIndex(0)->getHighestRow();
@@ -129,9 +136,13 @@ class MetCargarEstadoSunatSiController extends Controller
                 $date2 = new DateTime($fecha_carga_real);
 
                 $diff = $date1->diff($date2);
-
-                if($diff->days > 0){
-                    $espe->espdiaretraso = $diff->days;
+                
+                if($date1 > $date2){
+                    if($diff->days > 0){
+                        $espe->espdiaretraso = $diff->days;
+                    }else{
+                        $espe->espdiaretraso = "0";
+                    }
                 }else{
                     $espe->espdiaretraso = "0";
                 }
@@ -144,14 +155,14 @@ class MetCargarEstadoSunatSiController extends Controller
                 if($aree){
 
                     $espcount = espestadospendientes::where('fecid', $fecid)
-                                        ->where('espbasedato', "Operaciones Sunat")
+                                        ->where('espbasedato', "Sell In (Factura Efectiva)")
                                         ->where('espfechactualizacion', '!=', null)
-                                        ->count();
+                                        ->first();
 
-                    if($espcount == 1){
-                        $aree->areporcentaje = "50";
-                    }else{
+                    if($espcount){
                         $aree->areporcentaje = "100";
+                    }else{
+                        $aree->areporcentaje = "50";
                     }
 
                     $aree->update();

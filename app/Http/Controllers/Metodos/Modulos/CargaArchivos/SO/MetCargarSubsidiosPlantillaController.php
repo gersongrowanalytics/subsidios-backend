@@ -18,6 +18,8 @@ use App\Models\areareasestados;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 use \DateTime;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\MailCargaArchivoOutlook;
 
 class MetCargarSubsidiosPlantillaController extends Controller
 {
@@ -38,7 +40,7 @@ class MetCargarSubsidiosPlantillaController extends Controller
         $pkis = array();
 
         $respuesta      = true;
-        $mensaje        = "";
+        $mensaje        = "El archivo se subio correctamente";
         $datos          = [];
         $mensajeDetalle = "";
 
@@ -54,9 +56,16 @@ class MetCargarSubsidiosPlantillaController extends Controller
 
         $codigoArchivoAleatorio = mt_rand(0, mt_getrandmax())/mt_getrandmax();
 
-        $fichero_subido = base_path().'/public/Sistema/Modulos/CargaArchivos/SO/SubsidiosPlantilla/'.basename($codigoArchivoAleatorio.'-'.$usu->usuid.'-'.$usu->usuusuario.'-'.$fechaActual.'-'.$_FILES['file']['name']);
+        $ubicacionArchivo = '/Sistema/Modulos/CargaArchivos/SO/SubsidiosPlantilla/'.basename($codigoArchivoAleatorio.'-'.$usu->usuid.'-'.$usu->usuusuario.'-'.$fechaActual.'-'.$_FILES['file']['name']);
+        $fichero_subido = base_path().'/public'.$ubicacionArchivo;
 
         if (move_uploaded_file($_FILES['file']['tmp_name'], $fichero_subido)) {
+
+            $data = [
+                'archivo' => $_FILES['file']['name'], "tipo" => "Plantilla Subsidios (objetivos)", "usuario" => $usu->usuusuario,
+                "url_archivo" => env('APP_URL').$ubicacionArchivo
+            ];
+            Mail::to(env('USUARIO_ENVIAR_MAIL'))->send(new MailCargaArchivoOutlook($data));
 
             $objPHPExcel    = IOFactory::load($fichero_subido);
             $objPHPExcel->setActiveSheetIndex(0);
@@ -340,9 +349,12 @@ class MetCargarSubsidiosPlantillaController extends Controller
 
                     $diff = $date2->diff($date1);
                     // $diff = $date1->diff($date2);
-
-                    if($diff->days > 0){
-                        $espe->espdiaretraso = $diff->days;
+                    if($date1 > $date2){
+                        if($diff->days > 0){
+                            $espe->espdiaretraso = $diff->days;
+                        }else{
+                            $espe->espdiaretraso = "0";
+                        }
                     }else{
                         $espe->espdiaretraso = "0";
                     }
@@ -382,6 +394,7 @@ class MetCargarSubsidiosPlantillaController extends Controller
         }
 
         $logs["MENSAJE"] = $mensaje;
+        $logs["RESPUESTA"] = $respuesta;
         
         $requestsalida = response()->json([
             "respuesta"      => $respuesta,

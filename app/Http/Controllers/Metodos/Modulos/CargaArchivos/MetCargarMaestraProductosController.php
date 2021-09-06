@@ -14,6 +14,8 @@ use App\Models\catcategorias;
 use App\Models\concodigosnegocios;
 use App\Models\coscodigossectores;
 use App\Models\marmarcas;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\MailCargaArchivoOutlook;
 
 class MetCargarMaestraProductosController extends Controller
 {
@@ -38,7 +40,7 @@ class MetCargarMaestraProductosController extends Controller
         $pkis = array();
 
         $respuesta      = true;
-        $mensaje        = "";
+        $mensaje        = "El archivo se subio correctamente";
         $datos          = [];
         $mensajeDetalle = "";
         $mensajedev     = "";
@@ -52,8 +54,17 @@ class MetCargarMaestraProductosController extends Controller
 
             $codigoArchivoAleatorio = mt_rand(0, mt_getrandmax())/mt_getrandmax();
 
-            $fichero_subido = base_path().'/public/Sistema/Modulos/CargaArchivos/Productos/'.basename($codigoArchivoAleatorio.'-'.$usu->usuid.'-'.$usu->usuusuario.'-'.$fechaActual.'-'.$_FILES['file']['name']);
+            
+            $ubicacionArchivo = '/Sistema/Modulos/CargaArchivos/Productos/'.basename($codigoArchivoAleatorio.'-'.$usu->usuid.'-'.$usu->usuusuario.'-'.$fechaActual.'-'.$_FILES['file']['name']);
+            $fichero_subido = base_path().'/public'.$ubicacionArchivo;
+
             if (move_uploaded_file($_FILES['file']['tmp_name'], $fichero_subido)) {
+                
+                $data = [
+                    'archivo' => $_FILES['file']['name'], "tipo" => "Maestra de Productos", "usuario" => $usu->usuusuario,
+                    "url_archivo" => env('APP_URL').$ubicacionArchivo
+                ];
+                Mail::to(env('USUARIO_ENVIAR_MAIL'))->send(new MailCargaArchivoOutlook($data));
 
                 // OBTENER CODIGOS DE NEGOCIOS
                 $conEstaticos = array(

@@ -197,12 +197,31 @@ class DatabaseSeeder extends Seeder
         // ]);
 
 
+        // perpersonas::create([
+        //     "pernumerodocumentoidentidad" => "0000000",
+        //     "pernombrecompleto"           => "Alonso Roel",
+        //     "pernombre"                   => "Alonso",
+        //     "perapellidopaterno"          => "Roel",
+        //     "perapellidomaterno"          => "",
+        // ]);
+
+        // usuusuarios::create([
+        //     "tpuid"           => 2,
+        //     "perid"           => 4,
+        //     "estid"           => 1,
+        //     "usucodigo"       => "SoftSacAroel-01",
+        //     "usuusuario"      => "aroel@softys.com",
+        //     "usucorreo"       => "aroel@softys.com",
+        //     "usucontrasenia"  => Hash::make('Alonso$$Roel$$982831'),
+        //     "usutoken"        => "AlonsowOPOR439223ldsawpwddmxdowke989230to123Roel",
+        // ]);
+
         perpersonas::create([
             "pernumerodocumentoidentidad" => "0000000",
-            "pernombrecompleto"           => "Alonso Roel",
-            "pernombre"                   => "Alonso",
-            "perapellidopaterno"          => "Roel",
-            "perapellidomaterno"          => "",
+            "pernombrecompleto"           => "Eduardo Soto Mayor",
+            "pernombre"                   => "Eduardo",
+            "perapellidopaterno"          => "Soto",
+            "perapellidomaterno"          => "Mayor",
         ]);
 
         usuusuarios::create([
@@ -210,11 +229,10 @@ class DatabaseSeeder extends Seeder
             "perid"           => 4,
             "estid"           => 1,
             "usucodigo"       => "SoftSacAroel-01",
-            "usuusuario"      => "aroel@softys.com",
-            "usucorreo"       => "aroel@softys.com",
-            "usucontrasenia"  => Hash::make('Alonso$$Roel$$982831'),
-            "usutoken"        => "AlonsowOPOR439223ldsawpwddmxdowke989230to123Roel",
+            "usuusuario"      => "esotomayor@softys.com",
+            "usucorreo"       => "esotomayor@softys.com",
+            "usucontrasenia"  => Hash::make('Eduardo$$Soto$$23414554'),
+            "usutoken"        => "EduardoowOPOR4392Maysawq222dkka2ldowke989230to123Stoo",
         ]);
-
     }
 }

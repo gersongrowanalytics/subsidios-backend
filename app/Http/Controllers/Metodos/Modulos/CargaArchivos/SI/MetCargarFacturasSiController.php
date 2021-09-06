@@ -26,6 +26,8 @@ use App\Models\sfssubsidiosfacturassi;
 use App\Models\espestadospendientes;
 use App\Models\areareasestados;
 use \DateTime;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\MailCargaArchivoOutlook;
 
 class MetCargarFacturasSiController extends Controller
 {
@@ -41,12 +43,11 @@ class MetCargarFacturasSiController extends Controller
             "MENSAJE" => "",
             "NUMERO_LINEAS_EXCEL" => 0,
             "FECHA_NO_REGISTRADA" => "",
-            "CLIENTES_NO_ENCONTRADOS" => [],
             "PRODUCTOS_NO_ENCONTRADOS" => [],
             "FACTURA_NO_ASIGNADA" => [],
             "CORRELATIVOS_FACTURAS_NO_ENCONTRADOS" => [],
             "TPC_NO_ENCONTRADO" => [],
-            "NO_EXISTE_CLIENTE" => [],
+            "CLIENTES_NO_ENCONTRADOS" => [],
             "NO_ES_FORMATO_CORRELATIVO_FACTURA" => [],
             "NO_ES_FORMATO_SERIE_FACTURA" => [],
             "NO_ES_FORMATO_CODIGO_FACTURA" => [],
@@ -55,13 +56,12 @@ class MetCargarFacturasSiController extends Controller
             "NO_GUARDO_FACTURA" => [],
             "NUEVA_SERIE_CREADA" => [],
             "CODIGO_DOCUMENTO_NO_EXISTE" => []
-
         );
 
         $pkis = array();
 
         $respuesta      = true;
-        $mensaje        = "";
+        $mensaje        = "El archivo se subio correctamente";
         $datos          = [];
         $mensajeDetalle = "";
 
@@ -73,9 +73,16 @@ class MetCargarFacturasSiController extends Controller
 
         $codigoArchivoAleatorio = mt_rand(0, mt_getrandmax())/mt_getrandmax();
 
-        $fichero_subido = base_path().'/public/Sistema/Modulos/CargaArchivos/SI/Facturas/'.basename($codigoArchivoAleatorio.'-'.$usu->usuid.'-'.$usu->usuusuario.'-'.$fechaActual.'-'.$_FILES['file']['name']);
+        $ubicacionArchivo = '/Sistema/Modulos/CargaArchivos/SI/Facturas/'.basename($codigoArchivoAleatorio.'-'.$usu->usuid.'-'.$usu->usuusuario.'-'.$fechaActual.'-'.$_FILES['file']['name']);
+        $fichero_subido = base_path().'/public'.$ubicacionArchivo;
 
         if (move_uploaded_file($_FILES['file']['tmp_name'], $fichero_subido)) {
+
+            $data = [
+                'archivo' => $_FILES['file']['name'], "tipo" => "Facturas SI", "usuario" => $usu->usuusuario,
+                "url_archivo" => env('APP_URL').$ubicacionArchivo
+            ];
+            Mail::to(env('USUARIO_ENVIAR_MAIL'))->send(new MailCargaArchivoOutlook($data));
 
             // OBTENER CODIGOS DE COMPROBANTES
             // $tpcEstaticos = array(
@@ -568,8 +575,8 @@ class MetCargarFacturasSiController extends Controller
             //                                         }else{
             //                                             $respuesta = false;
             //                                             $mensaje = "";
-            //                                             // $logs['NO_EXISTE_CLIENTE'][] = "El codigo del cliente: ".$ex_solicitante." no existe en nuestros registros, recomendamos actualizar la maestra de clientes. EN LA LINEA: ".$i;    
-            //                                             $logs["NO_EXISTE_CLIENTE"] = $this->EliminarDuplicidad( $logs["NO_EXISTE_CLIENTE"], $ex_solicitante, $i);
+            //                                             // $logs['CLIENTES_NO_ENCONTRADOS'][] = "El codigo del cliente: ".$ex_solicitante." no existe en nuestros registros, recomendamos actualizar la maestra de clientes. EN LA LINEA: ".$i;    
+            //                                             $logs["CLIENTES_NO_ENCONTRADOS"] = $this->EliminarDuplicidad( $logs["CLIENTES_NO_ENCONTRADOS"], $ex_solicitante, $i);
             //                                         }
 
             //                                     }else{
@@ -646,8 +653,12 @@ class MetCargarFacturasSiController extends Controller
 
                 $diff = $date1->diff($date2);
 
-                if($diff->days > 0){
-                    $espe->espdiaretraso = $diff->days;
+                if($date1 > $date2){
+                    if($diff->days > 0){
+                        $espe->espdiaretraso = $diff->days;
+                    }else{
+                        $espe->espdiaretraso = "0";
+                    }
                 }else{
                     $espe->espdiaretraso = "0";
                 }
@@ -681,6 +692,7 @@ class MetCargarFacturasSiController extends Controller
         }
 
         $logs["MENSAJE"] = $mensaje;
+        $logs["RESPUESTA"] = $respuesta;
 
 
         $requestsalida = response()->json([

@@ -13,12 +13,12 @@ class Zonzonas extends Migration
      */
     public function up()
     {
-        Schema::create('zonzonas', function (Blueprint $table) {
-            $table->increments('zonid');
-            $table->string('zonnombre');
+        // Schema::create('zonzonas', function (Blueprint $table) {
+        //     $table->increments('zonid');
+        //     $table->string('zonnombre');
 
-            $table->timestamps();
-        });
+        //     $table->timestamps();
+        // });
     }
 
     /**
@@ -28,6 +28,6 @@ class Zonzonas extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('zonzonas');
+        // Schema::dropIfExists('zonzonas');
     }
 }
