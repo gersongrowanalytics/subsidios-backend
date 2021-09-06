@@ -259,45 +259,45 @@ class MetCargarSubsidiosPlantillaController extends Controller
 
                                 // PARAMETROS UTILIZADOS PARA CARGAR DATA HISTORICA
 
-                                if($ex_cantidadbultos){
+                                // if($ex_cantidadbultos){
 
-                                    if(is_numeric($ex_cantidadbultos)){
-                                        $sden->sdecantidadbultos  = $ex_cantidadbultos;
-                                        $sden->sdemontoareconocer = $ex_cantidadbultos * $sden->sdedsctodos;
-                                    }else{
-                                        $sden->sdecantidadbultos  = 0;
-                                        $sden->sdemontoareconocer = 0;    
-                                    }
+                                //     if(is_numeric($ex_cantidadbultos)){
+                                //         $sden->sdecantidadbultos  = $ex_cantidadbultos;
+                                //         $sden->sdemontoareconocer = $ex_cantidadbultos * $sden->sdedsctodos;
+                                //     }else{
+                                //         $sden->sdecantidadbultos  = 0;
+                                //         $sden->sdemontoareconocer = 0;    
+                                //     }
 
-                                }else{
-                                    $sden->sdecantidadbultos  = 0;
-                                    $sden->sdemontoareconocer = 0;
-                                }
+                                // }else{
+                                //     $sden->sdecantidadbultos  = 0;
+                                //     $sden->sdemontoareconocer = 0;
+                                // }
 
-                                $sden->sdeaprobado = true;
+                                // $sden->sdeaprobado = true;
 
-                                if($ex_cantidadbultosreal){
+                                // if($ex_cantidadbultosreal){
 
-                                    if(is_numeric($ex_cantidadbultosreal)){
-                                        $sden->sdecantidadbultosreal  = $ex_cantidadbultosreal;
-                                        $sden->sdemontoareconocerreal = $ex_cantidadbultosreal * $sden->sdedsctodos;
-                                    }else{
-                                        $sden->sdecantidadbultosreal  = 0;
-                                        $sden->sdemontoareconocerreal = 0;
-                                    }
+                                //     if(is_numeric($ex_cantidadbultosreal)){
+                                //         $sden->sdecantidadbultosreal  = $ex_cantidadbultosreal;
+                                //         $sden->sdemontoareconocerreal = $ex_cantidadbultosreal * $sden->sdedsctodos;
+                                //     }else{
+                                //         $sden->sdecantidadbultosreal  = 0;
+                                //         $sden->sdemontoareconocerreal = 0;
+                                //     }
 
-                                }else{
-                                    $sden->sdecantidadbultosreal  = 0;
-                                    $sden->sdemontoareconocerreal = 0;
-                                }
+                                // }else{
+                                //     $sden->sdecantidadbultosreal  = 0;
+                                //     $sden->sdemontoareconocerreal = 0;
+                                // }
 
-                                if($ex_cantidadbultos == $ex_cantidadbultosreal){
-                                    $sden->sdestatus = "OK";
-                                }else{
-                                    $sden->sdestatus = "ERROR CANTIDADES";
-                                }
+                                // if($ex_cantidadbultos == $ex_cantidadbultosreal){
+                                //     $sden->sdestatus = "OK";
+                                // }else{
+                                //     $sden->sdestatus = "ERROR CANTIDADES";
+                                // }
 
-                                $sden->sdediferenciaahorro = $ex_diferenciaahorrocliente;
+                                // $sden->sdediferenciaahorro = $ex_diferenciaahorrocliente;
 
                                 //FINAL PARAMETROS UTILIZADOS PARA CARGAR DATA HISTORICA
 
