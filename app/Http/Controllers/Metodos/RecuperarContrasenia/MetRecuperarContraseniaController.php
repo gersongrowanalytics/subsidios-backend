@@ -58,7 +58,7 @@ class MetRecuperarContraseniaController extends Controller
         $usu = usuusuarios::where('usutoken', $usutoken)->first();
 
         if($usu){
-            $correo = $usu->usucorreo;
+            $correo = $usu->usuusuario;
             $usu->usucontrasenia = Hash::make($contrasenia);
             $usu->update();
 
