@@ -49,6 +49,7 @@ class MetRecuperarContraseniaController extends Controller
     public function MetCambiarContrasenia(Request $request)
     {
         $respuesta = true;
+        $correo = "";
         $mensaje   = "La contraseña se actualizo correctamente";
 
         $usutoken = $request['token'];
@@ -57,7 +58,7 @@ class MetRecuperarContraseniaController extends Controller
         $usu = usuusuarios::where('usutoken', $usutoken)->first();
 
         if($usu){
-
+            $correo = $usu->usucorreo;
             $usu->usucontrasenia = Hash::make($contrasenia);
             $usu->update();
 
@@ -69,8 +70,9 @@ class MetRecuperarContraseniaController extends Controller
         }
 
         return response()->json([
-            'respuesta' => $respuesta,
-            'mensaje'   => $mensaje
+            'respuesta'=> $respuesta,
+            'mensaje'  => $mensaje,
+            'correo'   => $correo,
         ]);
     }
 
