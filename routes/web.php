@@ -26,6 +26,7 @@ $router->post('/login', 'Validaciones\Login\LoginController@ValLogin');
 
 $router->get('/seed', 'Prueba\PruebaController@EjecutarSeeds');
 $router->post('/enviar-correo', 'Validaciones\RecuperarContrasenia\RecuperarContraseniaController@ValRecuperarContrasenia');
+$router->post('/cambiar-contrasenia', 'Validaciones\RecuperarContrasenia\RecuperarContraseniaController@ValCambiarContrasenia');
 
 // $router->group(['middleware' => ['permisos']], function() use($router) {
 

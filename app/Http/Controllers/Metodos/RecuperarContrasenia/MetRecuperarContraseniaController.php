@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\MailRecuperarContrasenaOutlook;
 use App\Models\usuusuarios;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
 
 class MetRecuperarContraseniaController extends Controller
 {
@@ -43,6 +44,34 @@ class MetRecuperarContraseniaController extends Controller
             'correo'  => $correo
         ]);
 
+    }
+
+    public function MetCambiarContrasenia(Request $request)
+    {
+        $respuesta = true;
+        $mensaje   = "La contraseña se actualizo correctamente";
+
+        $usutoken = $request['token'];
+        $contrasenia = $request['contrasenia'];
+
+        $usu = usuusuarios::where('usutoken', $usutoken)->first();
+
+        if($usu){
+
+            $usu->usucontrasenia = Hash::make($contrasenia);
+            $usu->update();
+
+        }else{
+
+            $respuesta = false;
+            $mensaje   = "Lo sentimos la opción de recuperar contraseña ha expirado, recomendamos volver a solicitar el cambio";
+
+        }
+
+        return response()->json([
+            'respuesta' => $respuesta,
+            'mensaje'   => $mensaje
+        ]);
     }
 
     // {

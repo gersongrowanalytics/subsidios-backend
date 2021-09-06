@@ -10,9 +10,13 @@ class RecuperarContraseniaController extends Controller
 {
     public function ValRecuperarContrasenia(Request $request)
     {
-
         $MetRecuperarContrasenia = new MetRecuperarContraseniaController;
         return $MetRecuperarContrasenia->MetRecuperarContrasenia($request);
+    }
 
+    public function ValCambiarContrasenia(Request $request)
+    {
+        $MetCambiarContrasenia = new MetRecuperarContraseniaController;
+        return $MetCambiarContrasenia->MetCambiarContrasenia($request);
     }
 }
