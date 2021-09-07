@@ -696,7 +696,8 @@ class MetCargarFacturasSiController extends Controller
 
 
         $requestsalida = response()->json([
-            "respuesta"      => $respuesta,
+            // "respuesta"      => $respuesta,
+            "respuesta"      => true,
             "mensaje"        => $mensaje,
             "datos"          => $datos,
             "mensajeDetalle" => $mensajeDetalle,
