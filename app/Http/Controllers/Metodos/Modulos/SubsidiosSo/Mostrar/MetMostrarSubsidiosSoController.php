@@ -59,7 +59,8 @@ class MetMostrarSubsidiosSoController extends Controller
 
         foreach($zonas as $posicionZon => $zon){
 
-
+            $zonas[$posicionZon]['desplegado'] = false;
+            
             $sdes = sdesubsidiosdetalles::join('cliclientes as cli', 'cli.cliid', 'sdesubsidiosdetalles.cliid')
                                     ->join('proproductos as pro', 'pro.proid', 'sdesubsidiosdetalles.proid')
                                     ->join('catcategorias as cat', 'cat.catid', 'pro.catid')
