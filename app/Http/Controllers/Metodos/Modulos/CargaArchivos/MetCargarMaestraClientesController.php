@@ -296,7 +296,7 @@ class MetCargarMaestraClientesController extends Controller
         $logs["MENSAJE"] = $mensaje;
 
         $requestsalida = response()->json([
-            "respuesta"      => true,
+            "respuesta"      => $respuesta,
             "mensaje"        => $mensaje,
             "datos"          => $datos,
             "mensajeDetalle" => $mensajeDetalle,
