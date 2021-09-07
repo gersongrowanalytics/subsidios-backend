@@ -98,13 +98,13 @@ class MetCargarSubsidiosPlantillaController extends Controller
                 //     $fec->update();
                 // }
                 
-                sdesubsidiosdetalles::where('fecid', $fec->fecid)
-                                    // ->where('sdesac', 0)
-                                    ->update(["sdeeditado" => 0]);
-                
                 $sdeultimo = sdesubsidiosdetalles::orderby('sdeid', 'desc')->first();
                 $pksde = $sdeultimo->sdeid + 1;
 
+                sdesubsidiosdetalles::where('fecid', $fec->fecid)
+                                    // ->where('sdesac', 0)
+                                    // ->update(["sdeeditado" => 0]);
+                                    ->delete();
 
                 for ($i=6; $i <= $numRows ; $i++) {
                     $pksde = $pksde + 1;
@@ -329,9 +329,9 @@ class MetCargarSubsidiosPlantillaController extends Controller
                                         ->where('sdeeditado', 0)
                                         ->delete();
 
-                sdesubsidiosdetalles::where('fecid', $fec->fecid)
-                                    ->where('sdeeditado', 0)
-                                    ->delete();
+                // sdesubsidiosdetalles::where('fecid', $fec->fecid)
+                //                     ->where('sdeeditado', 0)
+                //                     ->delete();
 
 
                 // AGREGAR REGISTRO
