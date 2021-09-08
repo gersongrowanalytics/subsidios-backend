@@ -203,7 +203,8 @@ class MetCargarMaestraFechasController extends Controller
         }
 
         $logs["MENSAJE"] = $mensaje;
-
+        $logs["RESPUESTA"] = $respuesta;
+        
         $requestsalida = response()->json([
             "respuesta"      => $respuesta,
             "mensaje"        => $mensaje,
