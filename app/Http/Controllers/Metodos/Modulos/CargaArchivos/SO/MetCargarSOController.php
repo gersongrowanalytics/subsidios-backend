@@ -75,6 +75,10 @@ class MetCargarSOController extends Controller
             $logs['NUMERO_LINEAS_EXCEL'] = $numRows;
 
             // // fsofacturasso::where('fsoid', '>', '0')->delete();
+            $fsoultimo = fsofacturasso::orderby('fsoid', 'desc')->first();
+            $pkid = $fsoultimo->fsoid + 1;
+
+            $fec = fecfechas::where('fecmesabierto', true)->first(['fecid']);
 
             for ($i=2; $i <= $numRows ; $i++) {
                 $ex_codigo              = $objPHPExcel->getActiveSheet()->getCell('A'.$i)->getCalculatedValue();
@@ -93,7 +97,7 @@ class MetCargarSOController extends Controller
 
                 // $fec = fecfechas::where('fecfecha', 'LIKE', "%".$ex_codigofecha."%")
                 //             ->first(['fecid']);
-                $fec = fecfechas::where('fecmesabierto', true)->first(['fecid']);
+                
                 
                 if($fec){
 
@@ -110,9 +114,6 @@ class MetCargarSOController extends Controller
 
                         if($cli){
 
-                            $fsoultimo = fsofacturasso::orderby('fsoid', 'desc')->first();
-                            $pkid = $fsoultimo->fsoid + 1;
-
                             $fson = new fsofacturasso;
                             $fson->fsoid            = $pkid;
                             $fson->fecid            = $fec->fecid;
@@ -122,6 +123,7 @@ class MetCargarSOController extends Controller
                             $fson->fsocantidadbulto = $ex_cantidadbultos;
                             if($ex_ventasinigv){
                                 $fson->fsoventasinigv   = $ex_ventasinigv;
+                                $pkid = $pkid + 1;
                             }else{
                                 $fson->fsoventasinigv   = 0;
                             }
@@ -152,53 +154,53 @@ class MetCargarSOController extends Controller
 
             // AGREGAR REGISTRO
 
-            $fec = fecfechas::where('fecmesabierto', true)->first(['fecid']);
-            $fecid = $fec->fecid;
+            // $fec = fecfechas::where('fecmesabierto', true)->first(['fecid']);
+            // $fecid = $fec->fecid;
 
-            $espe = espestadospendientes::where('fecid', $fecid)
-                                        ->where('espbasedato', "Sell Out (Efectivo)")
-                                        ->first();
+            // $espe = espestadospendientes::where('fecid', $fecid)
+            //                             ->where('espbasedato', "Sell Out (Efectivo)")
+            //                             ->first();
 
-            if($espe){
-                $espe->espfechactualizacion = $fechaActual;
+            // if($espe){
+            //     $espe->espfechactualizacion = $fechaActual;
 
-                $date1 = new DateTime($fechaActual);
-                $fecha_carga_real = date("Y-m-d", strtotime($espe->espfechaprogramado));
-                $date2 = new DateTime($fecha_carga_real);
+            //     $date1 = new DateTime($fechaActual);
+            //     $fecha_carga_real = date("Y-m-d", strtotime($espe->espfechaprogramado));
+            //     $date2 = new DateTime($fecha_carga_real);
 
-                $diff = $date1->diff($date2);
+            //     $diff = $date1->diff($date2);
 
-                if($date1 > $date2){
-                    if($diff->days > 0){
-                        $espe->espdiaretraso = $diff->days;
-                    }else{
-                        $espe->espdiaretraso = "0";
-                    }
-                }else{
-                    $espe->espdiaretraso = "0";
-                }
+            //     if($date1 > $date2){
+            //         if($diff->days > 0){
+            //             $espe->espdiaretraso = $diff->days;
+            //         }else{
+            //             $espe->espdiaretraso = "0";
+            //         }
+            //     }else{
+            //         $espe->espdiaretraso = "0";
+            //     }
 
-                $espe->update();
+            //     $espe->update();
 
 
-                $aree = areareasestados::where('areid', $espe->areid)->first();
+            //     $aree = areareasestados::where('areid', $espe->areid)->first();
 
-                if($aree){
+            //     if($aree){
 
-                    $espcount = espestadospendientes::where('fecid', $fecid)
-                                        ->where('espbasedato', "Subsidio Aprobado (Plantilla)")
-                                        ->where('espfechactualizacion', '!=', null)
-                                        ->first();
+            //         $espcount = espestadospendientes::where('fecid', $fecid)
+            //                             ->where('espbasedato', "Subsidio Aprobado (Plantilla)")
+            //                             ->where('espfechactualizacion', '!=', null)
+            //                             ->first();
 
-                    if($espcount){
-                        $aree->areporcentaje = "100";
-                    }else{
-                        $aree->areporcentaje = "50";
-                    }
+            //         if($espcount){
+            //             $aree->areporcentaje = "100";
+            //         }else{
+            //             $aree->areporcentaje = "50";
+            //         }
 
-                    $aree->update();
-                } 
-            }
+            //         $aree->update();
+            //     } 
+            // }
 
             // 
             
