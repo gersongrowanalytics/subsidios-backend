@@ -323,6 +323,28 @@ class MetCargarSOController extends Controller
                 $sdee->update();
                 
                 
+            }else{
+                $status = "OK";
+
+                // if($fsosuma == $sde->sdecantidadbultos){
+                if($fsosuma == $sde->sdebultosacordados){
+
+                    // if($sde->sdemontoareconocer == $fso->fsoventasinigv){
+
+                    // }else{
+                    //     $status = "ERROR PRECIO";
+                    // }
+
+                }else{
+                    $status = "ERROR CANTIDADES";
+                }
+                $sdee = sdesubsidiosdetalles::find($sde->sdeid);
+                $sdee->sdecantidadbultosreal = 0;
+                $sdee->sdemontoareconocerreal = 0;
+                $sdee->sdestatus = $status;
+                $sdee->sdeaprobado = false;
+
+                $sdee->update();
             }
         
         }
