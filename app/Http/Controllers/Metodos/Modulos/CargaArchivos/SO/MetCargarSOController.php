@@ -327,7 +327,7 @@ class MetCargarSOController extends Controller
                 $status = "OK";
 
                 // if($fsosuma == $sde->sdecantidadbultos){
-                if($fsosuma == $sde->sdebultosacordados){
+                if(0 == $sde->sdebultosacordados){
 
                     // if($sde->sdemontoareconocer == $fso->fsoventasinigv){
 
