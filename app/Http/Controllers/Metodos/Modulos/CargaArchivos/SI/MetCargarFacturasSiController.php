@@ -638,52 +638,52 @@ class MetCargarFacturasSiController extends Controller
 
             // AGREGAR REGISTRO
             
-            $fec = fecfechas::where('fecmesabierto', true)->first(['fecid']);
-            $fecid = $fec->fecid;
+            // $fec = fecfechas::where('fecmesabierto', true)->first(['fecid']);
+            // $fecid = $fec->fecid;
 
-            $espe = espestadospendientes::where('fecid', $fecid)
-                                        ->where('espbasedato', "Sell In (Factura Efectiva)")
-                                        ->first();
+            // $espe = espestadospendientes::where('fecid', $fecid)
+            //                             ->where('espbasedato', "Sell In (Factura Efectiva)")
+            //                             ->first();
 
-            if($espe){
-                $espe->espfechactualizacion = $fechaActual;
+            // if($espe){
+            //     $espe->espfechactualizacion = $fechaActual;
 
-                $date1 = new DateTime($fechaActual);
-                $fecha_carga_real = date("Y-m-d", strtotime($espe->espfechaprogramado));
-                $date2 = new DateTime($fecha_carga_real);
+            //     $date1 = new DateTime($fechaActual);
+            //     $fecha_carga_real = date("Y-m-d", strtotime($espe->espfechaprogramado));
+            //     $date2 = new DateTime($fecha_carga_real);
 
-                $diff = $date1->diff($date2);
+            //     $diff = $date1->diff($date2);
 
-                if($date1 > $date2){
-                    if($diff->days > 0){
-                        $espe->espdiaretraso = $diff->days;
-                    }else{
-                        $espe->espdiaretraso = "0";
-                    }
-                }else{
-                    $espe->espdiaretraso = "0";
-                }
+            //     if($date1 > $date2){
+            //         if($diff->days > 0){
+            //             $espe->espdiaretraso = $diff->days;
+            //         }else{
+            //             $espe->espdiaretraso = "0";
+            //         }
+            //     }else{
+            //         $espe->espdiaretraso = "0";
+            //     }
 
-                $espe->update();
+            //     $espe->update();
 
 
-                $aree = areareasestados::where('areid', $espe->areid)->first();
-                if($aree){
+            //     $aree = areareasestados::where('areid', $espe->areid)->first();
+            //     if($aree){
                     
-                    $espcount = espestadospendientes::where('fecid', $fec->fecid)
-                                        ->where('espbasedato', "Sell In (Factura Efectiva)")
-                                        ->where('espfechactualizacion', '!=', null)
-                                        ->count();
+            //         $espcount = espestadospendientes::where('fecid', $fec->fecid)
+            //                             ->where('espbasedato', "Sell In (Factura Efectiva)")
+            //                             ->where('espfechactualizacion', '!=', null)
+            //                             ->count();
 
-                    if($espcount == 1){
-                        $aree->areporcentaje = "50";
-                    }else{
-                        $aree->areporcentaje = "100";
-                    }
+            //         if($espcount == 1){
+            //             $aree->areporcentaje = "50";
+            //         }else{
+            //             $aree->areporcentaje = "100";
+            //         }
 
-                    $aree->update();
-                }
-            }
+            //         $aree->update();
+            //     }
+            // }
 
             //
 

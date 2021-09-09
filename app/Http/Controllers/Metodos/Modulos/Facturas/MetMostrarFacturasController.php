@@ -29,7 +29,7 @@ class MetMostrarFacturasController extends Controller
                                     $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
                                 // }
                             })
-                            // ->limit(50)
+                            ->limit(50)
                             ->get([
                                 'fsiid',
                                 'fsisolicitante',

@@ -58,9 +58,12 @@ class MetLogicaSubsidiosSiController extends Controller
             $sdes = sdesubsidiosdetalles::where('fecid', $fecid)
                                         ->where('sdeaprobado', true)
                                         ->where('sdemontoareconocerreal', '!=',0)
+                                        ->where('sdeid', 78554)
                                         ->get();
 
-            sfssubsidiosfacturassi::where('fecid', $fecid)->delete();
+            sfssubsidiosfacturassi::where('fecid', $fecid)
+                                    ->where('sdeid', 78554)
+                                    ->delete();
 
             foreach($sdes as $sde){
                 // $sde->sdemontoareconocerreal
@@ -218,6 +221,7 @@ class MetLogicaSubsidiosSiController extends Controller
 
         sdesubsidiosdetalles::where('fecid', $fecid)
                             ->where('sdeaprobado', true)
+                            ->where('sdeid', 78554)
                             ->update([
                                 "sdependiente" => 0,
                                 "sdeencontrofactura" => 0
