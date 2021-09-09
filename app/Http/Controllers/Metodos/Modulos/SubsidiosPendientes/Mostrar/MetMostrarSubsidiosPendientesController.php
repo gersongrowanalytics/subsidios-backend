@@ -83,6 +83,7 @@ class MetMostrarSubsidiosPendientesController extends Controller
                                         // }
                                     })
                                     // ->orderBy('sdestatus' , 'DESC')
+                                    ->orderBy('sdeterritorio' , 'ASC')
                                     ->orderBy('clihml' , 'ASC')
                                     ->orderBy('clisuchml' , 'ASC')
                                     ->orderBy('sdesubcliente' , 'DESC')
@@ -97,6 +98,7 @@ class MetMostrarSubsidiosPendientesController extends Controller
                                         // 'clinombre',
                                         'sdesubcliente',
                                         'catnombre',
+                                        'propresentacion',
                                         'pro.proid',
                                         'prosku',
                                         'pronombre',
@@ -112,7 +114,9 @@ class MetMostrarSubsidiosPendientesController extends Controller
                                         'sderucsubcliente',
                                         'sdesubsidiosdetalles.sdecodigodestinatario',
                                         'sdesector',
-                                        'sdeterritorio'
+                                        'sdeterritorio',
+                                        'sdevalidado',
+                                        'clicodigoshipto'
                                     ]);
 
             foreach($sdes as $posicionSde => $sde){
