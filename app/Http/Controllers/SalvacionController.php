@@ -52,10 +52,10 @@ class SalvacionController extends Controller
 
         foreach($sdes as $sde){
             $sdee = sdesubsidiosdetalles::find($sde->sdeid);
-            if($sde->sdestatus == null){
-                $sdee->sdevalidado = "NOVALIDADOS";
+            if($sde->sdecantidadbultosreal > 0){
+                $sdee->sdevalidado = "SIVALIDADOS";    
             }else{
-                $sdee->sdevalidado = "SIVALIDADOS";
+                $sdee->sdevalidado = "NOVALIDADOS";
             }
             $sdee->update();
         }

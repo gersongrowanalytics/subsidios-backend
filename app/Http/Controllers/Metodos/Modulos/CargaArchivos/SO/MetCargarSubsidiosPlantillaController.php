@@ -61,11 +61,11 @@ class MetCargarSubsidiosPlantillaController extends Controller
 
         if (move_uploaded_file($_FILES['file']['tmp_name'], $fichero_subido)) {
 
-            // $data = [
-            //     'archivo' => $_FILES['file']['name'], "tipo" => "Plantilla Subsidios (objetivos)", "usuario" => $usu->usuusuario,
-            //     "url_archivo" => env('APP_URL').$ubicacionArchivo
-            // ];
-            // Mail::to(env('USUARIO_ENVIAR_MAIL'))->send(new MailCargaArchivoOutlook($data));
+            $data = [
+                'archivo' => $_FILES['file']['name'], "tipo" => "Plantilla Subsidios (objetivos)", "usuario" => $usu->usuusuario,
+                "url_archivo" => env('APP_URL').$ubicacionArchivo
+            ];
+            Mail::to(env('USUARIO_ENVIAR_MAIL'))->send(new MailCargaArchivoOutlook($data));
 
             $objPHPExcel    = IOFactory::load($fichero_subido);
             $objPHPExcel->setActiveSheetIndex(0);
@@ -259,45 +259,45 @@ class MetCargarSubsidiosPlantillaController extends Controller
 
                                 // PARAMETROS UTILIZADOS PARA CARGAR DATA HISTORICA
 
-                                if($ex_cantidadbultos){
+                                // if($ex_cantidadbultos){
 
-                                    if(is_numeric($ex_cantidadbultos)){
-                                        $sden->sdecantidadbultos  = $ex_cantidadbultos;
-                                        $sden->sdemontoareconocer = $ex_cantidadbultos * $sden->sdedsctodos;
-                                    }else{
-                                        $sden->sdecantidadbultos  = 0;
-                                        $sden->sdemontoareconocer = 0;    
-                                    }
+                                //     if(is_numeric($ex_cantidadbultos)){
+                                //         $sden->sdecantidadbultos  = $ex_cantidadbultos;
+                                //         $sden->sdemontoareconocer = $ex_cantidadbultos * $sden->sdedsctodos;
+                                //     }else{
+                                //         $sden->sdecantidadbultos  = 0;
+                                //         $sden->sdemontoareconocer = 0;    
+                                //     }
 
-                                }else{
-                                    $sden->sdecantidadbultos  = 0;
-                                    $sden->sdemontoareconocer = 0;
-                                }
+                                // }else{
+                                //     $sden->sdecantidadbultos  = 0;
+                                //     $sden->sdemontoareconocer = 0;
+                                // }
 
-                                $sden->sdeaprobado = true;
+                                // $sden->sdeaprobado = true;
 
-                                if($ex_cantidadbultosreal){
+                                // if($ex_cantidadbultosreal){
 
-                                    if(is_numeric($ex_cantidadbultosreal)){
-                                        $sden->sdecantidadbultosreal  = $ex_cantidadbultosreal;
-                                        $sden->sdemontoareconocerreal = $ex_cantidadbultosreal * $sden->sdedsctodos;
-                                    }else{
-                                        $sden->sdecantidadbultosreal  = 0;
-                                        $sden->sdemontoareconocerreal = 0;
-                                    }
+                                //     if(is_numeric($ex_cantidadbultosreal)){
+                                //         $sden->sdecantidadbultosreal  = $ex_cantidadbultosreal;
+                                //         $sden->sdemontoareconocerreal = $ex_cantidadbultosreal * $sden->sdedsctodos;
+                                //     }else{
+                                //         $sden->sdecantidadbultosreal  = 0;
+                                //         $sden->sdemontoareconocerreal = 0;
+                                //     }
 
-                                }else{
-                                    $sden->sdecantidadbultosreal  = 0;
-                                    $sden->sdemontoareconocerreal = 0;
-                                }
+                                // }else{
+                                //     $sden->sdecantidadbultosreal  = 0;
+                                //     $sden->sdemontoareconocerreal = 0;
+                                // }
 
-                                if($ex_cantidadbultos == $ex_cantidadbultosreal){
-                                    $sden->sdestatus = "OK";
-                                }else{
-                                    $sden->sdestatus = "ERROR CANTIDADES";
-                                }
+                                // if($ex_cantidadbultos == $ex_cantidadbultosreal){
+                                //     $sden->sdestatus = "OK";
+                                // }else{
+                                //     $sden->sdestatus = "ERROR CANTIDADES";
+                                // }
 
-                                $sden->sdediferenciaahorro = $ex_diferenciaahorrocliente;
+                                // $sden->sdediferenciaahorro = $ex_diferenciaahorrocliente;
 
                                 //FINAL PARAMETROS UTILIZADOS PARA CARGAR DATA HISTORICA
 
@@ -336,50 +336,50 @@ class MetCargarSubsidiosPlantillaController extends Controller
 
                 // AGREGAR REGISTRO
 
-                // $espe = espestadospendientes::where('fecid', $fec->fecid)
-                //                             ->where('espbasedato', "Subsidio Aprobado (Plantilla)")
-                //                             ->first();
+                $espe = espestadospendientes::where('fecid', $fec->fecid)
+                                            ->where('espbasedato', "Subsidio Aprobado (Plantilla)")
+                                            ->first();
 
-                // if($espe){
-                //     $espe->espfechactualizacion = $fechaActual;
+                if($espe){
+                    $espe->espfechactualizacion = $fechaActual;
 
-                //     $date1 = new DateTime($fechaActual);
-                //     $fecha_carga_real = date("Y-m-d", strtotime($espe->espfechaprogramado));
-                //     $date2 = new DateTime($fecha_carga_real);
+                    $date1 = new DateTime($fechaActual);
+                    $fecha_carga_real = date("Y-m-d", strtotime($espe->espfechaprogramado));
+                    $date2 = new DateTime($fecha_carga_real);
 
-                //     $diff = $date2->diff($date1);
-                //     // $diff = $date1->diff($date2);
-                //     if($date1 > $date2){
-                //         if($diff->days > 0){
-                //             $espe->espdiaretraso = $diff->days;
-                //         }else{
-                //             $espe->espdiaretraso = "0";
-                //         }
-                //     }else{
-                //         $espe->espdiaretraso = "0";
-                //     }
+                    $diff = $date2->diff($date1);
+                    // $diff = $date1->diff($date2);
+                    if($date1 > $date2){
+                        if($diff->days > 0){
+                            $espe->espdiaretraso = $diff->days;
+                        }else{
+                            $espe->espdiaretraso = "0";
+                        }
+                    }else{
+                        $espe->espdiaretraso = "0";
+                    }
 
-                //     $espe->update();
+                    $espe->update();
 
 
-                //     $aree = areareasestados::where('areid', $espe->areid)->first();
+                    $aree = areareasestados::where('areid', $espe->areid)->first();
 
-                //     if($aree){
+                    if($aree){
 
-                //         $espcount = espestadospendientes::where('fecid', $fec->fecid)
-                //                             ->where('espbasedato', "Subsidio Aprobado (Plantilla)")
-                //                             ->where('espfechactualizacion', '!=', null)
-                //                             ->count();
+                        $espcount = espestadospendientes::where('fecid', $fec->fecid)
+                                            ->where('espbasedato', "Subsidio Aprobado (Plantilla)")
+                                            ->where('espfechactualizacion', '!=', null)
+                                            ->count();
 
-                //         if($espcount == 1){
-                //             $aree->areporcentaje = "50";
-                //         }else{
-                //             $aree->areporcentaje = "100";
-                //         }
+                        if($espcount == 1){
+                            $aree->areporcentaje = "50";
+                        }else{
+                            $aree->areporcentaje = "100";
+                        }
 
-                //         $aree->update();
-                //     }
-                // }
+                        $aree->update();
+                    }
+                }
 
 
             }else{
