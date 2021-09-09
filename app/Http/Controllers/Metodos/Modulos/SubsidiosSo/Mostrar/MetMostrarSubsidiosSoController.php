@@ -86,6 +86,7 @@ class MetMostrarSubsidiosSoController extends Controller
                                         // 'clinombre',
                                         'sdesubcliente',
                                         'catnombre',
+                                        'propresentacion',
                                         'prosku',
                                         'pronombre',
                                         'sdecantidadbultos',
@@ -97,7 +98,9 @@ class MetMostrarSubsidiosSoController extends Controller
                                         'sdebultosacordados',
                                         'sdesac',
                                         'sdesector',
-                                        'sdeterritorio'
+                                        'sdeterritorio',
+                                        'sdevalidado',
+                                        'clicodigoshipto'
                                     ]);
 
             $zonas[$posicionZon]['data'] = $sdes;

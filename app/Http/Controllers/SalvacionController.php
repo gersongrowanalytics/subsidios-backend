@@ -44,4 +44,21 @@ class SalvacionController extends Controller
             "sdediferenciaahorro" => null,
         ]);
     }
+
+    public function CambiarValidados($fecid)
+    {
+
+        $sdes = sdesubsidiosdetalles::where('fecid', $fecid)->get();
+
+        foreach($sdes as $sde){
+            $sdee = sdesubsidiosdetalles::find($sde->sdeid);
+            if($sde->sdestatus == null){
+                $sdee->sdevalidado = "NOVALIDADOS";
+            }else{
+                $sdee->sdevalidado = "SIVALIDADOS";
+            }
+            $sdee->update();
+        }
+
+    }
 }

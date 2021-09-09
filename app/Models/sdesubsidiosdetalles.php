@@ -50,7 +50,8 @@ class sdesubsidiosdetalles extends Model
         "sdesac",
         "sdeencontrofactura",
         "sdependiente",
-        "sdeeditado"
+        "sdeeditado",
+        "sdevalidado"
     ];
 
 

@@ -34,6 +34,7 @@ $router->post('/cambiar-contrasenia', 'Validaciones\RecuperarContrasenia\Recuper
 
         $router->get('/salvacion/asignar-zonas', 'SalvacionController@HabilitarZonas');
         $router->get('/salvacion/reiniciar-subsidos-data-dt/{fecid}', 'SalvacionController@ReinicarSubDtYReal');
+        $router->get('/salvacion/cambiar-validados/{fecid}', 'SalvacionController@CambiarValidados');
 
 
         $router->group(['prefix' => 'cargaArchivos'], function () use ($router) {
