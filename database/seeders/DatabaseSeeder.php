@@ -216,23 +216,43 @@ class DatabaseSeeder extends Seeder
         //     "usutoken"        => "AlonsowOPOR439223ldsawpwddmxdowke989230to123Roel",
         // ]);
 
+        // perpersonas::create([
+        //     "pernumerodocumentoidentidad" => "0000000",
+        //     "pernombrecompleto"           => "Eduardo Soto Mayor",
+        //     "pernombre"                   => "Eduardo",
+        //     "perapellidopaterno"          => "Soto",
+        //     "perapellidomaterno"          => "Mayor",
+        // ]);
+
+        // usuusuarios::create([
+        //     "tpuid"           => 2,
+        //     "perid"           => 4,
+        //     "estid"           => 1,
+        //     "usucodigo"       => "SoftSacAroel-01",
+        //     "usuusuario"      => "esotomayor@softys.com",
+        //     "usucorreo"       => "esotomayor@softys.com",
+        //     "usucontrasenia"  => Hash::make('Eduardo$$Soto$$23414554'),
+        //     "usutoken"        => "EduardoowOPOR4392Maysawq222dkka2ldowke989230to123Stoo",
+        // ]);
+
+
         perpersonas::create([
             "pernumerodocumentoidentidad" => "0000000",
-            "pernombrecompleto"           => "Eduardo Soto Mayor",
-            "pernombre"                   => "Eduardo",
-            "perapellidopaterno"          => "Soto",
-            "perapellidomaterno"          => "Mayor",
+            "pernombrecompleto"           => "Miguel Caballero",
+            "pernombre"                   => "Miguel",
+            "perapellidopaterno"          => "Caballero",
+            "perapellidomaterno"          => "",
         ]);
 
         usuusuarios::create([
-            "tpuid"           => 2,
-            "perid"           => 4,
+            "tpuid"           => 1,
+            "perid"           => 5,
             "estid"           => 1,
             "usucodigo"       => "SoftSacAroel-01",
-            "usuusuario"      => "esotomayor@softys.com",
-            "usucorreo"       => "esotomayor@softys.com",
-            "usucontrasenia"  => Hash::make('Eduardo$$Soto$$23414554'),
-            "usutoken"        => "EduardoowOPOR4392Maysawq222dkka2ldowke989230to123Stoo",
+            "usuusuario"      => "miguel.caballero@grow-analytics.com.pe",
+            "usucorreo"       => "miguel.caballero@grow-analytics.com.pe",
+            "usucontrasenia"  => Hash::make('Miguel$$Caballero$$283711'),
+            "usutoken"        => "MiguelwOPOR439asd11aaawq222dkka2ldrwke989230Caballeroo",
         ]);
     }
 }
