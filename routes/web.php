@@ -90,9 +90,15 @@ $router->post('/cambiar-contrasenia', 'Validaciones\RecuperarContrasenia\Recuper
 
         });
 
-
         $router->group(['prefix' => 'control-panel'], function () use ($router) {
             $router->post('/mostrar', 'Validaciones\Modulos\ControlPanel\Mostrar\MostrarControlPanelController@ValMostrarControlPanel');
+        });
+
+        $router->group(['prefix' => 'administrador'], function () use ($router) {
+            $router->group(['prefix' => 'mostrar'], function () use ($router) {
+                $router->post('/tipos-usuarios', 'Validaciones\Modulos\Administrador\TiposUsuarios\MostrarTiposUsuariosController@ValMostrarTiposUsuarios');
+                $router->post('/usuarios', 'Validaciones\Modulos\Administrador\Usuarios\MostrarUsuariosController@ValMostrarUsuarios');
+            });
         });
 
     });
