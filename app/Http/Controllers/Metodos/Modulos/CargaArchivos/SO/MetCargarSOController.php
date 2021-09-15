@@ -285,18 +285,22 @@ class MetCargarSOController extends Controller
 
                 $montoAReconocerReal = 0;
 
-                if($sde->sdecantidadbultos == 0){
+                if(is_numeric($sde->sdecantidadbultos)){
+                    if($sde->sdecantidadbultos == 0){
 
-                    $montoAReconocerReal = 0;
-
-                }else{
-
-                    if(floatval($fsosuma) > floatval($sde->sdecantidadbultos)){
-                        $montoAReconocerReal = floatval($sde->sdecantidadbultos);
+                        $montoAReconocerReal = 0;
+    
                     }else{
-                        $montoAReconocerReal = floatval($fsosuma);
+    
+                        if(floatval($fsosuma) > floatval($sde->sdecantidadbultos)){
+                            $montoAReconocerReal = floatval($sde->sdecantidadbultos);
+                        }else{
+                            $montoAReconocerReal = floatval($fsosuma);
+                        }
+    
                     }
-
+                }else{
+                    $montoAReconocerReal = 0;
                 }
 
                 $status = "OK";
