@@ -287,7 +287,7 @@ class MetCargarSOController extends Controller
 
                 if($sde->sdecantidadbultos == 0){
 
-                    $montoAReconocerReal = floatval($fsosuma);
+                    $montoAReconocerReal = 0;
 
                 }else{
 
