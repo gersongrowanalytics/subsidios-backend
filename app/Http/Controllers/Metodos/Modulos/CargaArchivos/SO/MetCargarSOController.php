@@ -15,6 +15,7 @@ use App\Models\fsofacturasso;
 use App\Models\sdesubsidiosdetalles;
 use App\Models\areareasestados;
 use App\Models\espestadospendientes;
+use App\Models\carcargasarchivos;
 use \DateTime;
 
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -47,17 +48,33 @@ class MetCargarSOController extends Controller
         $datos          = [];
         $mensajeDetalle = "";
 
-        // $usutoken = $request->header('api_token');
-        $usutoken = "TOKENESPECIFICOUNIFODEVGERSONGROW1845475#LD72";
+        
+        // $usutoken = "TOKENESPECIFICOUNIFODEVGERSONGROW1845475#LD72";
+        $usutoken = $request->header('api_token');
+        if(!isset($usutoken)){
+            $usutoken = "TOKENESPECIFICOUNIFODEVGERSONGROW1845475#LD72";
+        }
+
         $reiniciartodo  = $request['reiniciartodo'];
         $archivo  = $_FILES['file']['name'];
 
-        $usu = usuusuarios::where('usutoken', $usutoken)->first(['usuid', 'usuusuario']);
+        $usu = usuusuarios::where('usutoken', $usutoken)->first(['usuid', 'usuusuario', 'perid']);
 
         $codigoArchivoAleatorio = mt_rand(0, mt_getrandmax())/mt_getrandmax();
 
         $ubicacionArchivo = '/Sistema/Modulos/CargaArchivos/SO/SO/'.basename($codigoArchivoAleatorio.'-'.$usu->usuid.'-'.$usu->usuusuario.'-'.$fechaActual.'-'.$_FILES['file']['name']);
         $fichero_subido = base_path().'/public'.$ubicacionArchivo;
+
+        $ex_file_name = explode(".", $_FILES['file']['name']);
+        $carn = new carcargasarchivos;
+        $carn->tcaid        = 3;
+        $carn->usuid        = $usu->usuid;
+        $carn->carnombre    = $_FILES['file']['name'];
+        $carn->carextension = $ex_file_name[1];
+        $carn->carurl       = env('APP_URL').$ubicacionArchivo;
+        $carn->carexito     = 0;
+        $carn->save();
+        $carid = $carn->carid;
 
         if (move_uploaded_file($_FILES['file']['tmp_name'], $fichero_subido)) {
             
@@ -72,7 +89,7 @@ class MetCargarSOController extends Controller
             // $numRows        = $objPHPExcel->setActiveSheetIndex(0)->getHighestRow();
             // $ultimaColumna  = $objPHPExcel->setActiveSheetIndex(0)->getHighestColumn();
 
-            // $logs['NUMERO_LINEAS_EXCEL'] = $numRows;
+            $logs['NUMERO_LINEAS_EXCEL'] = $numRows;
 
             // // // fsofacturasso::where('fsoid', '>', '0')->delete();
             // $fsoultimo = fsofacturasso::orderby('fsoid', 'desc')->first();
@@ -102,7 +119,7 @@ class MetCargarSOController extends Controller
             //     if($fec){
 
             //         if($i == 2){
-            //             // fsofacturasso::where('fecid', $fec->fecid)->delete();
+            //             fsofacturasso::where('fecid', $fec->fecid)->delete();
             //             $fecid = $fec->fecid;
             //         }
 
@@ -162,6 +179,12 @@ class MetCargarSOController extends Controller
                                         ->first();
 
             if($espe){
+                if($usu->perid == 1 || $usu->perid == 3 || $usu->perid == 7 || $usu->perid == 10){
+                    
+                }else{
+                    $espe->perid = $usu->perid;
+                }
+                
                 $espe->espfechactualizacion = $fechaActual;
 
                 $date1 = new DateTime($fechaActual);
@@ -188,7 +211,7 @@ class MetCargarSOController extends Controller
                 if($aree){
 
                     $espcount = espestadospendientes::where('fecid', $fecid)
-                                        ->where('espbasedato', "Subsidio Aprobado (Plantilla)")
+                                        ->where('espbasedato', "Sell Out (Efectivo)")
                                         ->where('espfechactualizacion', '!=', null)
                                         ->first();
 
@@ -201,6 +224,10 @@ class MetCargarSOController extends Controller
                     $aree->update();
                 } 
             }
+
+            $care = carcargasarchivos::find($carid);
+            $care->carexito = 1;
+            $care->update();
 
             // 
             
@@ -285,22 +312,30 @@ class MetCargarSOController extends Controller
 
                 $montoAReconocerReal = 0;
 
-                if(is_numeric($sde->sdecantidadbultos)){
-                    if($sde->sdecantidadbultos == 0){
+                $pos = strpos($sde->sdebonificacion, "X");
 
-                        $montoAReconocerReal = 0;
-    
-                    }else{
-    
-                        if(floatval($fsosuma) > floatval($sde->sdecantidadbultos)){
-                            $montoAReconocerReal = floatval($sde->sdecantidadbultos);
-                        }else{
-                            $montoAReconocerReal = floatval($fsosuma);
-                        }
-    
-                    }
+                if($pos !== false){
+                    
+                    $montoAReconocerReal = floatval($sde->sdecantidadbultos);
+
                 }else{
-                    $montoAReconocerReal = 0;
+                    if(is_numeric($sde->sdecantidadbultos)){
+                        if($sde->sdecantidadbultos == 0){
+    
+                            $montoAReconocerReal = 0;
+        
+                        }else{
+        
+                            if(floatval($fsosuma) > floatval($sde->sdecantidadbultos)){
+                                $montoAReconocerReal = floatval($sde->sdecantidadbultos);
+                            }else{
+                                $montoAReconocerReal = floatval($fsosuma);
+                            }
+        
+                        }
+                    }else{
+                        $montoAReconocerReal = 0;
+                    }
                 }
 
                 $status = "OK";
@@ -323,7 +358,6 @@ class MetCargarSOController extends Controller
                 $sdee->sdemontoareconocerreal = floatval($montoAReconocerReal) * floatval($sde->sdedsctodos);
                 $sdee->sdestatus = $status;
                 $sdee->sdeaprobado = true;
-
                 $sdee->update();
                 
                 

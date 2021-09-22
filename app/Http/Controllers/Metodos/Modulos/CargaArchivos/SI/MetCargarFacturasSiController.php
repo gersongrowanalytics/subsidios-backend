@@ -25,6 +25,7 @@ use App\Models\ndsnotascreditossidetalles;
 use App\Models\sfssubsidiosfacturassi;
 use App\Models\espestadospendientes;
 use App\Models\areareasestados;
+use App\Models\carcargasarchivos;
 use \DateTime;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\MailCargaArchivoOutlook;
@@ -65,16 +66,31 @@ class MetCargarFacturasSiController extends Controller
         $datos          = [];
         $mensajeDetalle = "";
 
-        // $usutoken = $request->header('api_token');
-        $usutoken = "TOKENESPECIFICOUNIFODEVGERSONGROW1845475#LD72";
+        // $usutoken = "TOKENESPECIFICOUNIFODEVGERSONGROW1845475#LD72";
+        $usutoken = $request->header('api_token');
+        if(!isset($usutoken)){
+            $usutoken = "TOKENESPECIFICOUNIFODEVGERSONGROW1845475#LD72";
+        }
+
         $archivo  = $_FILES['file']['name'];
 
-        $usu = usuusuarios::where('usutoken', $usutoken)->first(['usuid', 'usuusuario']);
+        $usu = usuusuarios::where('usutoken', $usutoken)->first(['usuid', 'usuusuario', 'perid']);
 
         $codigoArchivoAleatorio = mt_rand(0, mt_getrandmax())/mt_getrandmax();
 
         $ubicacionArchivo = '/Sistema/Modulos/CargaArchivos/SI/Facturas/'.basename($codigoArchivoAleatorio.'-'.$usu->usuid.'-'.$usu->usuusuario.'-'.$fechaActual.'-'.$_FILES['file']['name']);
         $fichero_subido = base_path().'/public'.$ubicacionArchivo;
+
+        $ex_file_name = explode(".", $_FILES['file']['name']);
+        $carn = new carcargasarchivos;
+        $carn->tcaid        = 4;
+        $carn->usuid        = $usu->usuid;
+        $carn->carnombre    = $_FILES['file']['name'];
+        $carn->carextension = $ex_file_name[1];
+        $carn->carurl       = env('APP_URL').$ubicacionArchivo;
+        $carn->carexito     = 0;
+        $carn->save();
+        $carid = $carn->carid;
 
         if (move_uploaded_file($_FILES['file']['tmp_name'], $fichero_subido)) {
 
@@ -638,54 +654,63 @@ class MetCargarFacturasSiController extends Controller
 
             // AGREGAR REGISTRO
             
-            // $fec = fecfechas::where('fecmesabierto', true)->first(['fecid']);
-            // $fecid = $fec->fecid;
+            $fec = fecfechas::where('fecmesabierto', true)->first(['fecid']);
+            $fecid = $fec->fecid;
 
-            // $espe = espestadospendientes::where('fecid', $fecid)
-            //                             ->where('espbasedato', "Sell In (Factura Efectiva)")
-            //                             ->first();
+            $espe = espestadospendientes::where('fecid', $fecid)
+                                        ->where('espbasedato', "Sell In (Factura Efectiva)")
+                                        ->first();
 
-            // if($espe){
-            //     $espe->espfechactualizacion = $fechaActual;
-
-            //     $date1 = new DateTime($fechaActual);
-            //     $fecha_carga_real = date("Y-m-d", strtotime($espe->espfechaprogramado));
-            //     $date2 = new DateTime($fecha_carga_real);
-
-            //     $diff = $date1->diff($date2);
-
-            //     if($date1 > $date2){
-            //         if($diff->days > 0){
-            //             $espe->espdiaretraso = $diff->days;
-            //         }else{
-            //             $espe->espdiaretraso = "0";
-            //         }
-            //     }else{
-            //         $espe->espdiaretraso = "0";
-            //     }
-
-            //     $espe->update();
-
-
-            //     $aree = areareasestados::where('areid', $espe->areid)->first();
-            //     if($aree){
+            if($espe){
+                if($usu->perid == 1 || $usu->perid == 3 || $usu->perid == 7 || $usu->perid == 10){
                     
-            //         $espcount = espestadospendientes::where('fecid', $fec->fecid)
-            //                             ->where('espbasedato', "Sell In (Factura Efectiva)")
-            //                             ->where('espfechactualizacion', '!=', null)
-            //                             ->count();
+                }else{
+                    $espe->perid = $usu->perid;
+                }
+                $espe->espfechactualizacion = $fechaActual;
 
-            //         if($espcount == 1){
-            //             $aree->areporcentaje = "50";
-            //         }else{
-            //             $aree->areporcentaje = "100";
-            //         }
+                $date1 = new DateTime($fechaActual);
+                $fecha_carga_real = date("Y-m-d", strtotime($espe->espfechaprogramado));
+                $date2 = new DateTime($fecha_carga_real);
 
-            //         $aree->update();
-            //     }
-            // }
+                $diff = $date1->diff($date2);
+
+                if($date1 > $date2){
+                    if($diff->days > 0){
+                        $espe->espdiaretraso = $diff->days;
+                    }else{
+                        $espe->espdiaretraso = "0";
+                    }
+                }else{
+                    $espe->espdiaretraso = "0";
+                }
+
+                $espe->update();
+
+
+                $aree = areareasestados::where('areid', $espe->areid)->first();
+                if($aree){
+                    
+                    $espcount = espestadospendientes::where('fecid', $fec->fecid)
+                                        ->where('espbasedato', "Sell In (Factura Efectiva)")
+                                        ->where('espfechactualizacion', '!=', null)
+                                        ->count();
+
+                    if($espcount == 1){
+                        $aree->areporcentaje = "50";
+                    }else{
+                        $aree->areporcentaje = "100";
+                    }
+
+                    $aree->update();
+                }
+            }
 
             //
+
+            $care = carcargasarchivos::find($carid);
+            $care->carexito = 1;
+            $care->update();
 
         }else{
             $respuesta = false;

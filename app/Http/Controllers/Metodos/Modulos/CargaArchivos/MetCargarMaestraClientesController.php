@@ -10,6 +10,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use App\Models\usuusuarios;
 use App\Models\cliclientes;
+use App\Models\carcargasarchivos;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\MailCargaArchivoOutlook;
 
@@ -38,8 +39,12 @@ class MetCargarMaestraClientesController extends Controller
         $mensajedev     = "";
 
         try{
-            // $usutoken = $request->header('api_token');
-            $usutoken = "TOKENESPECIFICOUNIFODEVGERSONGROW1845475#LD72";
+            
+            // $usutoken = "TOKENESPECIFICOUNIFODEVGERSONGROW1845475#LD72";
+            $usutoken = $request->header('api_token');
+            if(!isset($usutoken)){
+                $usutoken = "TOKENESPECIFICOUNIFODEVGERSONGROW1845475#LD72";
+            }
             $archivo  = $_FILES['file']['name'];
 
             $usu = usuusuarios::where('usutoken', $usutoken)->first(['usuid', 'usuusuario']);
@@ -48,6 +53,17 @@ class MetCargarMaestraClientesController extends Controller
 
             $ubicacionArchivo = '/Sistema/Modulos/CargaArchivos/Clientes/'.basename($codigoArchivoAleatorio.'-'.$usu->usuid.'-'.$usu->usuusuario.'-'.$fechaActual.'-'.$_FILES['file']['name']);
             $fichero_subido = base_path().'/public'.$ubicacionArchivo;
+
+            $ex_file_name = explode(".", $_FILES['file']['name']);
+            $carn = new carcargasarchivos;
+            $carn->tcaid        = 10;
+            $carn->usuid        = $usu->usuid;
+            $carn->carnombre    = $_FILES['file']['name'];
+            $carn->carextension = $ex_file_name[1];
+            $carn->carurl       = env('APP_URL').$ubicacionArchivo;
+            $carn->carexito     = 0;
+            $carn->save();
+            $carid = $carn->carid;
 
             if (move_uploaded_file($_FILES['file']['tmp_name'], $fichero_subido)) {
                 
@@ -284,6 +300,10 @@ class MetCargarMaestraClientesController extends Controller
 
                 // }
 
+                $care = carcargasarchivos::find($carid);
+                $care->carexito = 1;
+                $care->update();
+
             }else{
                 $respuesta = false;
                 $mensaje = "Lo sentimos, el archivo no se pudo guardar en el sistema";
@@ -305,19 +325,19 @@ class MetCargarMaestraClientesController extends Controller
             "logs" => $logs,
         ]);
 
-        // $AuditoriaController = new AuditoriaController;
-        // $registrarAuditoria  = $AuditoriaController->registrarAuditoria(
-        //     $usutoken, // token
-        //     $usu->usuid, // usuid
-        //     null, // audip
-        //     $fichero_subido, // audjsonentrada
-        //     $requestsalida,// audjsonsalida
-        //     'CARGAR DATA DE CLIENTES AL SISTEMA ', //auddescripcion
-        //     'IMPORTAR', // audaccion
-        //     '/modulo/cargaArchivos/clientes', //audruta
-        //     $pkis, // audpk
-        //     $logs // log
-        // );
+        $AuditoriaController = new AuditoriaController;
+        $registrarAuditoria  = $AuditoriaController->registrarAuditoria(
+            $usutoken, // token
+            $usu->usuid, // usuid
+            null, // audip
+            $fichero_subido, // audjsonentrada
+            $requestsalida,// audjsonsalida
+            'CARGAR DATA DE CLIENTES AL SISTEMA ', //auddescripcion
+            'IMPORTAR', // audaccion
+            '/modulo/cargaArchivos/clientes', //audruta
+            $pkis, // audpk
+            $logs // log
+        );
 
         return $requestsalida;
     }

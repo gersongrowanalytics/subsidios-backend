@@ -13,6 +13,7 @@ use App\Models\usuusuarios;
 use App\Models\fsifacturassi;
 use App\Models\espestadospendientes;
 use App\Models\areareasestados;
+use App\Models\carcargasarchivos;
 use \DateTime;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\MailCargaArchivoOutlook;
@@ -38,16 +39,31 @@ class MetCargarEstadoSunatSiController extends Controller
         $datos          = [];
         $mensajeDetalle = "";
 
-        // $usutoken = $request->header('api_token');
-        $usutoken = "TOKENESPECIFICOUNIFODEVGERSONGROW1845475#LD72";
+        // $usutoken = "TOKENESPECIFICOUNIFODEVGERSONGROW1845475#LD72";
+        $usutoken = $request->header('api_token');
+        if(!isset($usutoken)){
+            $usutoken = "TOKENESPECIFICOUNIFODEVGERSONGROW1845475#LD72";
+        }
+
         $archivo  = $_FILES['file']['name'];
 
-        $usu = usuusuarios::where('usutoken', $usutoken)->first(['usuid', 'usuusuario']);
+        $usu = usuusuarios::where('usutoken', $usutoken)->first(['usuid', 'usuusuario', 'perid']);
 
         $codigoArchivoAleatorio = mt_rand(0, mt_getrandmax())/mt_getrandmax();
 
         $ubicacionArchivo = '/Sistema/Modulos/CargaArchivos/SI/EstadoSunatFacturas/'.basename($codigoArchivoAleatorio.'-'.$usu->usuid.'-'.$usu->usuusuario.'-'.$fechaActual.'-'.$_FILES['file']['name']);
         $fichero_subido = base_path().'/public'.$ubicacionArchivo;
+
+        $ex_file_name = explode(".", $_FILES['file']['name']);
+        $carn = new carcargasarchivos;
+        $carn->tcaid        = 8;
+        $carn->usuid        = $usu->usuid;
+        $carn->carnombre    = $_FILES['file']['name'];
+        $carn->carextension = $ex_file_name[1];
+        $carn->carurl       = env('APP_URL').$ubicacionArchivo;
+        $carn->carexito     = 0;
+        $carn->save();
+        $carid = $carn->carid;
 
         if (move_uploaded_file($_FILES['file']['tmp_name'], $fichero_subido)) {
             $data = [
@@ -129,6 +145,11 @@ class MetCargarEstadoSunatSiController extends Controller
                                         ->first();
 
             if($espe){
+                if($usu->perid == 1 || $usu->perid == 3 || $usu->perid == 7 || $usu->perid == 10){
+                    
+                }else{
+                    $espe->perid = $usu->perid;
+                }
                 $espe->espfechactualizacion = $fechaActual;
 
                 $date1 = new DateTime($fechaActual);
@@ -167,20 +188,13 @@ class MetCargarEstadoSunatSiController extends Controller
 
                     $aree->update();
                 }
-
-                // $aree = areareasestados::where('areid', $espe->areid)-first();
-                // if($aree){
-                //     if($aree->areporcentaje == "50"){
-                //         $aree->areporcentaje = "100";
-                //     }else if($aree->areporcentaje == "100"){
-                //         $aree->areporcentaje = "100";
-                //     }else{
-                //         $aree->areporcentaje = "50";
-                //     }
-                // }
             }
 
             //
+
+            $care = carcargasarchivos::find($carid);
+            $care->carexito = 1;
+            $care->update();
 
         }else{
             $respuesta = false;
@@ -188,7 +202,7 @@ class MetCargarEstadoSunatSiController extends Controller
         }
 
         $logs["MENSAJE"] = $mensaje;
-
+        $logs["RESPUESTA"] = $respuesta;
 
         $requestsalida = response()->json([
             "respuesta"      => $respuesta,

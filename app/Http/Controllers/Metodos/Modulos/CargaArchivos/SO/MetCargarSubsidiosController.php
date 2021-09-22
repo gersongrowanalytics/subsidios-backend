@@ -14,6 +14,7 @@ use App\Models\cliclientes;
 use App\Models\sdesubsidiosdetalles;
 use App\Models\espestadospendientes;
 use App\Models\areareasestados;
+use App\Models\carcargasarchivos;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 use \DateTime;
@@ -44,17 +45,34 @@ class MetCargarSubsidiosController extends Controller
         $datos          = [];
         $mensajeDetalle = "";
 
-        // $usutoken = $request->header('api_token');
-        $usutoken = "TOKENESPECIFICOUNIFODEVGERSONGROW1845475#LD72";
+        // $usutoken = "TOKENESPECIFICOUNIFODEVGERSONGROW1845475#LD72";
+        
+        $usutoken = $request->header('api_token');
+        if(!isset($usutoken)){
+            $usutoken = "TOKENESPECIFICOUNIFODEVGERSONGROW1845475#LD72";
+        }
+
         $reiniciartodo  = $request['reiniciartodo'];
         $archivo  = $_FILES['file']['name'];
 
-        $usu = usuusuarios::where('usutoken', $usutoken)->first(['usuid', 'usuusuario']);
+        $usu = usuusuarios::where('usutoken', $usutoken)->first(['usuid', 'usuusuario', 'perid']);
 
         $codigoArchivoAleatorio = mt_rand(0, mt_getrandmax())/mt_getrandmax();
 
         $ubicacionArchivo = '/Sistema/Modulos/CargaArchivos/SO/Subsidios/'.basename($codigoArchivoAleatorio.'-'.$usu->usuid.'-'.$usu->usuusuario.'-'.$fechaActual.'-'.$_FILES['file']['name']);;
         $fichero_subido = base_path().'/public'.$ubicacionArchivo;
+
+        $ex_file_name = explode(".", $_FILES['file']['name']);
+
+        $carn = new carcargasarchivos;
+        $carn->tcaid        = 2;
+        $carn->usuid        = $usu->usuid;
+        $carn->carnombre    = $_FILES['file']['name'];
+        $carn->carextension = $ex_file_name[1];
+        $carn->carurl       = env('APP_URL').$ubicacionArchivo;
+        $carn->carexito     = 0;
+        $carn->save();
+        $carid = $carn->carid;
 
         if (move_uploaded_file($_FILES['file']['tmp_name'], $fichero_subido)) {
 
@@ -135,6 +153,7 @@ class MetCargarSubsidiosController extends Controller
 
                     $ex_status              = $objPHPExcel->getActiveSheet()->getCell('AC'.$i)->getCalculatedValue();
                     $ex_diferenciaahorrocliente = $objPHPExcel->getActiveSheet()->getCell('AD'.$i)->getCalculatedValue();
+                    $ex_bonificado = $objPHPExcel->getActiveSheet()->getCell('AE'.$i)->getCalculatedValue();
 
                     $subirData = false;
 
@@ -183,7 +202,12 @@ class MetCargarSubsidiosController extends Controller
                                                                     ->first();
     
                                         if($espe){
-    
+                                            
+                                            if($usu->perid == 1 || $usu->perid == 3 || $usu->perid == 7 || $usu->perid == 10){
+                    
+                                            }else{
+                                                $espe->perid = $usu->perid;
+                                            }
                                             $espe->espfechactualizacion = $fechaActual;
                                             if($espe->espfechaprogramado == null){
                                                 $espe->espdiaretraso = "0";
@@ -219,7 +243,7 @@ class MetCargarSubsidiosController extends Controller
                                             $espn->espid = $pkid;
                                             $espn->cliid = $cli->cliid;
                                             $espn->fecid = $fec->fecid;
-                                            $espn->perid = 8; // POR DEFECTO ES 2
+                                            $espn->perid = $usu->perid;
                                             $espn->areid = $are->areid;
                                             // $espn->areid = 11;
     
@@ -326,6 +350,8 @@ class MetCargarSubsidiosController extends Controller
                                             $sdee->sdecantidadbultosreal  = 0;
                                             $sdee->sdemontoareconocerreal = 0;
                                         }
+
+                                        $sdee->sdebonificacion = $ex_bonificado;
     
                                         $sdee->update();
                                         
@@ -359,6 +385,11 @@ class MetCargarSubsidiosController extends Controller
                                                 ->first();
 
                     if($espe){
+                        if($usu->perid == 1 || $usu->perid == 3 || $usu->perid == 7 || $usu->perid == 10){
+                    
+                        }else{
+                            $espe->perid = $usu->perid;
+                        }
                         $espe->espfechactualizacion = $fechaActual;
 
                         $date1 = new DateTime($fechaActual);
@@ -387,6 +418,11 @@ class MetCargarSubsidiosController extends Controller
                                                 ->first();
 
                     if($espe){
+                        if($usu->perid == 1 || $usu->perid == 3 || $usu->perid == 7 || $usu->perid == 10){
+                    
+                        }else{
+                            $espe->perid = $usu->perid;
+                        }
                         $espe->espfechactualizacion = $fechaActual;
 
                         $date1 = new DateTime($fechaActual);
@@ -408,6 +444,10 @@ class MetCargarSubsidiosController extends Controller
                         $espe->update();
                     }
                 }
+
+                $care = carcargasarchivos::find($carid);
+                $care->carexito = 1;
+                $care->update();
 
             }else{
                 $respuesta = false;

@@ -10,6 +10,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use App\Models\usuusuarios;
 use App\Models\fecfechas;
+use App\Models\carcargasarchivos;
 
 class MetCargarMaestraFechasController extends Controller
 {
@@ -36,8 +37,12 @@ class MetCargarMaestraFechasController extends Controller
 
         try{
 
-            // $usutoken = $request->header('api_token');
-            $usutoken = "TOKENESPECIFICOUNIFODEVGERSONGROW1845475#LD72";
+            // $usutoken = "TOKENESPECIFICOUNIFODEVGERSONGROW1845475#LD72";
+            $usutoken = $request->header('api_token');
+            if(!isset($usutoken)){
+                $usutoken = "TOKENESPECIFICOUNIFODEVGERSONGROW1845475#LD72";
+            }
+            
             $archivo  = $_FILES['file']['name'];
 
             $usu = usuusuarios::where('usutoken', $usutoken)->first(['usuid', 'usuusuario']);
@@ -45,6 +50,18 @@ class MetCargarMaestraFechasController extends Controller
             $codigoArchivoAleatorio = mt_rand(0, mt_getrandmax())/mt_getrandmax();
 
             $fichero_subido = base_path().'/public/Sistema/Modulos/CargaArchivos/Fechas/'.basename($codigoArchivoAleatorio.'-'.$usu->usuid.'-'.$usu->usuusuario.'-'.$fechaActual.'-'.$_FILES['file']['name']);
+
+            $ex_file_name = explode(".", $_FILES['file']['name']);
+            $carn = new carcargasarchivos;
+            $carn->tcaid        = 11;
+            $carn->usuid        = $usu->usuid;
+            $carn->carnombre    = $_FILES['file']['name'];
+            $carn->carextension = $ex_file_name[1];
+            $carn->carurl       = env('APP_URL').$ubicacionArchivo;
+            $carn->carexito     = 0;
+            $carn->save();
+            $carid = $carn->carid;
+
             if (move_uploaded_file($_FILES['file']['tmp_name'], $fichero_subido)) {
 
                 $objPHPExcel    = IOFactory::load($fichero_subido);
@@ -192,6 +209,10 @@ class MetCargarMaestraFechasController extends Controller
                     }
 
                 }
+
+                $care = carcargasarchivos::find($carid);
+                $care->carexito = 1;
+                $care->update();
 
             }else{
                 $respuesta = false;
