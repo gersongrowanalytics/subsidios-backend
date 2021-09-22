@@ -89,7 +89,7 @@ class MetCargarSOController extends Controller
             // $numRows        = $objPHPExcel->setActiveSheetIndex(0)->getHighestRow();
             // $ultimaColumna  = $objPHPExcel->setActiveSheetIndex(0)->getHighestColumn();
 
-            $logs['NUMERO_LINEAS_EXCEL'] = $numRows;
+            // $logs['NUMERO_LINEAS_EXCEL'] = $numRows;
 
             // // // fsofacturasso::where('fsoid', '>', '0')->delete();
             // $fsoultimo = fsofacturasso::orderby('fsoid', 'desc')->first();
