@@ -93,8 +93,8 @@ class MetMostrarSubsidiosSiController extends Controller
                                         'sdediferenciaahorro',
                                         'sdebultosacordados',
                                         'fec.fecid',
-                                        // 'fecfecha',
-                                        'fsifecha as fecfecha',
+                                        'fecfecha',
+                                        // 'fsifecha as fecfecha',
                                         'sdependiente',
                                         'sdesac',
                                         'sdesector',
@@ -134,14 +134,15 @@ class MetMostrarSubsidiosSiController extends Controller
                                                 'fsifactura',
                                                 'fsipedido',
                                                 'sfsvalorizado',
-                                                'fecfecha',
+                                                // 'fecfecha',
                                                 'fdsreconocer',
                                                 'fdssaldo',
                                                 'fdstreintaporciento',
                                                 'fdsnotacredito',
                                                 'fdsvalorneto',
                                                 'sfssaldoanterior',
-                                                'sfssaldonuevo'
+                                                'sfssaldonuevo',
+                                                'fsifecha as fecfecha',
                                             ]);
 
                     $sumsfsvalorizado = sfssubsidiosfacturassi::join('fsifacturassi as fsi', 'fsi.fsiid', 'sfssubsidiosfacturassi.fsiid')
