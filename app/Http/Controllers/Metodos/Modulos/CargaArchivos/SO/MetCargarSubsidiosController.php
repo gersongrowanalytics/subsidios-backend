@@ -379,71 +379,71 @@ class MetCargarSubsidiosController extends Controller
                 //     }
                 // }
 
-                if($cargarDataAutomatico == true){
-                    $espe = espestadospendientes::where('espbasedato', "Subsidio Reconocido (Plantilla Automatico)")
-                                                ->where('fecid', $fec->fecid)
-                                                ->first();
+                // if($cargarDataAutomatico == true){
+                //     $espe = espestadospendientes::where('espbasedato', "Subsidio Reconocido (Plantilla Automatico)")
+                //                                 ->where('fecid', $fec->fecid)
+                //                                 ->first();
 
-                    if($espe){
-                        if($usu->perid == 1 || $usu->perid == 3 || $usu->perid == 7 || $usu->perid == 10){
+                //     if($espe){
+                //         if($usu->perid == 1 || $usu->perid == 3 || $usu->perid == 7 || $usu->perid == 10){
                     
-                        }else{
-                            $espe->perid = $usu->perid;
-                        }
-                        $espe->espfechactualizacion = $fechaActual;
+                //         }else{
+                //             $espe->perid = $usu->perid;
+                //         }
+                //         $espe->espfechactualizacion = $fechaActual;
 
-                        $date1 = new DateTime($fechaActual);
-                        $fecha_carga_real = date("Y-m-d", strtotime($espe->espfechaprogramado));
-                        $date2 = new DateTime($fecha_carga_real);
+                //         $date1 = new DateTime($fechaActual);
+                //         $fecha_carga_real = date("Y-m-d", strtotime($espe->espfechaprogramado));
+                //         $date2 = new DateTime($fecha_carga_real);
                         
-                        if($date1 > $date2){
-                            $diff = $date1->diff($date2);
+                //         if($date1 > $date2){
+                //             $diff = $date1->diff($date2);
 
-                            if($diff->days > 0){
-                                $espe->espdiaretraso = $diff->days;
-                            }else{
-                                $espe->espdiaretraso = "0";
-                            }
-                        }else{
-                            $espe->espdiaretraso = "0";
-                        }
+                //             if($diff->days > 0){
+                //                 $espe->espdiaretraso = $diff->days;
+                //             }else{
+                //                 $espe->espdiaretraso = "0";
+                //             }
+                //         }else{
+                //             $espe->espdiaretraso = "0";
+                //         }
 
-                        $espe->update();
-                    }
-                }
+                //         $espe->update();
+                //     }
+                // }
 
-                if($cargarDataManual == true){
-                    $espe = espestadospendientes::where('espbasedato', "Subsidio Reconocido (Plantilla Manual)")
-                                                ->where('fecid', $fec->fecid)
-                                                ->first();
+                // if($cargarDataManual == true){
+                //     $espe = espestadospendientes::where('espbasedato', "Subsidio Reconocido (Plantilla Manual)")
+                //                                 ->where('fecid', $fec->fecid)
+                //                                 ->first();
 
-                    if($espe){
-                        if($usu->perid == 1 || $usu->perid == 3 || $usu->perid == 7 || $usu->perid == 10){
+                //     if($espe){
+                //         if($usu->perid == 1 || $usu->perid == 3 || $usu->perid == 7 || $usu->perid == 10){
                     
-                        }else{
-                            $espe->perid = $usu->perid;
-                        }
-                        $espe->espfechactualizacion = $fechaActual;
+                //         }else{
+                //             $espe->perid = $usu->perid;
+                //         }
+                //         $espe->espfechactualizacion = $fechaActual;
 
-                        $date1 = new DateTime($fechaActual);
-                        $fecha_carga_real = date("Y-m-d", strtotime($espe->espfechaprogramado));
-                        $date2 = new DateTime($fecha_carga_real);
+                //         $date1 = new DateTime($fechaActual);
+                //         $fecha_carga_real = date("Y-m-d", strtotime($espe->espfechaprogramado));
+                //         $date2 = new DateTime($fecha_carga_real);
                         
-                        if($date1 > $date2){
-                            $diff = $date1->diff($date2);
+                //         if($date1 > $date2){
+                //             $diff = $date1->diff($date2);
 
-                            if($diff->days > 0){
-                                $espe->espdiaretraso = $diff->days;
-                            }else{
-                                $espe->espdiaretraso = "0";
-                            }
-                        }else{
-                            $espe->espdiaretraso = "0";
-                        }
+                //             if($diff->days > 0){
+                //                 $espe->espdiaretraso = $diff->days;
+                //             }else{
+                //                 $espe->espdiaretraso = "0";
+                //             }
+                //         }else{
+                //             $espe->espdiaretraso = "0";
+                //         }
 
-                        $espe->update();
-                    }
-                }
+                //         $espe->update();
+                //     }
+                // }
 
                 $care = carcargasarchivos::find($carid);
                 $care->carexito = 1;
