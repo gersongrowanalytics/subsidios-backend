@@ -85,7 +85,7 @@ class MetCargarSubsidiosPlantillaController extends Controller
             // $numRows        = $objPHPExcel->setActiveSheetIndex(0)->getHighestRow();
             // $ultimaColumna  = $objPHPExcel->setActiveSheetIndex(0)->getHighestColumn();
 
-            $logs['NUMERO_LINEAS_EXCEL'] = $numRows;
+            // $logs['NUMERO_LINEAS_EXCEL'] = $numRows;
 
             // $ex_anio = $objPHPExcel->getActiveSheet()->getCell('A2')->getCalculatedValue();
             // $ex_mes  = $objPHPExcel->getActiveSheet()->getCell('B3')->getCalculatedValue();
