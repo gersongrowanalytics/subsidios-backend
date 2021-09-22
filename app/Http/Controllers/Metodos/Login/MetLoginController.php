@@ -41,7 +41,10 @@ class MetLoginController extends Controller
                                 'usucontrasenia',
                                 'tpu.tpuid',
                                 'tpuprivilegio',
-                                'tpunombre'
+                                'tpunombre',
+                                'percumpleanios',
+                                'pernumero',
+                                'usuimagen'
                             ]);
 
         if($usu){
@@ -81,7 +84,7 @@ class MetLoginController extends Controller
             'datos'     => $datos,
             'fecha'     => $fechaDisponible,
             'subsidiospendientes' => false,
-            'fechaActualizacion' => "14 Setiembre 2021",
+            'fechaActualizacion' => "22 Setiembre 2021",
         ]);
     }
 }
