@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\sfssubsidiosfacturassi;
 use App\Models\fdsfacturassidetalles;
+use App\Models\sdesubsidiosdetalles;
 
 class MetEliminarFacturasController extends Controller
 {
@@ -32,6 +33,23 @@ class MetEliminarFacturasController extends Controller
 
             $sfsd = sfssubsidiosfacturassi::find($sfsid);
             if($sfsd){
+
+                $sfss = sfssubsidiosfacturassi::where('sdeid', $sfsd->sdeid)->get();
+                
+                $sdee = sdesubsidiosdetalles::where('sdeid', $sfsd->sdeid)->first();
+                $objetivoSde = $sdee->sdemontoareconocerreal;
+
+                foreach($sfss as $sfse){
+                    
+                    if($sfse->sfsid != $sfsid){
+                        $sfsee = sfssubsidiosfacturassi::find($sfse->sfsid);
+                        $sfsee->sfsdiferenciaobjetivo = $objetivoSde - $sfse->sfsvalorizado;
+                        $sfsee->update();
+
+                        $objetivoSde = $objetivoSde - $sfse->sfsvalorizado;
+                    }
+                }
+
                 $fdse = fdsfacturassidetalles::find($fdsid);
                 if($fdse){
 

@@ -32,83 +32,91 @@ class MetAsignarFacturasController extends Controller
         $sdemontoareconocerreal = $request['sdemontoareconocerreal'];
         $facturas = $request['facturas'];
 
-        date_default_timezone_set("America/Lima");
-        $fechaActual = date('Y-m');
-        $fechaActual = $fechaActual."-01";
+        // date_default_timezone_set("America/Lima");
+        // $fechaActual = date('Y-m');
+        // $fechaActual = $fechaActual."-01";
 
 
         try{
-            $fec = fecfechas::where('fecfecha', $fechaActual)->first();
+            // $fec = fecfechas::where('fecfecha', $fechaActual)->first();
 
-            if($fec){
+            // if($fec){
 
-                $sde = sdesubsidiosdetalles::find($sdeid);
+                
 
-                if($sde){
+            // }else{
+            //     $respuesta = false;
+            //     $mensaje   = "No se encontro la fecha seleccionada";
+            //     $logs["FECHA_NO_ENCONTRADA"] = "FECHA SELECCIONADA: ".$fechaActual;
+            // }
 
-                    foreach( $facturas as $factura ){
-                    
-                        if(isset($factura['seleccionado'])){
+            $sde = sdesubsidiosdetalles::find($sdeid);
 
-                            if($factura['seleccionado'] == true){
-                                $fdse = fdsfacturassidetalles::find($factura['fdsid']);
+            if($sde){
 
-                                if($fdse){
+                foreach( $facturas as $factura ){
+                
+                    if(isset($factura['seleccionado'])){
 
-                                    $fdse->fdssaldo = $fdse->fdssaldo - $factura['impacto'];
-                                    $fdse->fdsreconocer = $fdse->fdsreconocer + $factura['impacto'];
-                                    if($fdse->update()){
+                        if($factura['seleccionado'] == true){
+                            $fdse = fdsfacturassidetalles::find($factura['fdsid']);
 
-                                        $sfsn = new sfssubsidiosfacturassi;
-                                        $sfsn->fecid = $fec->fecid;
-                                        $sfsn->sdeid = $sdeid;
-                                        $sfsn->fsiid = $factura['fsiid'];
-                                        $sfsn->fdsid = $factura['fdsid'];
-                    
-                                        $sfsn->nsiid = null;
-                                        $sfsn->ndsid = null;
-                    
-                                        $sfsn->sfsvalorizado    = $factura['impacto'];
-                                        $sfsn->sfssaldoanterior = $fdse->fdssaldo;
-                                        $sfsn->sfssaldonuevo    = $fdse->fdssaldo - $factura['impacto'];
-                                        $sfsn->sfsobjetivo      = $sdemontoareconocerreal;
-                                        $sfsn->sfsdiferenciaobjetivo = $sdemontoareconocerreal - $factura['impacto'];
-                                        if($sfsn->save()){
-                                            
-                                            $sdemontoareconocerreal = $sdemontoareconocerreal - $factura['impacto'];
+                            if($fdse){
 
-                                        }else{
-                                            $respuesta = false;
-                                            $mensaje   = "No se pudo editar el registro del subsidio";
-                                            $logs["REGISTRO_SUBSIDIO_NO_EDITADO"][] = "REGISTRO DEL SUBSIDIO NO EDITADO: ".$factura['fdsid'];
-                                        }
+                                $fdse->fdssaldo = $fdse->fdssaldo - $factura['impacto'];
+                                $fdse->fdsreconocer = $fdse->fdsreconocer + $factura['impacto'];
+                                if($fdse->update()){
+
+                                    $sfsn = new sfssubsidiosfacturassi;
+                                    $sfsn->fecid = $sde->fecid;
+                                    $sfsn->sdeid = $sdeid;
+                                    $sfsn->fsiid = $factura['fsiid'];
+                                    $sfsn->fdsid = $factura['fdsid'];
+                
+                                    $sfsn->nsiid = null;
+                                    $sfsn->ndsid = null;
+                
+                                    $sfsn->sfsvalorizado    = $factura['impacto'];
+                                    $sfsn->sfssaldoanterior = $fdse->fdssaldo;
+                                    $sfsn->sfssaldonuevo    = $fdse->fdssaldo - $factura['impacto'];
+                                    $sfsn->sfsobjetivo      = $sdemontoareconocerreal;
+
+                                    $sumsfs = sfssubsidiosfacturassi::where('sdeid', $sdeid)->sum('sfsvalorizado');
+                                    $sumsfs = $sumsfs + $factura['impacto'];
+                                    $sfsn->sfsdiferenciaobjetivo = $sdemontoareconocerreal - $sumsfs;
+
+
+                                    if($sfsn->save()){
+                                        
+                                        $sdemontoareconocerreal = $sdemontoareconocerreal - $factura['impacto'];
 
                                     }else{
                                         $respuesta = false;
-                                        $mensaje   = "No se pudo editar la factura seleccionada";
-                                        $logs["DETALLE_FACTURA_NO_EDITADA"][] = "FDSID NO EDITADO: ".$factura['fdsid'];
+                                        $mensaje   = "No se pudo editar el registro del subsidio";
+                                        $logs["REGISTRO_SUBSIDIO_NO_EDITADO"][] = "REGISTRO DEL SUBSIDIO NO EDITADO: ".$factura['fdsid'];
                                     }
 
                                 }else{
                                     $respuesta = false;
-                                    $mensaje   = "No se encontro el detalle de la factura";
-                                    $logs["DETALLE_FACTURA_NO_ENCONTRADA"][] = "FDSID NO ENCONTRADA: ".$factura['fdsid'];
-                                }   
-                            }
+                                    $mensaje   = "No se pudo editar la factura seleccionada";
+                                    $logs["DETALLE_FACTURA_NO_EDITADA"][] = "FDSID NO EDITADO: ".$factura['fdsid'];
+                                }
+
+                            }else{
+                                $respuesta = false;
+                                $mensaje   = "No se encontro el detalle de la factura";
+                                $logs["DETALLE_FACTURA_NO_ENCONTRADA"][] = "FDSID NO ENCONTRADA: ".$factura['fdsid'];
+                            }   
                         }
                     }
-
-                }else{
-                    $respuesta = false;
-                    $mensaje   = "No se encontro el subsidio seleccionado";
-                    $logs["SUBSIDIO_NO_ENCONTRADO"] = "SUBSIDIO SELECCIONADO SDEID: ".$sdeid;
                 }
 
             }else{
                 $respuesta = false;
-                $mensaje   = "No se encontro la fecha seleccionada";
-                $logs["FECHA_NO_ENCONTRADA"] = "FECHA SELECCIONADA: ".$fechaActual;
+                $mensaje   = "No se encontro el subsidio seleccionado";
+                $logs["SUBSIDIO_NO_ENCONTRADO"] = "SUBSIDIO SELECCIONADO SDEID: ".$sdeid;
             }
+
         } catch (Exception $e) {
             $mensajedev = $e->getMessage();
             $respuesta = false;
