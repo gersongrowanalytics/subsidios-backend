@@ -66,23 +66,23 @@ class MetCargarSOController extends Controller
         $fichero_subido = base_path().'/public'.$ubicacionArchivo;
 
         $ex_file_name = explode(".", $_FILES['file']['name']);
-        // $carn = new carcargasarchivos;
-        // $carn->tcaid        = 3;
-        // $carn->usuid        = $usu->usuid;
-        // $carn->carnombre    = $_FILES['file']['name'];
-        // $carn->carextension = $ex_file_name[1];
-        // $carn->carurl       = env('APP_URL').$ubicacionArchivo;
-        // $carn->carexito     = 0;
-        // $carn->save();
-        // $carid = $carn->carid;
+        $carn = new carcargasarchivos;
+        $carn->tcaid        = 3;
+        $carn->usuid        = $usu->usuid;
+        $carn->carnombre    = $_FILES['file']['name'];
+        $carn->carextension = $ex_file_name[1];
+        $carn->carurl       = env('APP_URL').$ubicacionArchivo;
+        $carn->carexito     = 0;
+        $carn->save();
+        $carid = $carn->carid;
 
         if (move_uploaded_file($_FILES['file']['tmp_name'], $fichero_subido)) {
             
-            // $data = [
-            //     'archivo' => $_FILES['file']['name'], "tipo" => "Facturas Sell Out", "usuario" => $usu->usuusuario,
-            //     "url_archivo" => env('APP_URL').$ubicacionArchivo
-            // ];
-            // Mail::to(env('USUARIO_ENVIAR_MAIL'))->send(new MailCargaArchivoOutlook($data));
+            $data = [
+                'archivo' => $_FILES['file']['name'], "tipo" => "Facturas Sell Out", "usuario" => $usu->usuusuario,
+                "url_archivo" => env('APP_URL').$ubicacionArchivo
+            ];
+            Mail::to(env('USUARIO_ENVIAR_MAIL'))->send(new MailCargaArchivoOutlook($data));
 
             // $objPHPExcel    = IOFactory::load($fichero_subido);
             // $objPHPExcel->setActiveSheetIndex(0);
@@ -171,63 +171,63 @@ class MetCargarSOController extends Controller
 
             // AGREGAR REGISTRO
 
-            // $fec = fecfechas::where('fecmesabierto', true)->first(['fecid']);
-            // $fecid = $fec->fecid;
+            $fec = fecfechas::where('fecmesabierto', true)->first(['fecid']);
+            $fecid = $fec->fecid;
 
-            // $espe = espestadospendientes::where('fecid', $fecid)
-            //                             ->where('espbasedato', "Sell Out (Efectivo)")
-            //                             ->first();
+            $espe = espestadospendientes::where('fecid', $fecid)
+                                        ->where('espbasedato', "Sell Out (Efectivo)")
+                                        ->first();
 
-            // if($espe){
-            //     if($usu->perid == 1 || $usu->perid == 3 || $usu->perid == 7 || $usu->perid == 10){
+            if($espe){
+                if($usu->perid == 1 || $usu->perid == 3 || $usu->perid == 7 || $usu->perid == 10){
                     
-            //     }else{
-            //         $espe->perid = $usu->perid;
-            //     }
+                }else{
+                    $espe->perid = $usu->perid;
+                }
                 
-            //     $espe->espfechactualizacion = $fechaActual;
+                $espe->espfechactualizacion = $fechaActual;
 
-            //     $date1 = new DateTime($fechaActual);
-            //     $fecha_carga_real = date("Y-m-d", strtotime($espe->espfechaprogramado));
-            //     $date2 = new DateTime($fecha_carga_real);
+                $date1 = new DateTime($fechaActual);
+                $fecha_carga_real = date("Y-m-d", strtotime($espe->espfechaprogramado));
+                $date2 = new DateTime($fecha_carga_real);
 
-            //     $diff = $date1->diff($date2);
+                $diff = $date1->diff($date2);
 
-            //     if($date1 > $date2){
-            //         if($diff->days > 0){
-            //             $espe->espdiaretraso = $diff->days;
-            //         }else{
-            //             $espe->espdiaretraso = "0";
-            //         }
-            //     }else{
-            //         $espe->espdiaretraso = "0";
-            //     }
+                if($date1 > $date2){
+                    if($diff->days > 0){
+                        $espe->espdiaretraso = $diff->days;
+                    }else{
+                        $espe->espdiaretraso = "0";
+                    }
+                }else{
+                    $espe->espdiaretraso = "0";
+                }
 
-            //     $espe->update();
+                $espe->update();
 
 
-            //     $aree = areareasestados::where('areid', $espe->areid)->first();
+                $aree = areareasestados::where('areid', $espe->areid)->first();
 
-            //     if($aree){
+                if($aree){
 
-            //         $espcount = espestadospendientes::where('fecid', $fecid)
-            //                             ->where('espbasedato', "Sell Out (Efectivo)")
-            //                             ->where('espfechactualizacion', '!=', null)
-            //                             ->first();
+                    $espcount = espestadospendientes::where('fecid', $fecid)
+                                        ->where('espbasedato', "Sell Out (Efectivo)")
+                                        ->where('espfechactualizacion', '!=', null)
+                                        ->first();
 
-            //         if($espcount){
-            //             $aree->areporcentaje = "100";
-            //         }else{
-            //             $aree->areporcentaje = "50";
-            //         }
+                    if($espcount){
+                        $aree->areporcentaje = "100";
+                    }else{
+                        $aree->areporcentaje = "50";
+                    }
 
-            //         $aree->update();
-            //     } 
-            // }
+                    $aree->update();
+                } 
+            }
 
-            // $care = carcargasarchivos::find($carid);
-            // $care->carexito = 1;
-            // $care->update();
+            $care = carcargasarchivos::find($carid);
+            $care->carexito = 1;
+            $care->update();
 
             // 
             
