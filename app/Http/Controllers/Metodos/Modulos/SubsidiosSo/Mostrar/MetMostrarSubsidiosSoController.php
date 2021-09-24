@@ -169,7 +169,8 @@ class MetMostrarSubsidiosSoController extends Controller
                                             "sdeaprobado",
                                             "prosku",
                                             "cliclientesac",
-                                            "sdeterritorio"
+                                            "sdeterritorio",
+                                            "sdevalidado"
                                         ]);
 
         foreach($descargarSdes as $posicionSde => $descargarSde){
