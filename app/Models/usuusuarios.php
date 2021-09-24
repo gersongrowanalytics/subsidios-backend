@@ -18,5 +18,6 @@ class usuusuarios extends Model
         "usucorreo",
         "usucontrasenia",
         "usutoken",
+        "usuimagen"
     ];
 }

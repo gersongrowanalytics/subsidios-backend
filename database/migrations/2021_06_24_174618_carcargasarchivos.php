@@ -17,7 +17,10 @@ class Carcargasarchivos extends Migration
             $table->increments('carid');
             $table->unsignedInteger('tcaid');
             $table->unsignedInteger('usuid');
-            $table->string('cardiasatraso');
+            $table->string('carnombre');
+            $table->string('carextension');
+            $table->string('carurl');
+            $table->boolean('carexito');
 
             $table->timestamps();
 

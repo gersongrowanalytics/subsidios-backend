@@ -12,6 +12,9 @@ class carcargasarchivos extends Model
     protected $fillable = [
         "tcaid",
         "usuid",
-        "cardiasatraso",
+        "carnombre",
+        "carextension",
+        "carurl",
+        "carexito",
     ];
 }

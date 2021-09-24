@@ -21,6 +21,7 @@ class Fsofacturasso extends Migration
             $table->string('fsoruc')->nullable();
             $table->string('fsocantidadbulto');
             $table->string('fsoventasinigv');
+            $table->string('fsofecha')->nullable();
             $table->timestamps();
 
             $table->foreign('fecid')->references('fecid')->on('fecfechas');

@@ -112,7 +112,7 @@ class MetCargarEstadoSunatSiController extends Controller
 
             //         $estadosunataprobado = 1;
 
-            //         if($ex_estadocomprobante == "NO ACEPTADO"){
+            //         if($ex_estadocomprobante == "NO ACEPTADO" || $ex_estadocomprobante == "INCIDENCIAS" || $ex_estadocomprobante == "Incidencia" || $ex_estadocomprobante == "Rechazado"){
             //             $estadosunataprobado = 0;
             //         }
 
@@ -190,7 +190,7 @@ class MetCargarEstadoSunatSiController extends Controller
                 }
             }
 
-            //
+            
 
             $care = carcargasarchivos::find($carid);
             $care->carexito = 1;

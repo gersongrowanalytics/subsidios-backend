@@ -36,6 +36,13 @@ $router->post('/cambiar-contrasenia', 'Validaciones\RecuperarContrasenia\Recuper
         $router->get('/salvacion/reiniciar-subsidos-data-dt/{fecid}', 'SalvacionController@ReinicarSubDtYReal');
         $router->get('/salvacion/cambiar-validados/{fecid}', 'SalvacionController@CambiarValidados');
 
+        $router->post('/salvacion/enviar-correo', 'SalvacionController@EnviarCorreo');
+
+        $router->group(['prefix' => 'perfil'], function () use ($router) {
+            $router->post('/editar', 'Validaciones\Modulos\Perfil\EditarPerfilController@ValEditarPerfil');
+            $router->post('/editar/imagen', 'Validaciones\Modulos\Perfil\EditarPerfilController@ValEditarImagenPerfil');
+            
+        });
 
         $router->group(['prefix' => 'cargaArchivos'], function () use ($router) {
             $router->post('/facturas', 'Validaciones\Modulos\CargaArchivos\CargarFacturasController@CargarFacturas');
@@ -98,6 +105,8 @@ $router->post('/cambiar-contrasenia', 'Validaciones\RecuperarContrasenia\Recuper
             $router->group(['prefix' => 'mostrar'], function () use ($router) {
                 $router->post('/tipos-usuarios', 'Validaciones\Modulos\Administrador\TiposUsuarios\MostrarTiposUsuariosController@ValMostrarTiposUsuarios');
                 $router->post('/usuarios', 'Validaciones\Modulos\Administrador\Usuarios\MostrarUsuariosController@ValMostrarUsuarios');
+
+                $router->post('/control-archivos', 'Validaciones\Modulos\Administrador\ControlArchivos\MostrarControlArchivosController@ValMostrarControlArchivos');
             });
         });
 

@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\cliclientes;
 use App\Models\zonzonas;
 use App\Models\sdesubsidiosdetalles;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\MailCargaArchivoOutlook;
 
 class SalvacionController extends Controller
 {
@@ -61,4 +63,26 @@ class SalvacionController extends Controller
         }
 
     }
+
+    public function EnviarCorreo(Request $request)
+    {
+
+        $url     = $request['url'];
+        $usuario = $request['usuario'];
+        $tipo    = $request['tipo'];
+        $archivo = $request['archivo'];
+        $correo  = $request['correo'];
+
+        $data = [
+            'archivo'      => $archivo, 
+            "tipo"         => $tipo, 
+            "usuario"      => $usuario,
+            "url_archivo"  => $url,
+            "correo"  => $correo,
+        ];
+        // dd($data);
+        Mail::to($correo)->send(new MailCargaArchivoOutlook($data));
+
+    }
+
 }

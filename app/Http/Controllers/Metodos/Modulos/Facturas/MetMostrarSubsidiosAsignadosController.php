@@ -13,7 +13,8 @@ class MetMostrarSubsidiosAsignadosController extends Controller
 
         $fdsid = $request['fdsid'];
 
-        $sfss = sfssubsidiosfacturassi::join('sdesubsidiosdetalles as sde', 'sde.sdeid', 'sfssubsidiosfacturassi.sdeid')
+        $sfss = sfssubsidiosfacturassi::join('fsifacturassi as fsi', 'fsi.fsiid', 'sfssubsidiosfacturassi.fsiid')
+                                    ->join('sdesubsidiosdetalles as sde', 'sde.sdeid', 'sfssubsidiosfacturassi.sdeid')
                                     ->join('fecfechas as fec', 'fec.fecid', 'sde.fecid')
                                     ->join('proproductos as pro', 'pro.proid', 'sde.proid')
                                     ->where('fdsid', $fdsid)
@@ -27,11 +28,13 @@ class MetMostrarSubsidiosAsignadosController extends Controller
                                         'sdecantidadbultosreal',
                                         'sdemontoareconocerreal',
                                         'fecfecha',
+                                        // 'fsifecha as fecfecha',
                                         'fecanionumero',
                                         'fecmesabreviacion',
                                         'pro.proid',
                                         'prosku',
-                                        'pronombre'
+                                        'pronombre',
+                                        'sdedestrucsap'
                                     ]);
 
         $sumSfss = sfssubsidiosfacturassi::where('fdsid', $fdsid)

@@ -18,17 +18,22 @@ class MetMostrarFacturasSubsidiosPendientesController extends Controller
                                 ->join('proproductos as pro', 'pro.proid', 'fdsfacturassidetalles.proid')
                                 ->where('fsi.fsidestinatario', $coddestinatario)
                                 ->where('fdssaldo', '>', 0)
+                                ->orderBy('fdssaldo', 'desc')
                                 ->get([
                                     'fdsfacturassidetalles.fdsid',
                                     'fdsfacturassidetalles.fsiid',
-                                    'fecfecha',
+                                    // 'fecfecha',
+                                    'fsifecha as fecfecha',
                                     'fsifactura',
                                     'fdsmaterial',
                                     'pro.proid',
                                     'prosku',
                                     'pronombre',
                                     'fdsvalorneto',
-                                    'fdssaldo'
+                                    'fdssaldo',
+                                    'fdsnotacredito',
+                                    'fsipedido',
+                                    'fdsreconocer'
                                 ]);
 
         $requestsalida = response()->json([

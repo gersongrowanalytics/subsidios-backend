@@ -15,5 +15,7 @@ class perpersonas extends Model
         "pernombre",
         "perapellidopaterno",
         "perapellidomaterno",
+        "percumpleanios",
+        "pernumero",
     ];
 }

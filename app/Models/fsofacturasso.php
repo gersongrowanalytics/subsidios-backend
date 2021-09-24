@@ -16,6 +16,7 @@ class fsofacturasso extends Model
         "proid",
         "fsoruc",
         "fsocantidadbulto",
-        "fsoventasinigv"
+        "fsoventasinigv",
+        "fsofecha"
     ];
 }

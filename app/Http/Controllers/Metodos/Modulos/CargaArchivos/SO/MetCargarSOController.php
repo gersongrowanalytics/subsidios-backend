@@ -110,8 +110,10 @@ class MetCargarSOController extends Controller
             //     $ex_codigofecha = Date::excelToDateTimeObject($ex_codigofecha);
             //     $ex_codigofecha = json_encode($ex_codigofecha);
             //     $ex_codigofecha = json_decode($ex_codigofecha);
+            //     $ex_fecha = date("Y-m-d", strtotime($ex_codigofecha->date));
             //     $ex_codigofecha = date("Y-m", strtotime($ex_codigofecha->date));
 
+                
             //     // $fec = fecfechas::where('fecfecha', 'LIKE', "%".$ex_codigofecha."%")
             //     //             ->first(['fecid']);
                 
@@ -138,6 +140,7 @@ class MetCargarSOController extends Controller
             //                 $fson->proid            = $pro->proid;
             //                 $fson->fsoruc           = $ex_ruc;
             //                 $fson->fsocantidadbulto = $ex_cantidadbultos;
+            //                 $fson->fsofecha = $ex_fecha;
             //                 if($ex_ventasinigv){
             //                     $fson->fsoventasinigv   = $ex_ventasinigv;
             //                     $pkid = $pkid + 1;

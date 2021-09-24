@@ -32,8 +32,10 @@ class MetLogicaSubsidiosSiController extends Controller
         $datos          = [];
         $mensajeDetalle = "";
 
-        // $usutoken = $request->header('api_token');
-        $usutoken = "TOKENESPECIFICOUNIFODEVGERSONGROW1845475#LD72";
+        $usutoken = $request->header('api_token');
+        if(!isset($usutoken)){
+            $usutoken = "TOKENESPECIFICOUNIFODEVGERSONGROW1845475#LD72";
+        }
 
         $usu = usuusuarios::where('usutoken', $usutoken)->first(['usuid', 'usuusuario']);
 
@@ -60,19 +62,10 @@ class MetLogicaSubsidiosSiController extends Controller
                                         ->where('sdemontoareconocerreal', '!=',0)
                                         ->get();
 
-            sfssubsidiosfacturassi::where('fecid', $fecid)
-                                    ->delete();
-
             foreach($sdes as $sde){
-                // $sde->sdemontoareconocerreal
 
                 $idFacturaEncontrada = [];
-                $facturasAfectadas = array(
-                    // array(
-                    //     "id" => "",
-                    //     "valorizado" => ""
-                    // )
-                );
+                $facturasAfectadas = array();
 
                 $dataObtenida = array(
                     "idFacturaEncontrada" => [],
@@ -208,18 +201,11 @@ class MetLogicaSubsidiosSiController extends Controller
 
     public function ActualizarReconocimientoSaldosFacturas($fecid)
     {
-
-        // fdsfacturassidetalles::update([
-        //     "fdsreconocer" => 0,
-        //     "fdsnotacredito" => 0,
-        //     "fdssaldo" => 
-        // ]);
-
-        // sfssubsidiosfacturassi::where('')->delete() YA LO ELIMINO MAS ARRIBA DE EJECUTAR LA FUNCION
+        sfssubsidiosfacturassi::where('fecid', $fecid)
+                                ->delete();
 
         sdesubsidiosdetalles::where('fecid', $fecid)
                             ->where('sdeaprobado', true)
-                            ->where('sdeid', 78554)
                             ->update([
                                 "sdependiente" => 0,
                                 "sdeencontrofactura" => 0
@@ -234,6 +220,8 @@ class MetLogicaSubsidiosSiController extends Controller
             $fdse->fdssaldo     = $fdse->fdstreintaporciento;
             $fdse->update();
         }
+
+        //REINICIAMOS TODO EL FDS, EL FDSRECONOCER PODEMOS OBTENERLO SUMANDO SFS, EL FDSNOTACREDITO DE LAS NOTAS DE CREDITO DE LA DATA SUBIDA
 
     }
 

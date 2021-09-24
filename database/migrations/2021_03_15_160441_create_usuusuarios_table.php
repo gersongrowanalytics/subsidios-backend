@@ -23,6 +23,7 @@ class CreateUsuusuariosTable extends Migration
             $table->string('usucorreo')->nullable();
             $table->string('usucontrasenia');
             $table->string('usutoken');
+            $table->string('usuimagen')->nullable();
             $table->timestamps();
 
             $table->foreign('tpuid')->references('tpuid')->on('tputiposusuarios');

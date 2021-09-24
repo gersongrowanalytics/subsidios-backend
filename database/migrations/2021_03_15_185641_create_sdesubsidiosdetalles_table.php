@@ -59,6 +59,7 @@ class CreateSdesubsidiosdetallesTable extends Migration
 
             $table->boolean('sdeeditado')->default(1);
             $table->string('sdevalidado')->default("NOVALIDADOS");
+            $table->string('sdebonificacion')->nullable();
             // $table->string('sdecantidad');
             // $table->string('sdetotal');
             $table->timestamps();

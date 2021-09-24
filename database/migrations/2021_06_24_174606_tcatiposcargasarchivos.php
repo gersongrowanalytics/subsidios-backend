@@ -15,16 +15,8 @@ class Tcatiposcargasarchivos extends Migration
     {
         Schema::create('tcatiposcargasarchivos', function (Blueprint $table) {
             $table->increments('tcaid');
-            $table->unsignedInteger('usuid');
             $table->string('tcanombre');
-            $table->string('tcaresponsable');
-            $table->string('tcabasedatos');
-            $table->string('tcaarea');
-            $table->string('tcafechacargaprogramada');
-
             $table->timestamps();
-
-            $table->foreign('usuid')->references('usuid')->on('usuusuarios');
         });
     }
 

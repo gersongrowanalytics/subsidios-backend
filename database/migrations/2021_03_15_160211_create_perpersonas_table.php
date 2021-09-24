@@ -20,6 +20,8 @@ class CreatePerpersonasTable extends Migration
             $table->string('pernombre')->nullable();
             $table->string('perapellidopaterno')->nullable();
             $table->string('perapellidomaterno')->nullable();
+            $table->string('percumpleanios')->nullable();
+            $table->string('pernumero')->nullable();
             $table->timestamps();
         });
     }
