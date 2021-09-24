@@ -231,7 +231,8 @@ class MetMostrarSubsidiosSiController extends Controller
                                             "sdeaprobado",
                                             "prosku",
                                             "cliclientesac",
-                                            "sdeterritorio"
+                                            "sdeterritorio",
+                                            "sdevalidado"
                                         ]);
 
         foreach($descargarSdes as $posicionSde => $descargarSde){
@@ -1314,7 +1315,8 @@ class MetMostrarSubsidiosSiController extends Controller
                     )
                 ),
                 array(
-                    "value" => $descargarSde->sdeaprobado == 1 ?"Validados" :"No Validados", 
+                    // "value" => $descargarSde->sdeaprobado == 1 ?"Validados" :"No Validados", 
+                    "value" => $descargarSde->sdevalidado == "SIVALIDADOS" ?"Validados" :"No Validados", 
                     "style" => array(
                         "font" => array(
                             "sz" => "9",
