@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Metodos\Modulos\SubsidiosPendientes\Mostrar;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\fdsfacturassidetalles;
+use App\Models\ndsnotascreditossidetalles;
 
 class MetMostrarFacturasSubsidiosPendientesController extends Controller
 {
@@ -33,8 +34,17 @@ class MetMostrarFacturasSubsidiosPendientesController extends Controller
                                     'fdssaldo',
                                     'fdsnotacredito',
                                     'fsipedido',
-                                    'fdsreconocer'
+                                    'fdsreconocer',
+                                    'fsipedidooriginal'
                                 ]);
+
+        foreach($fsis as $posicionFsi => $fsi){
+            $ndsSuma = ndsnotascreditossidetalles::where('ndspedidooriginal', $fsi->fsipedidooriginal)
+                                                ->where('ndsmaterial', $fsi->fdsmaterial)
+                                                ->sum('ndsvalorneto');
+
+            $fsis[$posicionFsi]['fdsnotacredito'] = $ndsSuma;
+        }
 
         $requestsalida = response()->json([
             "datos" => $fsis
