@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\fdsfacturassidetalles;
 use App\Models\ndsnotascreditossidetalles;
+use App\Models\sfssubsidiosfacturassi;
 
 class MetMostrarFacturasSubsidiosPendientesController extends Controller
 {
@@ -46,7 +47,17 @@ class MetMostrarFacturasSubsidiosPendientesController extends Controller
             $sumanotascredito = abs($ndsSuma); // VUELVE EL NÚMERO EN POSITIVO
             $fsis[$posicionFsi]['fdsnotacredito'] = $sumanotascredito;
 
-            $reconocido = $fsi->fdsreconocer + $sumanotascredito;
+            $sumsfsvalorizado = sfssubsidiosfacturassi::join('fsifacturassi as fsi', 'fsi.fsiid', 'sfssubsidiosfacturassi.fsiid')
+                                            ->join('fdsfacturassidetalles as fds', 'fds.fdsid', 'sfssubsidiosfacturassi.fdsid')
+                                            ->where('fdspedidooriginal', $fsi->fsipedidooriginal)
+                                            ->where('fdsmaterial', $fsi->fdsmaterial)
+                                            // ->where('sdeid', $sde->sdeid)
+                                            ->sum('sfsvalorizado');
+
+            $sumasfs = abs($sumsfsvalorizado); // VUELVE EL NÚMERO EN POSITIVO
+            $fsis[$posicionFsi]['fdsreconocer'] = $sumasfs;
+
+            $reconocido = $sumasfs + $sumanotascredito;
             
             $saldosin = $fsi->fdsvalorneto * 30/100;
 
