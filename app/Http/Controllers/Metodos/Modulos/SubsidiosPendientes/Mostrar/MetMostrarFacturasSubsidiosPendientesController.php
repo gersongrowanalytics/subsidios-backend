@@ -43,7 +43,20 @@ class MetMostrarFacturasSubsidiosPendientesController extends Controller
                                                 ->where('ndsmaterial', $fsi->fdsmaterial)
                                                 ->sum('ndsvalorneto');
 
-            $fsis[$posicionFsi]['fdsnotacredito'] = $ndsSuma;
+            $sumanotascredito = abs($ndsSuma); // VUELVE EL NÚMERO EN POSITIVO
+            $fsis[$posicionFsi]['fdsnotacredito'] = $sumanotascredito;
+
+            $reconocido = $fsi->fdsreconocer + $sumanotascredito;
+            
+            $saldosin = $fsi->fdsvalorneto * 30/100;
+
+            $nuevoSaldo = $saldosin - $reconocido;
+
+            if($nuevoSaldo < 0){
+                $fsis[$posicionFsi]['fdssaldo'] = 0;
+            }else{
+                $fsis[$posicionFsi]['fdssaldo'] = $nuevoSaldo;
+            }
         }
 
         $requestsalida = response()->json([
