@@ -18,7 +18,7 @@ class MetMostrarFacturasSubsidiosPendientesController extends Controller
                                 ->join('fecfechas as fec', 'fec.fecid', 'fsi.fecid')
                                 ->join('proproductos as pro', 'pro.proid', 'fdsfacturassidetalles.proid')
                                 ->where('fsi.fsidestinatario', $coddestinatario)
-                                ->where('fdssaldo', '>', 0)
+                                // ->where('fdssaldo', '>', 0)
                                 ->orderBy('fdssaldo', 'desc')
                                 ->get([
                                     'fdsfacturassidetalles.fdsid',
