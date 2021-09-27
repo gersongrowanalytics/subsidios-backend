@@ -105,7 +105,7 @@ class MetMostrarSubsidiosSiController extends Controller
 
             foreach($sdes as $posicionSde => $sde){
 
-                if($sde->fecid <= 1104){ // MENOR A JULIO 2021
+                if($sde->fecid <= 1103){ // MENOR A JULIO 2021
 
                     $sfss = array(
                         array(
