@@ -67,7 +67,11 @@ class MetAsignarFacturasController extends Controller
                                 $fdse->fdsreconocer = $fdse->fdsreconocer + $factura['impacto'];
                                 if($fdse->update()){
 
+                                    $sfsultimo = sfssubsidiosfacturassi::orderby('sfsid', 'desc')->first();
+                                    $pksfsid = $sfsultimo->sfsid + 1;
+
                                     $sfsn = new sfssubsidiosfacturassi;
+                                    $sfsn->sfsid = $pksfsid;
                                     $sfsn->fecid = $sde->fecid;
                                     $sfsn->sdeid = $sdeid;
                                     $sfsn->fsiid = $factura['fsiid'];
