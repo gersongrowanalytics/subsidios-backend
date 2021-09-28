@@ -17,5 +17,6 @@ class perpersonas extends Model
         "perapellidomaterno",
         "percumpleanios",
         "pernumero",
+        "perid",
     ];
 }
