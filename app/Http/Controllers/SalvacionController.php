@@ -90,7 +90,7 @@ class SalvacionController extends Controller
     public function AsignarPedidoFacturas()
     {
 
-        $fdss = fdsfacturassidetalles::where('fsiid', 0)->limit(100)->get();
+        $fdss = fdsfacturassidetalles::where('fsiid', 0)->limit(500)->get();
 
         foreach($fdss as $fds){
 
