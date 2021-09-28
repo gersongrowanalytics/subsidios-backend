@@ -12,6 +12,7 @@ use App\Models\perpersonas;
 use App\Models\usuusuarios;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\MailCargaArchivoOutlook;
+use Illuminate\Support\Facades\Hash;
 
 class SalvacionController extends Controller
 {
