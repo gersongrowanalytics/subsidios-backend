@@ -146,6 +146,8 @@ class MetMostrarSubsidiosSiController extends Controller
                     //                             'fsifecha as fecfecha',
                     //                         ]);
 
+                    $sfss = array();
+
                     $sumsfsvalorizado = sfssubsidiosfacturassi::join('fsifacturassi as fsi', 'fsi.fsiid', 'sfssubsidiosfacturassi.fsiid')
                                             ->join('fdsfacturassidetalles as fds', 'fds.fdsid', 'sfssubsidiosfacturassi.fdsid')
                                             ->join('fecfechas as fec', 'fec.fecid', 'fsi.fecid')
