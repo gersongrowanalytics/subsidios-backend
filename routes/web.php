@@ -26,6 +26,7 @@ $router->post('/login', 'Validaciones\Login\LoginController@ValLogin');
 
 $router->get('/seed', 'Prueba\PruebaController@EjecutarSeeds');
 $router->post('/enviar-correo', 'Validaciones\RecuperarContrasenia\RecuperarContraseniaController@ValRecuperarContrasenia');
+$router->get('/asignarfacturasfsi', 'SalvacionController@AsignarPedidoFacturas');
 $router->post('/cambiar-contrasenia', 'Validaciones\RecuperarContrasenia\RecuperarContraseniaController@ValCambiarContrasenia');
 
 // $router->group(['middleware' => ['permisos']], function() use($router) {
@@ -50,6 +51,7 @@ $router->post('/cambiar-contrasenia', 'Validaciones\RecuperarContrasenia\Recuper
             $router->post('/clientes', 'Validaciones\Modulos\CargaArchivos\CargarMaestraClientesController@CargarMaestraClientes');
             $router->post('/clientes/sac', 'Validaciones\Modulos\CargaArchivos\CargarClienteSacController@ValCargarClienteSac');
             $router->post('/fechas', 'Validaciones\Modulos\CargaArchivos\CargarMaestraFechasController@CargarMaestraFechas');
+            $router->post('/asdasd', 'Validaciones\Modulos\CargaArchivos\CargarMaestraFechasController@CargarMaestraFechas');
 
             $router->post('/so/subsidios-no-aprobados', 'Validaciones\Modulos\CargaArchivos\SO\CargarSubsiduosNoAprobadosController@ValCargarSubsiduosNoAprobados');
             $router->post('/so/subsidios-sac', 'Validaciones\Modulos\CargaArchivos\SO\CargarSubsiduosNoAprobadosController@ValCargarSubsiduosSac');
