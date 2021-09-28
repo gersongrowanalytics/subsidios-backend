@@ -13,6 +13,9 @@ class MetMostrarFacturasSubsidiosPendientesController extends Controller
     {
         $coddestinatario = $request['sdecodigodestinatario'];
 
+        if($coddestinatario == "170209"){
+            $coddestinatario = "170418";
+        }
 
         $fsis = fdsfacturassidetalles::join('fsifacturassi as fsi', 'fsi.fsiid', 'fdsfacturassidetalles.fsiid')
                                 ->join('fecfechas as fec', 'fec.fecid', 'fsi.fecid')
