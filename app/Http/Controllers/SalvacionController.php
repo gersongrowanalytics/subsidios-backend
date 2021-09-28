@@ -8,6 +8,8 @@ use App\Models\zonzonas;
 use App\Models\sdesubsidiosdetalles;
 use App\Models\fdsfacturassidetalles;
 use App\Models\fsifacturassi;
+use App\Models\perpersonas;
+use App\Models\usuusuarios;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\MailCargaArchivoOutlook;
 
@@ -69,21 +71,42 @@ class SalvacionController extends Controller
     public function EnviarCorreo(Request $request)
     {
 
-        $url     = $request['url'];
-        $usuario = $request['usuario'];
-        $tipo    = $request['tipo'];
-        $archivo = $request['archivo'];
-        $correo  = $request['correo'];
+        perpersonas::create([
+            "perid"                       => 11,
+            "pernumerodocumentoidentidad" => "0000000",
+            "pernombrecompleto"           => "Julian Cruz",
+            "pernombre"                   => "Julian",
+            "perapellidopaterno"          => "Cruz",
+            "perapellidomaterno"          => "",
+        ]);
 
-        $data = [
-            'archivo'      => $archivo, 
-            "tipo"         => $tipo, 
-            "usuario"      => $usuario,
-            "url_archivo"  => $url,
-            "correo"  => $correo,
-        ];
-        // dd($data);
-        Mail::to($correo)->send(new MailCargaArchivoOutlook($data));
+        usuusuarios::create([
+            "usuid"           => 10,
+            "tpuid"           => 2,
+            "perid"           => 11,
+            "estid"           => 1,
+            "usucodigo"       => "SacJulian-08",
+            "usuusuario"      => "jcruzg@softys.com",
+            "usucorreo"       => "jcruzg@softys.com",
+            "usucontrasenia"  => Hash::make('Julian$$Cruz$$928134'),
+            "usutoken"        => "JulianpIDMWZZwOPOR439asd11aPWOALSDQ2dkka2ldrwke989230CuzdlaI",
+        ]);
+
+        // $url     = $request['url'];
+        // $usuario = $request['usuario'];
+        // $tipo    = $request['tipo'];
+        // $archivo = $request['archivo'];
+        // $correo  = $request['correo'];
+
+        // $data = [
+        //     'archivo'      => $archivo, 
+        //     "tipo"         => $tipo, 
+        //     "usuario"      => $usuario,
+        //     "url_archivo"  => $url,
+        //     "correo"  => $correo,
+        // ];
+        // // dd($data);
+        // Mail::to($correo)->send(new MailCargaArchivoOutlook($data));
 
     }
 
