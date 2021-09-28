@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\cliclientes;
 use App\Models\zonzonas;
 use App\Models\sdesubsidiosdetalles;
+use App\Models\fdsfacturassidetalles;
+use App\Models\fsifacturassi;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\MailCargaArchivoOutlook;
 
@@ -82,6 +84,27 @@ class SalvacionController extends Controller
         ];
         // dd($data);
         Mail::to($correo)->send(new MailCargaArchivoOutlook($data));
+
+    }
+
+    public function AsignarPedidoFacturas()
+    {
+
+        $fdss = fdsfacturassidetalles::where('fsiid', 0)->limit(100)->get();
+
+        foreach($fdss as $fds){
+
+            $fsie = fsifacturassi::where('fsipedido', $fds->fdspedido)->first();
+
+            if($fsie){
+                $fdse = fdsfacturassidetalles::find($fds->fdsid);
+                $fdse->fsiid = $fsie->fsiid;
+                $fdse->update();
+            }
+
+        }
+
+
 
     }
 
