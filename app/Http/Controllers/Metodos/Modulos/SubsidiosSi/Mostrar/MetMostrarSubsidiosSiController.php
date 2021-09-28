@@ -241,7 +241,7 @@ class MetMostrarSubsidiosSiController extends Controller
         foreach($descargarSdes as $posicionSde => $descargarSde){
 
             $sfss = sfssubsidiosfacturassi::join('fsifacturassi as fsi', 'fsi.fsiid', 'sfssubsidiosfacturassi.fsiid')
-                                            ->join('fdsfacturassidetalles as fds', 'fds.fsiid', 'fsi.fsiid')
+                                            ->join('fdsfacturassidetalles as fds', 'fds.fdsid', 'sfssubsidiosfacturassi.fdsid')
                                             ->where('sdeid', $descargarSde->sdeid)
                                             ->get([
                                                 'fsi.fsifactura',
