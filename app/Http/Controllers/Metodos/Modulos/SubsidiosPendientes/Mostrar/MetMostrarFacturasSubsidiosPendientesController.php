@@ -15,6 +15,8 @@ class MetMostrarFacturasSubsidiosPendientesController extends Controller
 
         if($coddestinatario == "170209"){
             $coddestinatario = "170418";
+        }else if($coddestinatario == "278981"){
+            $coddestinatario = "284861";
         }
 
         $fsis = fdsfacturassidetalles::join('fsifacturassi as fsi', 'fsi.fsiid', 'fdsfacturassidetalles.fsiid')
