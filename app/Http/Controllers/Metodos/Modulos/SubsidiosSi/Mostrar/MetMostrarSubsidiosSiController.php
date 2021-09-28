@@ -869,8 +869,8 @@ class MetMostrarSubsidiosSiController extends Controller
                     ),
                 );
 
-                for($i = 0; $i < 44; $i++){
-                // for($i = 0; $i < 2; $i++){
+                // for($i = 0; $i < 44; $i++){
+                for($i = 0; $i < 258; $i++){
                     $pos = $i+1;
 
                     $arrayFilaExcel[] = array(
