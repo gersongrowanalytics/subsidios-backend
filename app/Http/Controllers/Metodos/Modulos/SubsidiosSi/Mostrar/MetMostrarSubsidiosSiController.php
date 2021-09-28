@@ -127,24 +127,24 @@ class MetMostrarSubsidiosSiController extends Controller
                     $sumsfsvalorizado = $sde->sdemontoareconocerreal;
 
                 }else{
-                    $sfss = sfssubsidiosfacturassi::join('fsifacturassi as fsi', 'fsi.fsiid', 'sfssubsidiosfacturassi.fsiid')
-                                            ->join('fdsfacturassidetalles as fds', 'fds.fdsid', 'sfssubsidiosfacturassi.fdsid')
-                                            ->join('fecfechas as fec', 'fec.fecid', 'fsi.fecid')
-                                            ->where('sdeid', $sde->sdeid)
-                                            ->get([
-                                                'fsifactura',
-                                                'fsipedido',
-                                                'sfsvalorizado',
-                                                // 'fecfecha',
-                                                'fdsreconocer',
-                                                'fdssaldo',
-                                                'fdstreintaporciento',
-                                                'fdsnotacredito',
-                                                'fdsvalorneto',
-                                                'sfssaldoanterior',
-                                                'sfssaldonuevo',
-                                                'fsifecha as fecfecha',
-                                            ]);
+                    // $sfss = sfssubsidiosfacturassi::join('fsifacturassi as fsi', 'fsi.fsiid', 'sfssubsidiosfacturassi.fsiid')
+                    //                         ->join('fdsfacturassidetalles as fds', 'fds.fdsid', 'sfssubsidiosfacturassi.fdsid')
+                    //                         ->join('fecfechas as fec', 'fec.fecid', 'fsi.fecid')
+                    //                         ->where('sdeid', $sde->sdeid)
+                    //                         ->get([
+                    //                             'fsifactura',
+                    //                             'fsipedido',
+                    //                             'sfsvalorizado',
+                    //                             // 'fecfecha',
+                    //                             'fdsreconocer',
+                    //                             'fdssaldo',
+                    //                             'fdstreintaporciento',
+                    //                             'fdsnotacredito',
+                    //                             'fdsvalorneto',
+                    //                             'sfssaldoanterior',
+                    //                             'sfssaldonuevo',
+                    //                             'fsifecha as fecfecha',
+                    //                         ]);
 
                     $sumsfsvalorizado = sfssubsidiosfacturassi::join('fsifacturassi as fsi', 'fsi.fsiid', 'sfssubsidiosfacturassi.fsiid')
                                             ->join('fdsfacturassidetalles as fds', 'fds.fdsid', 'sfssubsidiosfacturassi.fdsid')
