@@ -21,8 +21,8 @@ class MetMostrarSubsidiosSiController extends Controller
             $fechaFinal  = date("Y-m-d", strtotime($fechaFinal));
         }
 
-        $descargarSde = $this->ArmarExcelDescargaSubsidiosSi($fechaInicio,$fechaFinal );
-        // $descargarSde = array();
+        // $descargarSde = $this->ArmarExcelDescargaSubsidiosSi($fechaInicio,$fechaFinal );
+        $descargarSde = array();
 
 
         $zons = sdesubsidiosdetalles::join('cliclientes as cli', 'cli.cliid', 'sdesubsidiosdetalles.cliid')
