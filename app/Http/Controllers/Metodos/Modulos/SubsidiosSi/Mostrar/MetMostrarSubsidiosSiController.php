@@ -241,10 +241,12 @@ class MetMostrarSubsidiosSiController extends Controller
         foreach($descargarSdes as $posicionSde => $descargarSde){
 
             $sfss = sfssubsidiosfacturassi::join('fsifacturassi as fsi', 'fsi.fsiid', 'sfssubsidiosfacturassi.fsiid')
+                                            ->join('fdsfacturassidetalles as fds', 'fds.fsiid', 'fsi.fsiid')
                                             ->where('sdeid', $descargarSde->sdeid)
                                             ->get([
-                                                'fsifactura',
-                                                'sfsvalorizado'
+                                                'fsi.fsifactura',
+                                                'sfsvalorizado',
+                                                'fdsmaterial'
                                             ]);
 
             $sfssSuma = sfssubsidiosfacturassi::join('fsifacturassi as fsi', 'fsi.fsiid', 'sfssubsidiosfacturassi.fsiid')
@@ -892,6 +894,26 @@ class MetMostrarSubsidiosSiController extends Controller
                     );
 
                     $arrayFilaExcel[] = array(
+                        "value" => "COD_MATERIAL N°".$pos,
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                                "color" => array(
+                                    "rgb" => "FFFFFFFF"
+                                )
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => "FF004FB8"
+                                )
+                            )
+                            
+                        )
+                    );
+
+                    $arrayFilaExcel[] = array(
                         "value" => "VALORIZADO N°".$pos,
                         "style" => array(
                             "font" => array(
@@ -1388,6 +1410,22 @@ class MetMostrarSubsidiosSiController extends Controller
                     
                 $arrayFilaExcel[] = array(
                     "value" => $sfs->fsifactura,
+                    "style" => array(
+                        "font" => array(
+                            "sz" => "9",
+                            "bold" => true,
+                        ),
+                        "fill" => array(
+                            "patternType" => 'solid',
+                            "fgColor" => array(
+                                "rgb" => "FFF2F2F2"
+                            )
+                        )
+                    )
+                );
+
+                $arrayFilaExcel[] = array(
+                    "value" => $sfs->fdsmaterial,
                     "style" => array(
                         "font" => array(
                             "sz" => "9",
