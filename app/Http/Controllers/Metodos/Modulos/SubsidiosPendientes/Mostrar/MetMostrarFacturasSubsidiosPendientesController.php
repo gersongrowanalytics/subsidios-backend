@@ -12,19 +12,29 @@ class MetMostrarFacturasSubsidiosPendientesController extends Controller
     public function MetMostrarFacturasSubsidiosPendientes(Request $request)
     {
         $coddestinatario = $request['sdecodigodestinatario'];
+        $coddestinatariodos = $request['sdecodigodestinatario'];
+        $coddestinatariotres = $request['sdecodigodestinatario'];
 
         if($coddestinatario == "170209"){
             $coddestinatario = "170418";
+            $coddestinatariodos = "170418";
+            $coddestinatariotres = "170418";
         }else if($coddestinatario == "278981"){
             $coddestinatario = "284861";
+            $coddestinatariodos = "278982";
+            $coddestinatariodos = "278981";
+
         }else if($coddestinatario == "96444"){
             $coddestinatario = "96474";
+            $coddestinatariotres = "96474";
         }
 
         $fsis = fdsfacturassidetalles::join('fsifacturassi as fsi', 'fsi.fsiid', 'fdsfacturassidetalles.fsiid')
                                 ->join('fecfechas as fec', 'fec.fecid', 'fsi.fecid')
                                 ->join('proproductos as pro', 'pro.proid', 'fdsfacturassidetalles.proid')
-                                ->where('fsi.fsidestinatario', $coddestinatario)
+                                ->orwhere('fsi.fsidestinatario', $coddestinatario)
+                                ->orwhere('fsi.fsidestinatario', $coddestinatariodos)
+                                ->orwhere('fsi.fsidestinatario', $coddestinatariotres)
                                 // ->where('fdssaldo', '>', 0)
                                 ->orderBy('fdssaldo', 'desc')
                                 ->get([
