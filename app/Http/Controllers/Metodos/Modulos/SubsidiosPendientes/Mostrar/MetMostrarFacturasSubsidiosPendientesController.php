@@ -26,15 +26,16 @@ class MetMostrarFacturasSubsidiosPendientesController extends Controller
 
         }else if($coddestinatario == "96444"){
             $coddestinatario = "96474";
+            $coddestinatariodos = "96474";
             $coddestinatariotres = "96474";
         }
 
         $fsis = fdsfacturassidetalles::join('fsifacturassi as fsi', 'fsi.fsiid', 'fdsfacturassidetalles.fsiid')
                                 ->join('fecfechas as fec', 'fec.fecid', 'fsi.fecid')
                                 ->join('proproductos as pro', 'pro.proid', 'fdsfacturassidetalles.proid')
-                                // ->orwhere('fsi.fsidestinatario', $coddestinatario)
-                                ->where('fsi.fsidestinatario', $coddestinatariodos)
-                                // ->orwhere('fsi.fsidestinatario', $coddestinatariotres)
+                                ->orwhere('fsi.fsidestinatario', $coddestinatario)
+                                ->orwhere('fsi.fsidestinatario', $coddestinatariodos)
+                                ->orwhere('fsi.fsidestinatario', $coddestinatariotres)
                                 // ->where('fdssaldo', '>', 0)
                                 ->orderBy('fdssaldo', 'desc')
                                 ->get([
