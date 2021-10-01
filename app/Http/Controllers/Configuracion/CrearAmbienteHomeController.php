@@ -29,7 +29,7 @@ class CrearAmbienteHomeController extends Controller
         $re_subsidiosreconocidomanual     = $request['re_subsidiosreconocidomanual'];
         $re_subsidiosreconocidoautomatico = $request['re_subsidiosreconocidoautomatico'];
 
-        $fecAbierto = fecfechas::where('fecmesabierto', true)->firts();
+        $fecAbierto = fecfechas::where('fecmesabierto', true)->first();
 
         if($fecAbierto){
 
