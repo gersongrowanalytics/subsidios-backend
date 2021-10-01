@@ -55,7 +55,12 @@ class MetCargarMaestraClientesController extends Controller
             $fichero_subido = base_path().'/public'.$ubicacionArchivo;
 
             $ex_file_name = explode(".", $_FILES['file']['name']);
+
+            $carultimo = carcargasarchivos::orderby('areid', 'desc')->first();
+            $pkcar = $carultimo->carid + 1;
+
             $carn = new carcargasarchivos;
+            $carn->carid        = $pkcar;
             $carn->tcaid        = 10;
             $carn->usuid        = $usu->usuid;
             $carn->carnombre    = $_FILES['file']['name'];
@@ -63,7 +68,7 @@ class MetCargarMaestraClientesController extends Controller
             $carn->carurl       = env('APP_URL').$ubicacionArchivo;
             $carn->carexito     = 0;
             $carn->save();
-            $carid = $carn->carid;
+            $carid = $pkcar;
 
             if (move_uploaded_file($_FILES['file']['tmp_name'], $fichero_subido)) {
                 
