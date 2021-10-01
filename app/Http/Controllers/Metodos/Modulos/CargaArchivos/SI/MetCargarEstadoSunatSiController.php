@@ -55,7 +55,12 @@ class MetCargarEstadoSunatSiController extends Controller
         $fichero_subido = base_path().'/public'.$ubicacionArchivo;
 
         $ex_file_name = explode(".", $_FILES['file']['name']);
+
+        $carultimo = carcargasarchivos::orderby('carid', 'desc')->first();
+        $pkcar = $carultimo->carid + 1;
+
         $carn = new carcargasarchivos;
+        $carn->carid        = $pkcar;
         $carn->tcaid        = 8;
         $carn->usuid        = $usu->usuid;
         $carn->carnombre    = $_FILES['file']['name'];
@@ -63,7 +68,7 @@ class MetCargarEstadoSunatSiController extends Controller
         $carn->carurl       = env('APP_URL').$ubicacionArchivo;
         $carn->carexito     = 0;
         $carn->save();
-        $carid = $carn->carid;
+        $carid = $pkcar;
 
         if (move_uploaded_file($_FILES['file']['tmp_name'], $fichero_subido)) {
             $data = [
@@ -82,113 +87,117 @@ class MetCargarEstadoSunatSiController extends Controller
 
             // for ($i=2; $i <= $numRows; $i++) {
 
-            //     $ex_anio  = $objPHPExcel->getActiveSheet()->getCell('A'.$i)->getCalculatedValue();
-            //     $ex_mes   = $objPHPExcel->getActiveSheet()->getCell('B'.$i)->getCalculatedValue();
-            //     $ex_documentocomprobante  = $objPHPExcel->getActiveSheet()->getCell('C'.$i)->getCalculatedValue();
-            //     $ex_estadocomprobante     = $objPHPExcel->getActiveSheet()->getCell('F'.$i)->getCalculatedValue();
+                // $ex_anio  = $objPHPExcel->getActiveSheet()->getCell('A'.$i)->getCalculatedValue();
+                // $ex_mes   = $objPHPExcel->getActiveSheet()->getCell('B'.$i)->getCalculatedValue();
 
-            //     $fecid = 0;
+                // $ex_tipodocumento  = $objPHPExcel->getActiveSheet()->getCell('A'.$i)->getCalculatedValue();
+                // $ex_documentocomprobante  = $objPHPExcel->getActiveSheet()->getCell('B'.$i)->getCalculatedValue();
+                // $ex_estadocomprobante     = $objPHPExcel->getActiveSheet()->getCell('F'.$i)->getCalculatedValue();
 
-            //     if($i == 2){
-            //         $fec = fecfechas::where('fecmesabreviacion', $ex_mes)
-            //                     ->where('fecanionumero', $ex_anio)
-            //                     ->where('fecdianumero', "1")
-            //                     ->first();
+                // $fecid = 0;
 
-            //         if($fec){
-            //             $fecid = $fec->fecid;
-            //             $fecidUsada = $fec->fecid;
-            //             $encontrofecha = true;
+                // if($i == 2){
+                //     $fec = fecfechas::where('fecmesabreviacion', $ex_mes)
+                //                 ->where('fecanionumero', $ex_anio)
+                //                 ->where('fecdianumero', "1")
+                //                 ->first();
 
-            //             $fsi = fsifacturassi::where('fecid', $fecid)->update(['fsisunataprobado' => 1]);
+                //     if($fec){
+                //         $fecid = $fec->fecid;
+                //         $fecidUsada = $fec->fecid;
+                //         $encontrofecha = true;
 
-            //         }else{
-            //             $encontrofecha = false;
-            //             $fecid = 0;
-            //         }
-            //     }
+                //         $fsi = fsifacturassi::where('fecid', $fecid)->update(['fsisunataprobado' => 1]);
 
-            //     if($encontrofecha == true){
+                //     }else{
+                //         $encontrofecha = false;
+                //         $fecid = 0;
+                //     }
+                // }
 
-            //         $estadosunataprobado = 1;
+                // if($encontrofecha == true){
 
-            //         if($ex_estadocomprobante == "NO ACEPTADO" || $ex_estadocomprobante == "INCIDENCIAS" || $ex_estadocomprobante == "Incidencia" || $ex_estadocomprobante == "Rechazado"){
-            //             $estadosunataprobado = 0;
-            //         }
+                    
 
-            //         $fsi = fsifacturassi::where('fsifactura', $ex_documentocomprobante)->first();
+                // }else{
+                //     $respuesta = false;
+                //     $mensaje  = "No se encontro la fecha seleccionada";
+                //     $logs["NO_SE_ENCONTRO_FECHA"][] = "Fecha Mes: ".$ex_mes.", EN EL AÑO: ".$ex_anio." EN LA LINEA: ".$i;
+                //     break;
+                // }
 
-            //         if($fsi){
-            //             $fsi->fsisunataprobado = $estadosunataprobado;
-            //             $fsi->update();
-            //         }else{
-            //             $logs["NO_SE_ENCONTRO_DOCUMENTO"][] = "NO SE ENCONTRO EL DOCUMENTO: ".$ex_documentocomprobante." EN LA LINEA: ".$i;
-            //         }
+                // $estadosunataprobado = 0;
 
-            //     }else{
-            //         $respuesta = false;
-            //         $mensaje  = "No se encontro la fecha seleccionada";
-            //         $logs["NO_SE_ENCONTRO_FECHA"][] = "Fecha Mes: ".$ex_mes.", EN EL AÑO: ".$ex_anio." EN LA LINEA: ".$i;
-            //         break;
-            //     }
+                // if($ex_estadocomprobante == "NO ACEPTADO" || $ex_estadocomprobante == "INCIDENCIAS" || $ex_estadocomprobante == "Incidencia" || $ex_estadocomprobante == "Rechazado"){
+                //     $estadosunataprobado = 0;
+                // }
+
+                // $fsi = fsifacturassi::where('fsifactura', 'like', "%".$ex_documentocomprobante."%")->first();
+
+                // if($fsi){
+                //     $fsi->fsisunataprobado = $estadosunataprobado;
+                //     $fsi->update();
+                // }else{
+                //     $logs["NO_SE_ENCONTRO_DOCUMENTO"][] = "NO SE ENCONTRO EL DOCUMENTO: ".$ex_documentocomprobante." EN LA LINEA: ".$i;
+                // }
             // }
 
             // 
 
             // AGREGAR REGISTRO
             
-            $fec = fecfechas::where('fecmesabierto', true)->first(['fecid']);
-            $fecid = $fec->fecid;
+            // $fec = fecfechas::where('fecmesabierto', true)->first(['fecid']);
+            // $fecid = $fec->fecid;
 
-            $espe = espestadospendientes::where('fecid', $fecid)
-                                        ->where('espbasedato', "Operaciones Sunat")
-                                        ->first();
+            // $espe = espestadospendientes::where('fecid', $fecid)
+            //                             ->where('espbasedato', "Operaciones Sunat")
+            //                             ->first();
 
-            if($espe){
-                if($usu->perid == 1 || $usu->perid == 3 || $usu->perid == 7 || $usu->perid == 10){
+            // if($espe){
+            //     if($usu->perid == 1 || $usu->perid == 3 || $usu->perid == 7 || $usu->perid == 10){
                     
-                }else{
-                    $espe->perid = $usu->perid;
-                }
-                $espe->espfechactualizacion = $fechaActual;
+            //     }else{
+            //         $espe->perid = $usu->perid;
+            //     }
+            //     $espe->espfechactualizacion = $fechaActual;
 
-                $date1 = new DateTime($fechaActual);
-                $fecha_carga_real = date("Y-m-d", strtotime($espe->espfechaprogramado));
-                $date2 = new DateTime($fecha_carga_real);
+            //     $date1 = new DateTime($fechaActual);
+            //     $fecha_carga_real = date("Y-m-d", strtotime($espe->espfechaprogramado));
+            //     $date2 = new DateTime($fecha_carga_real);
 
-                $diff = $date1->diff($date2);
+            //     $diff = $date1->diff($date2);
                 
-                if($date1 > $date2){
-                    if($diff->days > 0){
-                        $espe->espdiaretraso = $diff->days;
-                    }else{
-                        $espe->espdiaretraso = "0";
-                    }
-                }else{
-                    $espe->espdiaretraso = "0";
-                }
+            //     if($date1 > $date2){
+            //         if($diff->days > 0){
+            //             $espe->espdiaretraso = $diff->days;
+            //         }else{
+            //             $espe->espdiaretraso = "0";
+            //         }
+            //     }else{
+            //         $espe->espdiaretraso = "0";
+            //     }
 
-                $espe->update();
+            //     $espe->update();
 
 
-                $aree = areareasestados::where('areid', $espe->areid)->first();
+            //     $aree = areareasestados::where('areid', $espe->areid)->first();
 
-                if($aree){
+            //     if($aree){
 
-                    $espcount = espestadospendientes::where('fecid', $fecid)
-                                        ->where('espbasedato', "Sell In (Factura Efectiva)")
-                                        ->where('espfechactualizacion', '!=', null)
-                                        ->first();
+            //         $espcount = espestadospendientes::where('fecid', $fecid)
+            //                             ->where('espbasedato', "Sell In (Factura Efectiva)")
+            //                             ->where('espfechactualizacion', '!=', null)
+            //                             ->first();
 
-                    if($espcount){
-                        $aree->areporcentaje = "100";
-                    }else{
-                        $aree->areporcentaje = "50";
-                    }
+            //         if($espcount){
+            //             $aree->areporcentaje = "100";
+            //         }else{
+            //             $aree->areporcentaje = "50";
+            //         }
 
-                    $aree->update();
-                }
-            }
+            //         $aree->update();
+            //     }
+            // }
 
             
 

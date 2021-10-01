@@ -82,7 +82,12 @@ class MetCargarFacturasSiController extends Controller
         $fichero_subido = base_path().'/public'.$ubicacionArchivo;
 
         $ex_file_name = explode(".", $_FILES['file']['name']);
+
+        $carultimo = carcargasarchivos::orderby('carid', 'desc')->first();
+        $pkcar = $carultimo->carid + 1;
+
         $carn = new carcargasarchivos;
+        $carn->carid        = $pkcar;
         $carn->tcaid        = 4;
         $carn->usuid        = $usu->usuid;
         $carn->carnombre    = $_FILES['file']['name'];
@@ -90,7 +95,7 @@ class MetCargarFacturasSiController extends Controller
         $carn->carurl       = env('APP_URL').$ubicacionArchivo;
         $carn->carexito     = 0;
         $carn->save();
-        $carid = $carn->carid;
+        $carid = $pkcar;
 
         if (move_uploaded_file($_FILES['file']['tmp_name'], $fichero_subido)) {
 
@@ -127,19 +132,23 @@ class MetCargarFacturasSiController extends Controller
 
             // $secultimo = secseriescomprobantes::orderby('secid', 'desc')->first();
             // $pksec = $secultimo->secid + 1;
+            // $pksec = 1;
 
             // $fdsultimo = fdsfacturassidetalles::orderby('fdsid', 'desc')->first();
             // $pkfds = $fdsultimo->fdsid + 1;
+            // $pkfds = 1;
             
             // $fsiultimo = fsifacturassi::orderby('fsiid', 'desc')->first();
             // $pkfsi = $fsiultimo->fsiid + 1;
-            
+            // $pkfsi = 1;
             
             // $ndsultimo = ndsnotascreditossidetalles::orderby('ndsid', 'desc')->first();
             // $pknds = $ndsultimo->ndsid + 1;
+            // $pknds = 1;
 
             // $nsiultimo = nsinotascreditossi::orderby('nsiid', 'desc')->first();
             // $pknsi = $nsiultimo->nsiid + 1;
+            // $pknsi = 1;
 
 
             // for ($i=2; $i <= $numRows; $i++) {
@@ -197,14 +206,14 @@ class MetCargarFacturasSiController extends Controller
             //         if($encontroFecha == true){
             //             $fecfechaFecha = $arrayFecha[2]."-".$arrayFecha[1]."-01";
 
-            //             // $fec = fecfechas::where('fecfecha', "$fecfechaFecha")->first();
-            //             $fec = true;
+            //             $fec = fecfechas::where('fecfecha', "$fecfechaFecha")->first();
+            //             // $fec = true;
             //             if($fec){
 
             //                 if($i == 2){
 
-            //                     // $fecid = $fec->fecid;
-            //                     $fecid = 1104;
+            //                     $fecid = $fec->fecid;
+            //                     // $fecid = 1104;
 
             //                     // ndsnotascreditossidetalles::where('fecid', $fec->fecid)->delete();
             //                     // nsinotascreditossi::where('fecid', $fec->fecid)->delete();
@@ -295,12 +304,12 @@ class MetCargarFacturasSiController extends Controller
 
             //                                     }else{
             //                                         $secn = new secseriescomprobantes;
-            //                                         $secn->secid = $pksec;
+            //                                         // $secn->secid = $pksec;
             //                                         $secn->tpcid          = $tpcidDocumento;
             //                                         $secn->secserie       = $serieDocumento;
             //                                         $secn->secdescripcion = "NUEVA SERIE";
             //                                         if($secn->save()){
-            //                                             $pksec = $pksec + 1;
+            //                                             // $pksec = $pksec + 1;
             //                                             $encontroSec = true;
             //                                             $secidDocumento = $secn->secid;
             //                                             // $logs['NUEVA_SERIE_CREADA'][] = "La serie : ".$serieDocumento." se acaba de registrar en nuestros servidores. EN LA LINEA: ".$i;
@@ -318,10 +327,15 @@ class MetCargarFacturasSiController extends Controller
             //                                         $correlativoDocumento = $correlativoFac;
 
             //                                         $cli = cliclientes::where('clicodigoshipto', $ex_destinatario)->first();
-
-            //                                         if($cli){
-
-            //                                             $cliidDocumento = $cli->cliid;
+            //                                         $recli = true;
+            //                                         // if($cli){
+            //                                         if($recli){
+                                                        
+            //                                             if($cli){
+            //                                                 $cliidDocumento = $cli->cliid;
+            //                                             }else{
+            //                                                 $cliidDocumento = 0;
+            //                                             }
 
             //                                             if($tpcidDocumento == 1){ // FACTURA
 
@@ -333,43 +347,46 @@ class MetCargarFacturasSiController extends Controller
             //                                                 }
 
             //                                                 $fsi = fsifacturassi::where('fsifactura', $ex_factura)->first();
-
+            //                                                 $fsiid = 0;
             //                                                 if($fsi){
-
+            //                                                     $fsiid = $fsi->fsiid;
             //                                                     $pro = proproductos::where('prosku', $ex_material)->first();
-
+            //                                                     $proid = 0;
             //                                                     if($pro){
-
-            //                                                         $fdsn = new fdsfacturassidetalles;
-            //                                                         $fdsn->fdsid = $pkfds;
-            //                                                         $fdsn->fecid = $fecidDocumento;
-            //                                                         $fdsn->fsiid = $fsi->fsiid;
-            //                                                         $fdsn->proid = $pro->proid;
-            //                                                         $fdsn->cliid = $cliidDocumento;
-            //                                                         $fdsn->fdsmaterial  = $ex_material;
-            //                                                         $fdsn->fdsmoneda    = $ex_moneda;
-            //                                                         $fdsn->fdsvalorneto = $ex_valorneto;
-            //                                                         $fdsn->fdsvalornetodolares = $ex_valornetodolares;
-            //                                                         $fdsn->fdspedido         = $ex_pedido;
-            //                                                         $fdsn->fdspedidooriginal = $ex_pedidooriginal;
-
-            //                                                         $fdsn->fdstreintaporciento = ($ex_valorneto*30)/100;
-            //                                                         $fdsn->fdssaldo            = ($ex_valorneto*30)/100;;
-            //                                                         $fdsn->fdsreconocer        = 0;
-                                                                    
-
-            //                                                         if($fdsn->save()){
-            //                                                             $pkfds = $pkfds + 1;
-            //                                                             $fsi->fsivalorneto = $fsi->fsivalorneto + $ex_valorneto;
-            //                                                             $fsi->fsivalornetodolares = $fsi->fsivalornetodolares + $ex_valornetodolares;
-            //                                                             $fsi->update();
-            //                                                         }
+            //                                                         $proid = $pro->proid;
 
             //                                                     }else{
             //                                                         $respuesta = false;
             //                                                         $mensaje = "No existe el producto: ".$ex_material." recomendamos actualizar dicha maestra, linea excel: ".$i;
             //                                                         // $logs['NO_EXISTE_PRODUCTO'][] = "El producto: ".$ex_material." no se encontro en nuestros registros, recomendamos actualizar la maestra de productos EN LA LINEA: ".$i;
             //                                                         $logs['PRODUCTOS_NO_ENCONTRADOS'] = $this->EliminarDuplicidad( $logs["PRODUCTOS_NO_ENCONTRADOS"], $ex_material, $i);
+            //                                                     }
+
+            //                                                     $fdsn = new fdsfacturassidetalles;
+            //                                                     $fdsn->fdsid = $pkfds;
+            //                                                     $fdsn->fecid = $fecidDocumento;
+            //                                                     // $fdsn->fsiid = $fsi->fsiid;
+            //                                                     $fdsn->fsiid = $fsiid;
+            //                                                     // $fdsn->proid = $pro->proid;
+            //                                                     $fdsn->proid = $proid;
+            //                                                     $fdsn->cliid = $cliidDocumento;
+            //                                                     $fdsn->fdsmaterial  = $ex_material;
+            //                                                     $fdsn->fdsmoneda    = $ex_moneda;
+            //                                                     $fdsn->fdsvalorneto = $ex_valorneto;
+            //                                                     $fdsn->fdsvalornetodolares = $ex_valornetodolares;
+            //                                                     $fdsn->fdspedido         = $ex_pedido;
+            //                                                     $fdsn->fdspedidooriginal = $ex_pedidooriginal;
+
+            //                                                     $fdsn->fdstreintaporciento = ($ex_valorneto*30)/100;
+            //                                                     $fdsn->fdssaldo            = ($ex_valorneto*30)/100;;
+            //                                                     $fdsn->fdsreconocer        = 0;
+                                                                
+
+            //                                                     if($fdsn->save()){
+            //                                                         $pkfds = $pkfds + 1;
+            //                                                         $fsi->fsivalorneto = $fsi->fsivalorneto + $ex_valorneto;
+            //                                                         $fsi->fsivalornetodolares = $fsi->fsivalornetodolares + $ex_valornetodolares;
+            //                                                         $fsi->update();
             //                                                     }
 
             //                                                 }else{
@@ -395,32 +412,35 @@ class MetCargarFacturasSiController extends Controller
             //                                                         $pro = proproductos::where('prosku', $ex_material)->first();
 
             //                                                         if($pro){
-            //                                                             $fdsn = new fdsfacturassidetalles;
-            //                                                             $fdsn->fdsid = $pkfds;
-            //                                                             $fdsn->fecid = $fecidDocumento;
-            //                                                             $fdsn->fsiid = $fsin->fsiid;
-            //                                                             $fdsn->proid = $pro->proid;
-            //                                                             $fdsn->cliid = $cliidDocumento;
-            //                                                             $fdsn->fdsmaterial  = $ex_material;
-            //                                                             $fdsn->fdsmoneda    = $ex_moneda;
-            //                                                             $fdsn->fdsvalorneto = $ex_valorneto;
-            //                                                             $fdsn->fdsvalornetodolares = $ex_valornetodolares;
-            //                                                             $fdsn->fdspedido         = $ex_pedido;
-            //                                                             $fdsn->fdspedidooriginal = $ex_pedidooriginal;
-
-            //                                                             $fdsn->fdstreintaporciento = ($ex_valorneto*30)/100;
-            //                                                             $fdsn->fdssaldo            = ($ex_valorneto*30)/100;;
-            //                                                             $fdsn->fdsreconocer        = 0;
-            //                                                             $fdsn->save();
-
-            //                                                             $pkfds = $pkfds + 1;
-
+            //                                                             $proid = $pro->proid;
             //                                                         }else{
+            //                                                             $proid = 0;
             //                                                             $respuesta = false;
             //                                                             $mensaje = "No existe el producto: ".$ex_material." recomendamos actualizar dicha maestra, linea excel: ".$i;
             //                                                             // $logs['NO_EXISTE_PRODUCTO'][] = "El producto: ".$ex_material." no se encontro en nuestros registros, recomendamos actualizar la maestra de productos EN LA LINEA: ".$i;
             //                                                             $logs['PRODUCTOS_NO_ENCONTRADOS'] = $this->EliminarDuplicidad( $logs["PRODUCTOS_NO_ENCONTRADOS"], $ex_material, $i);
             //                                                         }
+
+            //                                                         $fdsn = new fdsfacturassidetalles;
+            //                                                         $fdsn->fdsid = $pkfds;
+            //                                                         $fdsn->fecid = $fecidDocumento;
+            //                                                         $fdsn->fsiid = $fsin->fsiid;
+            //                                                         // $fdsn->proid = $pro->proid;
+            //                                                         $fdsn->proid = $proid;
+            //                                                         $fdsn->cliid = $cliidDocumento;
+            //                                                         $fdsn->fdsmaterial  = $ex_material;
+            //                                                         $fdsn->fdsmoneda    = $ex_moneda;
+            //                                                         $fdsn->fdsvalorneto = $ex_valorneto;
+            //                                                         $fdsn->fdsvalornetodolares = $ex_valornetodolares;
+            //                                                         $fdsn->fdspedido         = $ex_pedido;
+            //                                                         $fdsn->fdspedidooriginal = $ex_pedidooriginal;
+
+            //                                                         $fdsn->fdstreintaporciento = ($ex_valorneto*30)/100;
+            //                                                         $fdsn->fdssaldo            = ($ex_valorneto*30)/100;;
+            //                                                         $fdsn->fdsreconocer        = 0;
+            //                                                         $fdsn->save();
+
+            //                                                         $pkfds = $pkfds + 1;
 
             //                                                     }else{
             //                                                         // $logs['NO_GUARDO_FACTURA'][] = "La factura: ".$ex_factura." no se pudo guardar en nuestros registros, revisar bien sus datos EN LA LINEA: ".$i;
@@ -441,63 +461,21 @@ class MetCargarFacturasSiController extends Controller
             //                                                 if($nsi){
 
             //                                                     $fsi = fsifacturassi::where('fsipedido', $ex_pedidooriginal)->first();
-
+            //                                                     $fsiid = 0;
             //                                                     if($fsi){
+            //                                                         $fsiid = $fsi->fsiid;
+                                                                    
             //                                                         $pro = proproductos::where('prosku', $ex_material)->first();
-
+            //                                                         $proid = 0;
             //                                                         if($pro){
-            //                                                             $ndsn = new ndsnotascreditossidetalles;
-            //                                                             $ndsn->ndsid = $pknds;
-            //                                                             $ndsn->fecid = $fecidDocumento;
-            //                                                             $ndsn->nsiid = $nsi->nsiid;
-            //                                                             $ndsn->fsiid = $fsi->fsiid;
-            //                                                             $ndsn->proid = $pro->proid;
-            //                                                             $ndsn->cliid = $cliidDocumento;
-            //                                                             $ndsn->ndsmaterial    = $ex_material;
-            //                                                             $ndsn->ndsclase       = $ex_clase;
-            //                                                             $ndsn->ndsnotacredito = $ex_factura;
-            //                                                             $ndsn->ndsvalorneto   = $ex_valorneto;
-            //                                                             $ndsn->ndsvalornetodolares = $ex_valornetodolares;
-            //                                                             $ndsn->ndspedido      = $ex_pedido;
-            //                                                             $ndsn->ndspedidooriginal = $ex_pedidooriginal;
-            //                                                             if($ndsn->save()){
-            //                                                                 $pknds = $pknds + 1;
-            //                                                                 $nsi->nsivalorneto = $nsi->nsivalorneto + $ex_valorneto;
-            //                                                                 $nsi->nsivalornetodolares = $nsi->nsivalornetodolares + $ex_valornetodolares;
-            //                                                                 $nsi->update();
-
-            //                                                                 // $fds = fdsfacturassidetalles::where('fsiid', $fsi->fsiid)
-            //                                                                 //                             ->where('proid', $pro->proid)
-            //                                                                 //                             ->first();
-
-            //                                                                 // if($fds){
-            //                                                                 //     $nuevoSaldo = $fds->fdssaldo - $ex_valorneto;
-            //                                                                 //     if($nuevoSaldo >= 0){
-            //                                                                 //         $fds->fdssaldo     = $nuevoSaldo;
-            //                                                                 //         $fds->fdsreconocer = $fds->fdsreconocer + $ex_valorneto;
-            //                                                                 //         $fds->save();
-            //                                                                 //     }else{
-            //                                                                 //         $fds->fdssaldo       = $nuevoSaldo;
-            //                                                                 //         $fds->fdsreconocer   = $fds->fdsreconocer + $ex_valorneto;
-            //                                                                 //         $fds->fdsobservacion = true;
-            //                                                                 //         $fds->save();
-
-            //                                                                 //         $logs["OBSERVACIONES_NOTAS_CREDITO_FACTURAS_DETALLADAS"][] = "SE ENCONTRO UN DETALLE DE LA FACTURA DONDE EL SALDO ES MENOR A 0, PEDIDO ORIGINAL: ".$ex_pedidooriginal." CON EL NUEVO SALDO DE: ".$nuevoSaldo." EN LA LINEA".$i;
-            //                                                                 //     }
-
-            //                                                                 // }else{
-            //                                                                 //     $respuesta = false;
-            //                                                                 //     $mensaje = "No se encontro el detalle de una factura asignada pedido original: ".$ex_pedidooriginal." para el producto: ".$ex_material." recomendamos actualizar la información de facturas, linea excel: ".$i;
-            //                                                                 //     $logs['NO_SE_ENCONTRO_DETALLE_FACTURA_ASIGNADA'][] = "No se encontro el detalle de una factura asignada con el pedido original: ".$ex_pedidooriginal." para el producto: ".$ex_material." recomendamos actualizar la información de facturas, linea excel: ".$i;
-            //                                                                 // }
-            //                                                             }
-
+            //                                                             $proid = $pro->proid;
             //                                                         }else{
             //                                                             $respuesta = false;
             //                                                             $mensaje = "No existe el producto: ".$ex_material." recomendamos actualizar dicha maestra, linea excel: ".$i;
             //                                                             // $logs['NO_EXISTE_PRODUCTO'][] = "El producto: ".$ex_material." no se encontro en nuestros registros, recomendamos actualizar la maestra de productos EN LA LINEA: ".$i;
             //                                                             $logs['PRODUCTOS_NO_ENCONTRADOS'] = $logs['PRODUCTOS_NO_ENCONTRADOS'][] = $this->EliminarDuplicidad( $logs["PRODUCTOS_NO_ENCONTRADOS"], $ex_material, $i);
             //                                                         }
+
             //                                                     }else{
             //                                                         $respuesta = false;
             //                                                         $mensaje = "No se encontro una factura asignada a esta nota de credito";
@@ -505,9 +483,32 @@ class MetCargarFacturasSiController extends Controller
             //                                                         $logs['FACTURA_NO_ASIGNADA'] = $this->EliminarDuplicidad( $logs["FACTURA_NO_ASIGNADA"], $ex_pedidooriginal, $i);
             //                                                     }
 
+            //                                                     $ndsn = new ndsnotascreditossidetalles;
+            //                                                     // $ndsn->ndsid = $pknds;
+            //                                                     $ndsn->fecid = $fecidDocumento;
+            //                                                     $ndsn->nsiid = $nsi->nsiid;
+            //                                                     // $ndsn->fsiid = $fsi->fsiid;
+            //                                                     $ndsn->fsiid = $fsiid;
+            //                                                     // $ndsn->proid = $pro->proid;
+            //                                                     $ndsn->proid = $proid;
+            //                                                     $ndsn->cliid = $cliidDocumento;
+            //                                                     $ndsn->ndsmaterial    = $ex_material;
+            //                                                     $ndsn->ndsclase       = $ex_clase;
+            //                                                     $ndsn->ndsnotacredito = $ex_factura;
+            //                                                     $ndsn->ndsvalorneto   = $ex_valorneto;
+            //                                                     $ndsn->ndsvalornetodolares = $ex_valornetodolares;
+            //                                                     $ndsn->ndspedido      = $ex_pedido;
+            //                                                     $ndsn->ndspedidooriginal = $ex_pedidooriginal;
+            //                                                     if($ndsn->save()){
+            //                                                         // $pknds = $pknds + 1;
+            //                                                         $nsi->nsivalorneto = $nsi->nsivalorneto + $ex_valorneto;
+            //                                                         $nsi->nsivalornetodolares = $nsi->nsivalornetodolares + $ex_valornetodolares;
+            //                                                         $nsi->update();
+            //                                                     }
+
             //                                                 }else{
             //                                                     $nsin = new nsinotascreditossi;
-            //                                                     $nsin->nsiid = $pknsi;
+            //                                                     // $nsin->nsiid = $pknsi;
             //                                                     $nsin->fecid = $fecidDocumento;
             //                                                     $nsin->tpcid = $tpcidDocumento;
             //                                                     $nsin->secid = $secidDocumento;
@@ -519,55 +520,15 @@ class MetCargarFacturasSiController extends Controller
             //                                                     $nsin->nsivalorneto   = $ex_valorneto;
             //                                                     $nsin->nsivalornetodolares = $ex_valornetodolares;
             //                                                     if($nsin->save()){
-            //                                                         $pknsi = $pknsi + 1;
+            //                                                         // $pknsi = $pknsi + 1;
             //                                                         $fsi = fsifacturassi::where('fsipedido', $ex_pedidooriginal)->first();
-
+            //                                                         $fsiid = 0;
             //                                                         if($fsi){
-                                                                        
+            //                                                             $fsiid = $fsi->fsiid;
             //                                                             $pro = proproductos::where('prosku', $ex_material)->first();
-
+            //                                                             $proid = 0;
             //                                                             if($pro){
-            //                                                                 $ndsn = new ndsnotascreditossidetalles;
-            //                                                                 $ndsn->ndsid = $pknds;
-            //                                                                 $ndsn->fecid = $fecidDocumento;
-            //                                                                 $ndsn->nsiid = $nsin->nsiid;
-            //                                                                 $ndsn->fsiid = $fsi->fsiid;
-            //                                                                 $ndsn->proid = $pro->proid;
-            //                                                                 $ndsn->cliid = $cliidDocumento;
-            //                                                                 $ndsn->ndsmaterial    = $ex_material;
-            //                                                                 $ndsn->ndsclase       = $ex_clase;
-            //                                                                 $ndsn->ndsnotacredito = $ex_factura;
-            //                                                                 $ndsn->ndsvalorneto   = $ex_valorneto;
-            //                                                                 $ndsn->ndsvalornetodolares = $ex_valornetodolares;
-            //                                                                 $ndsn->ndspedido      = $ex_pedido;
-            //                                                                 $ndsn->ndspedidooriginal = $ex_pedidooriginal;
-            //                                                                 if($ndsn->save()){
-            //                                                                     $pknds = $pknds + 1;
-            //                                                                     // $fds = fdsfacturassidetalles::where('fsiid', $fsi->fsiid)
-            //                                                                     //                             ->where('proid', $pro->proid)
-            //                                                                     //                             ->first();
-
-            //                                                                     // if($fds){
-            //                                                                     //     $nuevoSaldo = $fds->fdssaldo - $ex_valorneto;
-            //                                                                     //     if($nuevoSaldo >= 0){
-            //                                                                     //         $fds->fdssaldo     = $nuevoSaldo;
-            //                                                                     //         $fds->fdsreconocer = $fds->fdsreconocer + $ex_valorneto;
-            //                                                                     //         $fds->save();
-            //                                                                     //     }else{
-            //                                                                     //         $fds->fdssaldo       = $nuevoSaldo;
-            //                                                                     //         $fds->fdsreconocer   = $fds->fdsreconocer + $ex_valorneto;
-            //                                                                     //         $fds->fdsobservacion = true;
-            //                                                                     //         $fds->save();
-
-            //                                                                     //         $logs["OBSERVACIONES_NOTAS_CREDITO_FACTURAS_DETALLADAS"][] = "SE ENCONTRO UN DETALLE DE LA FACTURA DONDE EL SALDO ES MENOR A 0, PEDIDO ORIGINAL: ".$ex_pedidooriginal." CON EL NUEVO SALDO DE: ".$nuevoSaldo." EN LA LINEA".$i;
-            //                                                                     //     }
-
-            //                                                                     // }else{
-            //                                                                     //     $respuesta = false;
-            //                                                                     //     $mensaje = "No se encontro el detalle de una factura asignada pedido original: ".$ex_pedidooriginal." para el producto: ".$ex_material." recomendamos actualizar la información de facturas, linea excel: ".$i;
-            //                                                                     //     $logs['NO_SE_ENCONTRO_DETALLE_FACTURA_ASIGNADA'][] = "No se encontro el detalle de una factura asignada con el pedido original: ".$ex_pedidooriginal." para el producto: ".$ex_material." recomendamos actualizar la información de facturas, linea excel: ".$i;
-            //                                                                     // }
-            //                                                                 }
+            //                                                                 $proid = $pro->proid;
             //                                                             }else{
             //                                                                 $respuesta = false;
             //                                                                 $mensaje = "No existe el producto: ".$ex_material." recomendamos actualizar dicha maestra, linea excel: ".$i;
@@ -580,6 +541,26 @@ class MetCargarFacturasSiController extends Controller
             //                                                             $mensaje = "No se encontro una factura asignada a esta nota de credito";
             //                                                             // $logs['FACTURA_NO_ASIGNADA'][] = "El pedido original: ".$ex_pedidooriginal." no existe en nuestros registros, recomendamos actualizar la información de facturas. EN LA LINEA: ".$i;
             //                                                             $logs['FACTURA_NO_ASIGNADA'] = $this->EliminarDuplicidad( $logs["FACTURA_NO_ASIGNADA"], $ex_pedidooriginal, $i);
+            //                                                         }
+
+            //                                                         $ndsn = new ndsnotascreditossidetalles;
+            //                                                         // $ndsn->ndsid = $pknds;
+            //                                                         $ndsn->fecid = $fecidDocumento;
+            //                                                         $ndsn->nsiid = $nsin->nsiid;
+            //                                                         // $ndsn->fsiid = $fsi->fsiid;
+            //                                                         $ndsn->fsiid = $fsiid;
+            //                                                         // $ndsn->proid = $pro->proid;
+            //                                                         $ndsn->proid = $proid;
+            //                                                         $ndsn->cliid = $cliidDocumento;
+            //                                                         $ndsn->ndsmaterial    = $ex_material;
+            //                                                         $ndsn->ndsclase       = $ex_clase;
+            //                                                         $ndsn->ndsnotacredito = $ex_factura;
+            //                                                         $ndsn->ndsvalorneto   = $ex_valorneto;
+            //                                                         $ndsn->ndsvalornetodolares = $ex_valornetodolares;
+            //                                                         $ndsn->ndspedido      = $ex_pedido;
+            //                                                         $ndsn->ndspedidooriginal = $ex_pedidooriginal;
+            //                                                         if($ndsn->save()){
+
             //                                                         }
             //                                                     }
             //                                                 }

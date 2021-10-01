@@ -62,7 +62,11 @@ class MetCargarSubsidiosPlantillaController extends Controller
 
         $ex_file_name = explode(".", $_FILES['file']['name']);
 
+        $carultimo = carcargasarchivos::orderby('carid', 'desc')->first();
+        $pkcar = $carultimo->carid + 1;
+
         $carn = new carcargasarchivos;
+        $carn->carid        = $pkcar;
         $carn->tcaid        = 1;
         $carn->usuid        = $usu->usuid;
         $carn->carnombre    = $_FILES['file']['name'];
@@ -70,7 +74,7 @@ class MetCargarSubsidiosPlantillaController extends Controller
         $carn->carurl       = env('APP_URL').$ubicacionArchivo;
         $carn->carexito     = 0;
         $carn->save();
-        $carid = $carn->carid;
+        $carid = $pkcar;
 
         if (move_uploaded_file($_FILES['file']['tmp_name'], $fichero_subido)) {
 
