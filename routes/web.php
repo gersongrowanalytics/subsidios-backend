@@ -29,6 +29,8 @@ $router->post('/enviar-correo', 'Validaciones\RecuperarContrasenia\RecuperarCont
 $router->get('/asignarfacturasfsi', 'SalvacionController@AsignarPedidoFacturas');
 $router->post('/cambiar-contrasenia', 'Validaciones\RecuperarContrasenia\RecuperarContraseniaController@ValCambiarContrasenia');
 
+$router->post('/crear-ambiente', 'Configuracion\CrearAmbienteHomeController@CrearAmbiente');
+
 // $router->group(['middleware' => ['permisos']], function() use($router) {
 
     $router->group(['prefix' => 'modulo'], function () use ($router) {
