@@ -34,8 +34,17 @@ class CrearAmbienteHomeController extends Controller
         if($fecAbierto){
 
             // $fecAbierto->fecmesabierto = false;
+            $fecultimo = fecfechas::orderby('fecid', 'desc')->first();
+            $pkfec = $fecultimo->fecid + 1;
+
+            $areultimo = areareasestados::orderby('areid', 'desc')->first();
+            $pkare = $areultimo->areid + 1;
+
+            $espultimo = espestadospendientes::orderby('espid', 'desc')->first();
+            $pkesp = $espultimo->espid + 1;
 
             $fecn = new fecfechas;
+            $fecn->fecid = $pkfec;
             $fecn->fecfecha = $re_fecfecha;
             $fecn->fecmesabreviacion = $re_fecmesabreviacion;
             $fecn->fecdianumero = $re_fecdianumero;
@@ -46,6 +55,7 @@ class CrearAmbienteHomeController extends Controller
             $fecn->fecmesabierto = true;
             if($fecn->save()){
                 $aren = new areareasestados;
+                $aren->areid = $pkare;
                 $aren->fecid = $fecn->fecid;
                 $aren->tprid = 1;
                 $aren->areicono = "/Sistema/Modulos/Home/areas/iconoRevenue.png";
@@ -53,8 +63,10 @@ class CrearAmbienteHomeController extends Controller
                 $aren->areporcentaje = "0";
                 $aren->save();
                 $areidRevenue = $aren->areid;
+                $pkare = $pkare +1 ;
 
                 $arendos = new areareasestados;
+                $arendos->areid = $pkare;
                 $arendos->fecid = $fecn->fecid;
                 $arendos->tprid = 1;
                 $arendos->areicono = "/Sistema/Modulos/Home/areas/iconoSac.png ";
@@ -62,8 +74,10 @@ class CrearAmbienteHomeController extends Controller
                 $arendos->areporcentaje = "0";
                 $arendos->save();
                 $areidSacSI = $arendos->areid;
+                $pkare = $pkare +1 ;
 
                 $arentres = new areareasestados;
+                $arentres->areid = $pkare;
                 $arentres->fecid = $fecn->fecid;
                 $arentres->tprid = 1;
                 $arentres->areicono = "/Sistema/Modulos/Home/areas/iconoSac.png ";
@@ -71,8 +85,10 @@ class CrearAmbienteHomeController extends Controller
                 $arentres->areporcentaje = "0";
                 $arentres->save();
                 $areidSacSO = $arentres->areid;
+                $pkare = $pkare +1 ;
 
                 $arencuatro = new areareasestados;
+                $arencuatro->areid = $pkare;
                 $arencuatro->fecid = $fecn->fecid;
                 $arencuatro->tprid = 1;
                 $arencuatro->areicono = "/Sistema/Modulos/Home/areas/iconoSac.png ";
@@ -80,9 +96,11 @@ class CrearAmbienteHomeController extends Controller
                 $arencuatro->areporcentaje = "9090"; // EL PORCENTAJE DEBE SER 9090 YA QUE HAY UNA RESTRICCIÓN A ESTE PORCENTAJE EN EL FRONTEND
                 $arencuatro->save();
                 $areidSacSODetalle = $arencuatro->areid;
+                $pkare = $pkare +1 ;
 
                 // REVENUE
                 $espn = new espestadospendientes;
+                $espn->espid = $pkesp;
                 $espn->fecid = $fecn->fecid;
                 $espn->perid = null;
                 $espn->areid = $areidRevenue;
@@ -95,8 +113,10 @@ class CrearAmbienteHomeController extends Controller
                 $espn->esporden = "0";
                 $espn->cliid = null;
                 $espn->save();
+                $pkesp = $pkesp + 1;
 
                 $espn = new espestadospendientes;
+                $espn->espid = $pkesp;
                 $espn->fecid = $fecn->fecid;
                 $espn->perid = null;
                 $espn->areid = $areidRevenue;
@@ -109,10 +129,12 @@ class CrearAmbienteHomeController extends Controller
                 $espn->esporden = "0";
                 $espn->cliid = null;
                 $espn->save();
+                $pkesp = $pkesp + 1;
                 // FIN DE REVENUE
 
                 // SAC SELL IN
                 $espn = new espestadospendientes;
+                $espn->espid = $pkesp;
                 $espn->fecid = $fecn->fecid;
                 $espn->perid = null;
                 $espn->areid = $areidSacSI;
@@ -125,8 +147,10 @@ class CrearAmbienteHomeController extends Controller
                 $espn->esporden = "0";
                 $espn->cliid = null;
                 $espn->save();
+                $pkesp = $pkesp + 1;
 
                 $espn = new espestadospendientes;
+                $espn->espid = $pkesp;
                 $espn->fecid = $fecn->fecid;
                 $espn->perid = null;
                 $espn->areid = $areidSacSI;
@@ -139,11 +163,13 @@ class CrearAmbienteHomeController extends Controller
                 $espn->esporden = "0";
                 $espn->cliid = null;
                 $espn->save();
+                $pkesp = $pkesp + 1;
                 // FIN SAC SELL IN
 
                 // SAC SELL OUT
 
                 $espn = new espestadospendientes;
+                $espn->espid = $pkesp;
                 $espn->fecid = $fecn->fecid;
                 $espn->perid = null;
                 $espn->areid = $areidSacSO;
@@ -156,8 +182,10 @@ class CrearAmbienteHomeController extends Controller
                 $espn->esporden = "0";
                 $espn->cliid = null;
                 $espn->save();
+                $pkesp = $pkesp + 1;
 
                 $espn = new espestadospendientes;
+                $espn->espid = $pkesp;
                 $espn->fecid = $fecn->fecid;
                 $espn->perid = null;
                 $espn->areid = $areidSacSO;
@@ -170,12 +198,14 @@ class CrearAmbienteHomeController extends Controller
                 $espn->esporden = "0";
                 $espn->cliid = null;
                 $espn->save();
+                $pkesp = $pkesp + 1;
 
                 // FIN SELL OUT
 
                 // SAC SELL OUT DETALLE
                 
                 $espn = new espestadospendientes;
+                $espn->espid = $pkesp;
                 $espn->fecid = $fecn->fecid;
                 $espn->perid = null;
                 $espn->areid = $areidSacSODetalle;
@@ -188,6 +218,7 @@ class CrearAmbienteHomeController extends Controller
                 $espn->esporden = "0";
                 $espn->cliid = null;
                 $espn->save();
+                $pkesp = $pkesp + 1;
                 
                 // FIN SELL OUT DETALLE
 
