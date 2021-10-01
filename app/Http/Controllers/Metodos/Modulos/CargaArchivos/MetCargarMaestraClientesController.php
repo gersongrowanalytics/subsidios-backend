@@ -56,7 +56,7 @@ class MetCargarMaestraClientesController extends Controller
 
             $ex_file_name = explode(".", $_FILES['file']['name']);
 
-            $carultimo = carcargasarchivos::orderby('areid', 'desc')->first();
+            $carultimo = carcargasarchivos::orderby('carid', 'desc')->first();
             $pkcar = $carultimo->carid + 1;
 
             $carn = new carcargasarchivos;
