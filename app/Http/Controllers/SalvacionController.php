@@ -72,42 +72,42 @@ class SalvacionController extends Controller
     public function EnviarCorreo(Request $request)
     {
 
-        perpersonas::create([
-            "perid"                       => 11,
-            "pernumerodocumentoidentidad" => "0000000",
-            "pernombrecompleto"           => "Julian Cruz",
-            "pernombre"                   => "Julian",
-            "perapellidopaterno"          => "Cruz",
-            "perapellidomaterno"          => "",
-        ]);
+        // perpersonas::create([
+        //     "perid"                       => 11,
+        //     "pernumerodocumentoidentidad" => "0000000",
+        //     "pernombrecompleto"           => "Julian Cruz",
+        //     "pernombre"                   => "Julian",
+        //     "perapellidopaterno"          => "Cruz",
+        //     "perapellidomaterno"          => "",
+        // ]);
 
-        usuusuarios::create([
-            "usuid"           => 10,
-            "tpuid"           => 2,
-            "perid"           => 11,
-            "estid"           => 1,
-            "usucodigo"       => "SacJulian-08",
-            "usuusuario"      => "jcruzg@softys.com",
-            "usucorreo"       => "jcruzg@softys.com",
-            "usucontrasenia"  => Hash::make('Julian$$Cruz$$928134'),
-            "usutoken"        => "JulianpIDMWZZwOPOR439asd11aPWOALSDQ2dkka2ldrwke989230CuzdlaI",
-        ]);
+        // usuusuarios::create([
+        //     "usuid"           => 10,
+        //     "tpuid"           => 2,
+        //     "perid"           => 11,
+        //     "estid"           => 1,
+        //     "usucodigo"       => "SacJulian-08",
+        //     "usuusuario"      => "jcruzg@softys.com",
+        //     "usucorreo"       => "jcruzg@softys.com",
+        //     "usucontrasenia"  => Hash::make('Julian$$Cruz$$928134'),
+        //     "usutoken"        => "JulianpIDMWZZwOPOR439asd11aPWOALSDQ2dkka2ldrwke989230CuzdlaI",
+        // ]);
 
-        // $url     = $request['url'];
-        // $usuario = $request['usuario'];
-        // $tipo    = $request['tipo'];
-        // $archivo = $request['archivo'];
-        // $correo  = $request['correo'];
+        $url     = $request['url'];
+        $usuario = $request['usuario'];
+        $tipo    = $request['tipo'];
+        $archivo = $request['archivo'];
+        $correo  = $request['correo'];
 
-        // $data = [
-        //     'archivo'      => $archivo, 
-        //     "tipo"         => $tipo, 
-        //     "usuario"      => $usuario,
-        //     "url_archivo"  => $url,
-        //     "correo"  => $correo,
-        // ];
-        // // dd($data);
-        // Mail::to($correo)->send(new MailCargaArchivoOutlook($data));
+        $data = [
+            'archivo'      => $archivo, 
+            "tipo"         => $tipo, 
+            "usuario"      => $usuario,
+            "url_archivo"  => $url,
+            "correo"  => $correo,
+        ];
+        // dd($data);
+        Mail::to($correo)->send(new MailCargaArchivoOutlook($data));
 
     }
 
