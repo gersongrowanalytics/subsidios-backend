@@ -84,7 +84,7 @@ class MetMostrarFacturasController extends Controller
             )
         );
 
-        $ndss = ndsnotascreditossidetalles::join('fecfechas as fec', 'fec.fecid', 'fsifacturassi.fecid')
+        $ndss = ndsnotascreditossidetalles::join('fecfechas as fec', 'fec.fecid', 'ndsnotascreditossidetalles.fecid')
                                             ->where(function ($query) use($fechaInicio, $fechaFinal) {
                                                 // if($fechaInicio != null){
                                                     $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
