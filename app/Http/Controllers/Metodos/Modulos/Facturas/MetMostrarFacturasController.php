@@ -474,7 +474,7 @@ class MetMostrarFacturasController extends Controller
                 ),
 
                 array(
-                    "value" => $fsi->fsivalorneto,
+                    "value" => floatval($fsi->fsivalorneto),
                     "style" => array(
                         "font" => array(
                             "sz" => "9",
