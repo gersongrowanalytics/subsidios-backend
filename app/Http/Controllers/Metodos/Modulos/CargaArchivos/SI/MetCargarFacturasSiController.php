@@ -132,23 +132,23 @@ class MetCargarFacturasSiController extends Controller
 
             $secultimo = secseriescomprobantes::orderby('secid', 'desc')->first();
             $pksec = $secultimo->secid + 1;
-            $pksec = 1;
+            // $pksec = 1;
 
             $fdsultimo = fdsfacturassidetalles::orderby('fdsid', 'desc')->first();
             $pkfds = $fdsultimo->fdsid + 1;
-            $pkfds = 1;
+            // $pkfds = 1;
             
             $fsiultimo = fsifacturassi::orderby('fsiid', 'desc')->first();
             $pkfsi = $fsiultimo->fsiid + 1;
-            $pkfsi = 1;
+            // $pkfsi = 1;
             
             $ndsultimo = ndsnotascreditossidetalles::orderby('ndsid', 'desc')->first();
             $pknds = $ndsultimo->ndsid + 1;
-            $pknds = 1;
+            // $pknds = 1;
 
             $nsiultimo = nsinotascreditossi::orderby('nsiid', 'desc')->first();
             $pknsi = $nsiultimo->nsiid + 1;
-            $pknsi = 1;
+            // $pknsi = 1;
 
 
             for ($i=2; $i <= $numRows; $i++) {
@@ -484,7 +484,7 @@ class MetCargarFacturasSiController extends Controller
                                                                 }
 
                                                                 $ndsn = new ndsnotascreditossidetalles;
-                                                                // $ndsn->ndsid = $pknds;
+                                                                $ndsn->ndsid = $pknds;
                                                                 $ndsn->fecid = $fecidDocumento;
                                                                 $ndsn->nsiid = $nsi->nsiid;
                                                                 // $ndsn->fsiid = $fsi->fsiid;
@@ -500,7 +500,7 @@ class MetCargarFacturasSiController extends Controller
                                                                 $ndsn->ndspedido      = $ex_pedido;
                                                                 $ndsn->ndspedidooriginal = $ex_pedidooriginal;
                                                                 if($ndsn->save()){
-                                                                    // $pknds = $pknds + 1;
+                                                                    $pknds = $pknds + 1;
                                                                     $nsi->nsivalorneto = $nsi->nsivalorneto + $ex_valorneto;
                                                                     $nsi->nsivalornetodolares = $nsi->nsivalornetodolares + $ex_valornetodolares;
                                                                     $nsi->update();
@@ -508,7 +508,7 @@ class MetCargarFacturasSiController extends Controller
 
                                                             }else{
                                                                 $nsin = new nsinotascreditossi;
-                                                                // $nsin->nsiid = $pknsi;
+                                                                $nsin->nsiid = $pknsi;
                                                                 $nsin->fecid = $fecidDocumento;
                                                                 $nsin->tpcid = $tpcidDocumento;
                                                                 $nsin->secid = $secidDocumento;
@@ -520,7 +520,7 @@ class MetCargarFacturasSiController extends Controller
                                                                 $nsin->nsivalorneto   = $ex_valorneto;
                                                                 $nsin->nsivalornetodolares = $ex_valornetodolares;
                                                                 if($nsin->save()){
-                                                                    // $pknsi = $pknsi + 1;
+                                                                    $pknsi = $pknsi + 1;
                                                                     $fsi = fsifacturassi::where('fsipedido', $ex_pedidooriginal)->first();
                                                                     $fsiid = 0;
                                                                     if($fsi){
@@ -544,7 +544,7 @@ class MetCargarFacturasSiController extends Controller
                                                                     }
 
                                                                     $ndsn = new ndsnotascreditossidetalles;
-                                                                    // $ndsn->ndsid = $pknds;
+                                                                    $ndsn->ndsid = $pknds;
                                                                     $ndsn->fecid = $fecidDocumento;
                                                                     $ndsn->nsiid = $nsin->nsiid;
                                                                     // $ndsn->fsiid = $fsi->fsiid;
@@ -560,7 +560,7 @@ class MetCargarFacturasSiController extends Controller
                                                                     $ndsn->ndspedido      = $ex_pedido;
                                                                     $ndsn->ndspedidooriginal = $ex_pedidooriginal;
                                                                     if($ndsn->save()){
-
+                                                                        $pknds = $pknds + 1;
                                                                     }
                                                                 }
                                                             }
