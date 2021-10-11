@@ -252,7 +252,8 @@ class MetMostrarSubsidiosSiController extends Controller
 
         foreach($descargarSdes as $posicionSde => $descargarSde){
 
-            $sfss = sfssubsidiosfacturassi::join('fsifacturassi as fsi', 'fsi.fsiid', 'sfssubsidiosfacturassi.fsiid')
+            if($descargarSde->sdevalidado == "SIVALIDADOS"){
+                $sfss = sfssubsidiosfacturassi::join('fsifacturassi as fsi', 'fsi.fsiid', 'sfssubsidiosfacturassi.fsiid')
                                             ->join('fdsfacturassidetalles as fds', 'fds.fdsid', 'sfssubsidiosfacturassi.fdsid')
                                             ->where('sdeid', $descargarSde->sdeid)
                                             ->get([
@@ -261,9 +262,13 @@ class MetMostrarSubsidiosSiController extends Controller
                                                 'fdsmaterial'
                                             ]);
 
-            $sfssSuma = sfssubsidiosfacturassi::join('fsifacturassi as fsi', 'fsi.fsiid', 'sfssubsidiosfacturassi.fsiid')
+                $sfssSuma = sfssubsidiosfacturassi::join('fsifacturassi as fsi', 'fsi.fsiid', 'sfssubsidiosfacturassi.fsiid')
                                             ->where('sdeid', $descargarSde->sdeid)
                                             ->sum('sfsvalorizado');
+            }else{
+                $sfss = array();
+                $sfssSuma = 0;
+            }
 
             if($posicionSde == 0){
                 $arrayTitulos = array(
