@@ -19,4 +19,26 @@ class MostrarSubsidiosSiController extends Controller
         return $MetMostrarSubsidiosSi->MetMostrarSubsidiosSi($request);
 
     }
+
+    public function ValMostrarDescargaSubsidiosSi(Request $request)
+    {
+
+        $mensajes = new CustomMessagesController;
+        $customMessages  = $mensajes->CustomMensajes();
+
+        $MetMostrarSubsidiosSi = new MetMostrarSubsidiosSiController;
+        return $MetMostrarSubsidiosSi->ArmarExcelDescargaSubsidiosSi($request);
+
+    }
+
+    public function ValMostrarFacturasAsignadas(Request $request)
+    {
+
+        $mensajes = new CustomMessagesController;
+        $customMessages  = $mensajes->CustomMensajes();
+
+        $MetMostrarSubsidiosSi = new MetMostrarSubsidiosSiController;
+        return $MetMostrarSubsidiosSi->MostrarFacturasAsignadas($request);
+
+    }
 }

@@ -12,21 +12,12 @@ class MetMostrarFiltrosController extends Controller
 {
     public function MetMostrarFiltros(Request $request)
     {
-        $clis = cliclientes::get([
-            'cliid as id',
-            'clinombre as nombre'
-        ]);
-        $pros = proproductos::get([
-            'proid as id',
-            'pronombre as nombre'
-        ]);
-        $cats = catcategorias::get([
-            'catid as id',
-            'catnombre as nombre'
-        ]);
+        $clis = array();
+        $pros = array();
+        $cats = array();
 
-        $zonas = cliclientes::distinct('clizona')->get(['clizona as nombre']);
-        $territorios = cliclientes::distinct('cliregion')->get(['cliregion as nombre']);
+        $zonas = array();
+        $territorios = array();
         
 
         $requestsalida = response()->json([

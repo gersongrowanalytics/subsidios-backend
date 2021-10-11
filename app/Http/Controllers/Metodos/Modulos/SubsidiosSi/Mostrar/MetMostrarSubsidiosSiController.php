@@ -21,8 +21,8 @@ class MetMostrarSubsidiosSiController extends Controller
             $fechaFinal  = date("Y-m-d", strtotime($fechaFinal));
         }
 
-        $descargarSde = $this->ArmarExcelDescargaSubsidiosSi($fechaInicio,$fechaFinal );
-        // $descargarSde = array();
+        // $descargarSde = $this->ArmarExcelDescargaSubsidiosSi($fechaInicio,$fechaFinal );
+        $descargarSde = array();
 
 
         $zons = sdesubsidiosdetalles::join('cliclientes as cli', 'cli.cliid', 'sdesubsidiosdetalles.cliid')
@@ -30,6 +30,7 @@ class MetMostrarSubsidiosSiController extends Controller
                                     ->where(function ($query) use($fechaInicio, $fechaFinal) {
                                         // if($fechaInicio != null){
                                             $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
+                                            // $query->where('sdesubsidiosdetalles.fecid', 1104);
                                         // }
                                     })
                                     ->distinct('cli.clizona')
@@ -60,10 +61,10 @@ class MetMostrarSubsidiosSiController extends Controller
                                     ->join('catcategorias as cat', 'cat.catid', 'pro.catid')
                                     ->join('fecfechas as fec', 'fec.fecid', 'sdesubsidiosdetalles.fecid')
                                     ->where('clizona', $zon['clizona'])
-                                    // ->where('sdestatus', '!=', null)
                                     ->where(function ($query) use($fechaInicio, $fechaFinal) {
                                         // if($fechaInicio != null){
                                             $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
+                                            // $query->where('sdesubsidiosdetalles.fecid', 1104);
                                         // }
                                     })
                                     // ->orderBy('sdestatus' , 'DESC')
@@ -101,7 +102,8 @@ class MetMostrarSubsidiosSiController extends Controller
                                         'sdesector',
                                         'sdeterritorio',
                                         'sdevalidado',
-                                        'clicodigoshipto'
+                                        'clicodigoshipto',
+                                        'sumsfsvalorizado'
                                     ]);
 
             foreach($sdes as $posicionSde => $sde){
@@ -148,16 +150,22 @@ class MetMostrarSubsidiosSiController extends Controller
 
                     $sfss = array();
 
-                    $sumsfsvalorizado = sfssubsidiosfacturassi::join('fsifacturassi as fsi', 'fsi.fsiid', 'sfssubsidiosfacturassi.fsiid')
-                                            ->join('fdsfacturassidetalles as fds', 'fds.fdsid', 'sfssubsidiosfacturassi.fdsid')
-                                            ->join('fecfechas as fec', 'fec.fecid', 'fsi.fecid')
-                                            ->where('sdeid', $sde->sdeid)
-                                            ->sum('sfsvalorizado');
+                    // $sumsfsvalorizado = sfssubsidiosfacturassi::join('fsifacturassi as fsi', 'fsi.fsiid', 'sfssubsidiosfacturassi.fsiid')
+                    //                         ->join('fdsfacturassidetalles as fds', 'fds.fdsid', 'sfssubsidiosfacturassi.fdsid')
+                    //                         ->join('fecfechas as fec', 'fec.fecid', 'fsi.fecid')
+                    //                         ->where('sdeid', $sde->sdeid)
+                    //                         ->sum('sfsvalorizado');
                 }
+
+                
+                // $sdee = sdesubsidiosdetalles::find($sde->sdeid);
+                // $sdee->sumsfsvalorizado = $sumsfsvalorizado;
+                // $sdee->update();
+
 
                 $sdes[$posicionSde]['facturas'] = $sfss;
 
-                $sdes[$posicionSde]['sumsfsvalorizado'] = $sumsfsvalorizado;
+
             }
 
             $zonas[$posicionZon]['data'] = $sdes;
@@ -176,8 +184,11 @@ class MetMostrarSubsidiosSiController extends Controller
 
     }
 
-    private function ArmarExcelDescargaSubsidiosSi($fechaInicio, $fechaFinal)
+    public function ArmarExcelDescargaSubsidiosSi(Request $request)
     {
+
+        $fechaInicio = $request['fechaInicio'];
+        $fechaFinal  = $request['fechaFinal'];
 
         if($fechaInicio != null){
             $fechaInicio = date("Y-m-d", strtotime($fechaInicio));
@@ -198,6 +209,7 @@ class MetMostrarSubsidiosSiController extends Controller
                                         ->where(function ($query) use($fechaInicio, $fechaFinal) {
                                             // if($fechaInicio != null){
                                                 $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
+                                                // $query->where('sdesubsidiosdetalles.fecid', 1104);
                                             // }
                                         })
                                         ->get([
@@ -1462,17 +1474,44 @@ class MetMostrarSubsidiosSiController extends Controller
 
         }
 
-        return $nuevoArray;
+        $requestsalida = response()->json([
+            "datos" => $nuevoArray,
+        ]);
+
+        return $requestsalida;
+
+        // return $nuevoArray;
     }
 
-    public function AsignarValorizadoAutomatico($fecid)
+    public function MostrarFacturasAsignadas(Request $request)
     {
 
-        $sdes = sdesubsidiosdetalles::where('fecid', $fecid)->get();
+        $sdeid = $request['sdeid'];
 
-        // foreach($sdes as $sde){
-        //     new sfssubsidiosfacturassi
-        // }
+        $sfss = sfssubsidiosfacturassi::join('fsifacturassi as fsi', 'fsi.fsiid', 'sfssubsidiosfacturassi.fsiid')
+                                ->join('fdsfacturassidetalles as fds', 'fds.fdsid', 'sfssubsidiosfacturassi.fdsid')
+                                ->join('fecfechas as fec', 'fec.fecid', 'fsi.fecid')
+                                ->where('sdeid', $sdeid)
+                                ->get([
+                                    'fsifactura',
+                                    'fsipedido',
+                                    'sfsvalorizado',
+                                    // 'fecfecha',
+                                    'fdsreconocer',
+                                    'fdssaldo',
+                                    'fdstreintaporciento',
+                                    'fdsnotacredito',
+                                    'fdsvalorneto',
+                                    'sfssaldoanterior',
+                                    'sfssaldonuevo',
+                                    'fsifecha as fecfecha',
+                                ]);
+
+        $requestsalida = response()->json([
+            "datos" => $sfss,
+        ]);
+
+        return $requestsalida;
 
 
     }

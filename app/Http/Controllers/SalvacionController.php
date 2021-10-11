@@ -10,6 +10,7 @@ use App\Models\fdsfacturassidetalles;
 use App\Models\fsifacturassi;
 use App\Models\perpersonas;
 use App\Models\usuusuarios;
+use App\Models\sfssubsidiosfacturassi;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\MailCargaArchivoOutlook;
 use Illuminate\Support\Facades\Hash;
@@ -127,6 +128,134 @@ class SalvacionController extends Controller
             }
 
         }
+
+
+
+    }
+
+    public function LimpiarSde()
+    {
+
+        // $sdes = sdesubsidiosdetalles::where('fecid', 1104)->get();
+
+        // foreach($sdes as $sde){
+        //     $suma = sfssubsidiosfacturassi::where('sdeid', $sde->sdeid)->sum('sfsvalorizado');
+
+        //     $sdee = sdesubsidiosdetalles::find($sde->sdeid);
+        //     $sdee->sumsfsvalorizado = $suma;
+        //     $sdee->update();
+
+        // }
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        $otro = "";
+
+        $zonas = sdesubsidiosdetalles::join('cliclientes as cli', 'cli.cliid', 'sdesubsidiosdetalles.cliid')
+                                    ->join('fecfechas as fec', 'fec.fecid', 'sdesubsidiosdetalles.fecid')
+                                    ->where(function ($query) use($otro) {
+                                        // if($fechaInicio != null){
+                                            // $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
+                                            $query->where('sdesubsidiosdetalles.fecid', 1104);
+                                        // }
+                                    })
+                                    ->distinct('cli.clizona')
+                                    ->orderBy('clizonacodigo', 'DESC')
+                                    // ->where('sdestatus', '!=', null)
+                                    ->get([
+                                        'cli.clizona'
+                                    ]);
+
+
+
+        foreach($zonas as $posicionZon => $zon){
+
+            $sdes = sdesubsidiosdetalles::join('cliclientes as cli', 'cli.cliid', 'sdesubsidiosdetalles.cliid')
+                                    ->join('proproductos as pro', 'pro.proid', 'sdesubsidiosdetalles.proid')
+                                    ->join('catcategorias as cat', 'cat.catid', 'pro.catid')
+                                    ->join('fecfechas as fec', 'fec.fecid', 'sdesubsidiosdetalles.fecid')
+                                    ->where('clizona', $zon['clizona'])
+                                    ->where(function ($query) use($otro) {
+                                        // if($fechaInicio != null){
+                                            // $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
+                                            $query->where('sdesubsidiosdetalles.fecid', 1104);
+                                        // }
+                                    })
+                                    // ->orderBy('sdestatus' , 'DESC')
+                                    ->orderBy('sdeterritorio' , 'ASC')
+                                    ->orderBy('clihml' , 'ASC')
+                                    ->orderBy('clisuchml' , 'ASC')
+                                    ->orderBy('sdesubcliente' , 'DESC')
+                                    ->orderBy('sdesector' , 'DESC')
+                                    ->orderBy('sdecantidadbultosreal' , 'DESC')
+                                    ->get([
+                                        'sdesubsidiosdetalles.sdeid',
+                                        'cli.cliid',
+                                        'clizona',
+                                        'clisuchml',
+                                        'clihml as clinombre',
+                                        // 'clinombre',
+                                        'sdesubcliente',
+                                        'catnombre',
+                                        'propresentacion',
+                                        'pro.proid',
+                                        'prosku',
+                                        'pronombre',
+                                        'sdecantidadbultos',
+                                        'sdemontoareconocer',
+                                        'sdecantidadbultosreal',
+                                        'sdemontoareconocerreal',
+                                        'sdestatus',
+                                        'sdediferenciaahorro',
+                                        'sdebultosacordados',
+                                        'fec.fecid',
+                                        'fecfecha',
+                                        // 'fsifecha as fecfecha',
+                                        'sdependiente',
+                                        'sdesac',
+                                        'sdesector',
+                                        'sdeterritorio',
+                                        'sdevalidado',
+                                        'clicodigoshipto',
+                                        'sumsfsvalorizado'
+                                    ]);
+
+            foreach($sdes as $posicionSde => $sde){
+
+                $suma = sfssubsidiosfacturassi::where('sdeid', $sde->sdeid)->sum('sfsvalorizado');
+
+                $sdee = sdesubsidiosdetalles::where('sdeid', $sde->sdeid)->first();
+                $sdee->sumsfsvalorizado = $suma;
+                $sdee->update();
+
+            }
+
+        }
+
+
+
+
+
+
+
+
+
 
 
 
