@@ -78,7 +78,7 @@ $router->post('/crear-ambiente', 'Configuracion\CrearAmbienteHomeController@Crea
             $router->post('/logica', 'Validaciones\Modulos\SubsidiosSi\LogicaSubsidiosSiController@ValLogicaSubsidiosSi');
             $router->post('/mostrar', 'Validaciones\Modulos\SubsidiosSi\Mostrar\MostrarSubsidiosSiController@ValMostrarSubsidiosSi');
             $router->post('/mostrar-subsidios-descarga', 'Validaciones\Modulos\SubsidiosSi\Mostrar\MostrarSubsidiosSiController@ValMostrarDescargaSubsidiosSi');
-            $router->post('/mostrar-facturas-asignadas', 'Validaciones\Modulos\SubsidiosSi\Mostrar\MostrarSubsidiosSiController@ValMostrarFacturasAsignadas ');
+            $router->post('/mostrar-facturas-asignadas', 'Validaciones\Modulos\SubsidiosSi\Mostrar\MostrarSubsidiosSiController@ValMostrarFacturasAsignadas');
 
             $router->post('/mostrar/notascreditos', 'Validaciones\Modulos\SubsidiosSi\Mostrar\MostrarNotasCreditoFacturaController@ValMostrarNotasCreditoFactura');
         });
