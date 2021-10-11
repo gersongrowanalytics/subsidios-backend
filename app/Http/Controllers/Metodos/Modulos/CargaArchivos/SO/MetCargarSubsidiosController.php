@@ -184,7 +184,7 @@ class MetCargarSubsidiosController extends Controller
                                     if($esp){
     
                                         $are = espestadospendientes::join('areareasestados as are', 'are.areid', 'espestadospendientes.areid')
-                                                                ->where('fecid', $fec->fecid)
+                                                                ->where('espestadospendientes.fecid', $fec->fecid)
                                                                 ->where('are.arenombre', "SAC Sell Out Detalle")
                                                                 ->first([
                                                                     'are.areid'
