@@ -767,7 +767,7 @@ class MetMostrarSubsidiosSiController extends Controller
                         )
                     ),
                     array(
-                        "value" => "CANTIDAD BULTOS SOFTYS",
+                        "value" => "CANTIDAD (BULTOS SOFTYS)",
                         "style" => array(
                             "font" => array(
                                 "sz" => "9",
@@ -786,27 +786,7 @@ class MetMostrarSubsidiosSiController extends Controller
                         )
                     ),
                     array(
-                        "value" => "MONTO A REONOCER S/IGV",
-                        "style" => array(
-                            "font" => array(
-                                "sz" => "9",
-                                "bold" => true,
-                                "color" => array(
-                                    "rgb" => "FFFFFFFF"
-                                )
-                            ),
-                            "fill" => array(
-                                "patternType" => 'solid',
-                                "fgColor" => array(
-                                    "rgb" => "FF004FB8"
-                                )
-                            )
-                            
-                        )
-                    ),
-
-                    array(
-                        "value" => "APROBADO",
+                        "value" => "MONTO  (S/IGV SOFTYS)",
                         "style" => array(
                             "font" => array(
                                 "sz" => "9",
@@ -826,7 +806,27 @@ class MetMostrarSubsidiosSiController extends Controller
                     ),
 
                     array(
-                        "value" => "APROBADO",
+                        "value" => "STATUS DE SUBSIDIOS",
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                                "color" => array(
+                                    "rgb" => "FFFFFFFF"
+                                )
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => "FF004FB8"
+                                )
+                            )
+                            
+                        )
+                    ),
+
+                    array(
+                        "value" => "TIPO DE DATA",
                         "style" => array(
                             "font" => array(
                                 "sz" => "9",
@@ -1358,7 +1358,7 @@ class MetMostrarSubsidiosSiController extends Controller
                 ),
                 array(
                     // "value" => $descargarSde->sdeaprobado == 1 ?"Validados" :"No Validados", 
-                    "value" => $descargarSde->sdevalidado == "SIVALIDADOS" ?"Validados" :"No Validados", 
+                    "value" => $descargarSde->sdevalidado == "SIVALIDADOS" ?"Subsidiado" :"No Subsidiado ", 
                     "style" => array(
                         "font" => array(
                             "sz" => "9",
