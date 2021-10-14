@@ -122,6 +122,7 @@ class MetMostrarSubsidiosPendientesController extends Controller
             foreach($sdes as $posicionSde => $sde){
                 $sfss = sfssubsidiosfacturassi::join('fsifacturassi as fsi', 'fsi.fsiid', 'sfssubsidiosfacturassi.fsiid')
                                             ->join('fdsfacturassidetalles as fds', 'fds.fdsid', 'sfssubsidiosfacturassi.fdsid')
+                                            ->join('proproductos as pro', 'pro.proid', 'fds.proid')
                                             ->join('fecfechas as fec', 'fec.fecid', 'fsi.fecid')
                                             ->where('sdeid', $sde->sdeid)
                                             ->get([
@@ -140,7 +141,9 @@ class MetMostrarSubsidiosPendientesController extends Controller
                                                 'sfsobjetivo',
                                                 'sfsdiferenciaobjetivo',
                                                 'sfssubsidiosfacturassi.sfsid',
-                                                'fds.fdsid'
+                                                'fds.fdsid',
+                                                'pro.pronombre',
+                                                'fdsmaterial',
                                             ]);
 
                 $sdes[$posicionSde]['facturas'] = $sfss;
