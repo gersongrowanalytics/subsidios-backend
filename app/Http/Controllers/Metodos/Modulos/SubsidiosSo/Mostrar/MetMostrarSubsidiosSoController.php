@@ -210,92 +210,6 @@ class MetMostrarSubsidiosSoController extends Controller
 
                 $nuevoArray[0]['columns'] = $arrayTitulos;
 
-                // $arrayFilaExcel = array(
-                //     array("value" => ""),
-                //     array(
-                //         "value" => "AÑO",
-                //         "style" => array(
-                //             "font" => array(
-                //                 "sz" => "9",
-                //                 "bold" => true,
-                //                 "color" => array(
-                //                     "rgb" => "FFFFFFFF"
-                //                 )
-                //             ),
-                //             "fill" => array(
-                //                 "patternType" => 'solid',
-                //                 "fgColor" => array(
-                //                     "rgb" => "FF000000"
-                //                 )
-                //             )
-                            
-                //         )
-                //     ),
-                //     array(
-                //         "value" => $descargarSde->fecanionumero, 
-                //         "style" => array(
-                //             "font" => array(
-                //                 "sz" => "9",
-                //                 "bold" => true,
-                //                 "color" => array(
-                //                     "rgb" => "FFFFFFFF"
-                //                 )
-                //             ),
-                //             "fill" => array(
-                //                 "patternType" => 'solid',
-                //                 "fgColor" => array(
-                //                     "rgb" => "FF000000"
-                //                 )
-                //             )
-                            
-                //         )
-                //     ),
-                // );
-                // $nuevoArray[0]['data'][] = $arrayFilaExcel;
-
-                // $arrayFilaExcel = array(
-                //     array("value" => ""),
-                //     array(
-                //         "value" => "MES",
-                //         "style" => array(
-                //             "font" => array(
-                //                 "sz" => "9",
-                //                 "bold" => true,
-                //                 "color" => array(
-                //                     "rgb" => "FFFFFFFF"
-                //                 )
-                //             ),
-                //             "fill" => array(
-                //                 "patternType" => 'solid',
-                //                 "fgColor" => array(
-                //                     "rgb" => "FF000000"
-                //                 )
-                //             )
-                            
-                //         )
-                //     ),
-                //     array(
-                //         "value" => $descargarSde->fecmesabreviacion,
-                //         "style" => array(
-                //             "font" => array(
-                //                 "sz" => "9",
-                //                 "bold" => true,
-                //                 "color" => array(
-                //                     "rgb" => "FFFFFFFF"
-                //                 )
-                //             ),
-                //             "fill" => array(
-                //                 "patternType" => 'solid',
-                //                 "fgColor" => array(
-                //                     "rgb" => "FF000000"
-                //                 )
-                //             )
-                            
-                //         )
-                //     ),
-                // );
-                // $nuevoArray[0]['data'][] = $arrayFilaExcel;
-
                 $arrayFilaExcel = array(
                     array(
                         "value" => "AÑO",
@@ -756,7 +670,7 @@ class MetMostrarSubsidiosSoController extends Controller
 
 
                     array(
-                        "value" => "CANTIDAD BULTOS DT",
+                        "value" => "CANTIDAD (BULTOS DT)",
                         "style" => array(
                             "font" => array(
                                 "sz" => "9",
@@ -776,7 +690,7 @@ class MetMostrarSubsidiosSoController extends Controller
                     ),
 
                     array(
-                        "value" => "MONTO A REONOCER S/IGV DT",
+                        "value" => "MONTO (S/IGV DT)",
                         "style" => array(
                             "font" => array(
                                 "sz" => "9",
@@ -797,7 +711,7 @@ class MetMostrarSubsidiosSoController extends Controller
 
 
                     array(
-                        "value" => "CANTIDAD BULTOS SOFTYS",
+                        "value" => "CANTIDAD (BULTOS SOFTYS)",
                         "style" => array(
                             "font" => array(
                                 "sz" => "9",
@@ -816,7 +730,7 @@ class MetMostrarSubsidiosSoController extends Controller
                         )
                     ),
                     array(
-                        "value" => "MONTO A REONOCER S/IGV",
+                        "value" => "MONTO  (S/IGV SOFTYS)",
                         "style" => array(
                             "font" => array(
                                 "sz" => "9",
@@ -836,7 +750,27 @@ class MetMostrarSubsidiosSoController extends Controller
                     ),
 
                     array(
-                        "value" => "APROBADO",
+                        "value" => "CANTIDAD NO RECONOCIDA (TEMA DE FACTURAS)",
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                                "color" => array(
+                                    "rgb" => "FFFFFFFF"
+                                )
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => "FFFFFF00"
+                                )
+                            )
+                            
+                        )
+                    ),
+
+                    array(
+                        "value" => "STATUS DE SUBSIDIOS",
                         "style" => array(
                             "font" => array(
                                 "sz" => "9",
@@ -856,7 +790,7 @@ class MetMostrarSubsidiosSoController extends Controller
                     ),
 
                     array(
-                        "value" => "APLICATIVO",
+                        "value" => "TIPO DE DATA",
                         "style" => array(
                             "font" => array(
                                 "sz" => "9",
@@ -876,7 +810,7 @@ class MetMostrarSubsidiosSoController extends Controller
                     ),
 
                     array(
-                        "value" => "DIFERENCIA DE AHORRO EN BULTOS",
+                        "value" => "DIF. AHORRO (BULTOS)",
                         "style" => array(
                             "font" => array(
                                 "sz" => "9",
@@ -896,7 +830,7 @@ class MetMostrarSubsidiosSoController extends Controller
                     ),
 
                     array(
-                        "value" => "DIFERENCIA DE AHORRO EN SOLES",
+                        "value" => "DIF. AHORRO (SOLES)",
                         "style" => array(
                             "font" => array(
                                 "sz" => "9",
@@ -915,25 +849,6 @@ class MetMostrarSubsidiosSoController extends Controller
                         )
                     ),
 
-                    // array(
-                    //     "value" => "PK",
-                    //     "style" => array(
-                    //         "font" => array(
-                    //             "sz" => "9",
-                    //             "bold" => true,
-                    //             "color" => array(
-                    //                 "rgb" => "FFFFFFFF"
-                    //             )
-                    //         ),
-                    //         "fill" => array(
-                    //             "patternType" => 'solid',
-                    //             "fgColor" => array(
-                    //                 "rgb" => "FF004FB8"
-                    //             )
-                    //         )
-                            
-                    //     )
-                    // ),
                 );
                 $nuevoArray[0]['data'][] = $arrayFilaExcel;
             }
@@ -1379,9 +1294,27 @@ class MetMostrarSubsidiosSoController extends Controller
                         "numFmt" => "#,##0.00"
                     )
                 ),
+
+                array(
+                    "value" => floatval(0), 
+                    "style" => array(
+                        "font" => array(
+                            "sz" => "9",
+                            "bold" => true,
+                        ),
+                        "fill" => array(
+                            "patternType" => 'solid',
+                            "fgColor" => array(
+                                "rgb" => "FFF2F2F2"
+                            )
+                        ),
+                        "numFmt" => "#,##0.00"
+                    )
+                ),
+
                 array(
                     // "value" => $descargarSde->sdeaprobado == 1 ?"Validados" :"No Validados", 
-                    "value" => $descargarSde->sdevalidado == "SIVALIDADOS" ?"Validados" :"No Validados", 
+                    "value" => $descargarSde->sdevalidado == "SIVALIDADOS" ?"Subsidiado" :"No Subsidiado", 
                     "style" => array(
                         "font" => array(
                             "sz" => "9",
