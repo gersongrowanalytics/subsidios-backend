@@ -301,6 +301,7 @@ class MetCargarSOController extends Controller
 
         $sdes = sdesubsidiosdetalles::where('fecid', $fecid)
                                     ->where('sdesac', false)
+                                    ->where('sdecodigodestinatario', "287493")
                                     ->get();
 
         foreach($sdes as $sde){
