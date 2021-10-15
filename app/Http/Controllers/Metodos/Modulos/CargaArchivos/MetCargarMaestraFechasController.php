@@ -10,6 +10,10 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use App\Models\usuusuarios;
 use App\Models\fecfechas;
+use App\Models\fsifacturassi;
+use App\Models\nsinotascreditossi;
+use App\Models\ndsnotascreditossidetalles;
+use App\Models\fdsfacturassidetalles;
 use App\Models\carcargasarchivos;
 
 class MetCargarMaestraFechasController extends Controller
@@ -302,5 +306,172 @@ class MetCargarMaestraFechasController extends Controller
             "mesTexto" => $mesTexto
         );
 
+    }
+
+    public function CargarDocumentosAnulados(Request $request)
+    {
+        date_default_timezone_set("America/Lima");
+        $fechaActual = date('Y-m-d');
+
+        $logs = array(
+            "MENSAJE" => "",
+            "NUMERO_LINEAS_EXCEL" => "",
+            "NUEVA_FECHA" => [],
+            "FECHA_EDITADO" => array(),
+            "FECHA_NO_EDITADO" => array(),
+            "CLIENTE_NO_ENCONTRADO" => array(),
+            "DETALLE_FACTURA_NO_ENCONTRADA" => array(),
+            "FACTURA_NO_ENCONTRADA" => array()
+
+        );
+
+        $pkis = array();
+
+        $respuesta      = true;
+        $mensaje        = "El archivo se subio correctamente";
+        $datos          = [];
+        $mensajeDetalle = "";
+        $mensajedev     = "";
+
+        try{
+
+            // $usutoken = "TOKENESPECIFICOUNIFODEVGERSONGROW1845475#LD72";
+            $usutoken = $request->header('api_token');
+            if(!isset($usutoken)){
+                $usutoken = "TOKENESPECIFICOUNIFODEVGERSONGROW1845475#LD72";
+            }
+            
+            $archivo  = $_FILES['file']['name'];
+
+            $usu = usuusuarios::where('usutoken', $usutoken)->first(['usuid', 'usuusuario']);
+
+            $codigoArchivoAleatorio = mt_rand(0, mt_getrandmax())/mt_getrandmax();
+
+            $fichero_subido = base_path().'/public/Sistema/Modulos/CargaArchivos/Fechas/'.basename($codigoArchivoAleatorio.'-'.$usu->usuid.'-'.$usu->usuusuario.'-'.$fechaActual.'-'.$_FILES['file']['name']);
+
+            $ex_file_name = explode(".", $_FILES['file']['name']);
+            // $carn = new carcargasarchivos;
+            // $carn->tcaid        = 11;
+            // $carn->usuid        = $usu->usuid;
+            // $carn->carnombre    = $_FILES['file']['name'];
+            // $carn->carextension = $ex_file_name[1];
+            // $carn->carurl       = env('APP_URL').$ubicacionArchivo;
+            // $carn->carexito     = 0;
+            // $carn->save();
+            // $carid = $carn->carid;
+
+            if (move_uploaded_file($_FILES['file']['tmp_name'], $fichero_subido)) {
+
+                $objPHPExcel    = IOFactory::load($fichero_subido);
+                $objPHPExcel->setActiveSheetIndex(0);
+                $numRows        = $objPHPExcel->setActiveSheetIndex(0)->getHighestRow();
+                $ultimaColumna  = $objPHPExcel->setActiveSheetIndex(0)->getHighestColumn();
+
+                $logs['NUMERO_LINEAS_EXCEL'] = $numRows;
+
+                for ($i=2; $i <= $numRows ; $i++) {
+                    $ex_destinatario    = $objPHPExcel->getActiveSheet()->getCell('D'.$i)->getCalculatedValue();
+                    $ex_material        = $objPHPExcel->getActiveSheet()->getCell('E'.$i)->getCalculatedValue();
+                    $ex_factura         = $objPHPExcel->getActiveSheet()->getCell('H'.$i)->getCalculatedValue();
+
+                    $fsi = fsifacturassi::where('fsifactura', $ex_factura)->first();
+                    // $nsi = nsinotascreditossi::where('nsinotacredito', $ex_factura)->first();
+
+                    if($fsi){
+                        
+                        $cli = cliclientes::where('clicodigoshipto', $ex_destinatario)->first();
+                        if($cli){
+                            $cliidDocumento = $cli->cliid;
+                        }else{
+                            $cliidDocumento = 0;
+                            $logs["CLIENTE_NO_ENCONTRADO"] = $this->EliminarDuplicidad( $logs["CLIENTE_NO_ENCONTRADO"], $ex_destinatario, $i);
+                        }
+
+                        $nds = fdsfacturassidetalles::where('fsiid', $fsi->fsiid)
+                                                    ->where('fdsmaterial', $ex_material)
+                                                    ->where('cliid', $cliidDocumento)
+                                                    ->where('fdsanulada', false)
+                                                    ->first();
+
+                        // $nds = ndsnotascreditossidetalles::where('nsiid', $nsi->nsiid)
+                        //                             ->where('ndsmaterial', $ex_material)
+                        //                             ->where('cliid', $cliidDocumento)
+                        //                             ->where('ndsanulada', false)
+                        //                             ->first();
+
+                        if($nds){
+                            // $nds->ndsanulada = true; // cambiar por si es una factura anulada "fdsanulada"
+                            // $nds->update();
+
+                            $nds->fdsanulada = true; // cambiar por si es una factura anulada "fdsanulada"
+                            $nds->update();
+                        }else{
+                            $logs["DETALLE_FACTURA_NO_ENCONTRADA"] = $this->EliminarDuplicidad( $logs["DETALLE_FACTURA_NO_ENCONTRADA"], $ex_material, $i);
+                        }
+
+                    }else{
+                        $logs["FACTURA_NO_ENCONTRADA"] = $this->EliminarDuplicidad( $logs["FACTURA_NO_ENCONTRADA"], $ex_factura, $i);
+                    }
+                    
+
+                }
+
+                // $care = carcargasarchivos::find($carid);
+                // $care->carexito = 1;
+                // $care->update();
+
+            }else{
+                $respuesta = false;
+                $mensaje = "Lo sentimos, el archivo no se pudo guardar en el sistema";
+            }
+
+        } catch (Exception $e) {
+            $mensajedev = $e->getMessage();
+        }
+
+        $logs["MENSAJE"] = $mensaje;
+        $logs["RESPUESTA"] = $respuesta;
+        
+        $requestsalida = response()->json([
+            "respuesta"      => $respuesta,
+            "mensaje"        => $mensaje,
+            "datos"          => $datos,
+            "mensajeDetalle" => $mensajeDetalle,
+            "mensajedev" => $mensajedev,
+            "logs" => $logs,
+        ]);
+
+        // $AuditoriaController = new AuditoriaController;
+        // $registrarAuditoria  = $AuditoriaController->registrarAuditoria(
+        //     $usutoken, // token
+        //     $usu->usuid, // usuid
+        //     null, // audip
+        //     $fichero_subido, // audjsonentrada
+        //     $requestsalida,// audjsonsalida
+        //     'CARGAR DATA DE FECHAS AL SISTEMA ', //auddescripcion
+        //     'IMPORTAR', // audaccion
+        //     '/modulo/cargaArchivos/fechas', //audruta
+        //     $pkis, // audpk
+        //     $logs // log
+        // );
+
+        return $requestsalida;
+    }
+
+    private function EliminarDuplicidad($array, $dato, $linea)
+    {
+        $encontroDato = false;
+        foreach($array as $arr){
+            if($arr['codigo'] == $dato){
+                $encontroDato = true;
+                break;
+            }
+        }
+
+        if($encontroDato == false){
+            $array[] = array("codigo" => $dato, "linea" => $linea);
+        }
+
+        return $array;
     }
 }
