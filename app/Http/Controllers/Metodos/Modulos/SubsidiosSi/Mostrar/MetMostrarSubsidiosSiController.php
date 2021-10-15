@@ -302,6 +302,7 @@ class MetMostrarSubsidiosSiController extends Controller
                     array("title" => "", "width" => array("wpx" => 100)),
                     array("title" => "", "width" => array("wpx" => 100)),
                     array("title" => "", "width" => array("wpx" => 100)),
+                    array("title" => "", "width" => array("wpx" => 100)),
                 );
 
                 $nuevoArray[0]['columns'] = $arrayTitulos;
@@ -931,6 +932,26 @@ class MetMostrarSubsidiosSiController extends Controller
                     );
 
                     $arrayFilaExcel[] = array(
+                        "value" => "MATERIAL N°".$pos,
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                                "color" => array(
+                                    "rgb" => "FFFFFFFF"
+                                )
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => "FF004FB8"
+                                )
+                            )
+                            
+                        )
+                    );
+
+                    $arrayFilaExcel[] = array(
                         "value" => "VALORIZADO N°".$pos,
                         "style" => array(
                             "font" => array(
@@ -1443,6 +1464,22 @@ class MetMostrarSubsidiosSiController extends Controller
 
                 $arrayFilaExcel[] = array(
                     "value" => $sfs->fdsmaterial,
+                    "style" => array(
+                        "font" => array(
+                            "sz" => "9",
+                            "bold" => true,
+                        ),
+                        "fill" => array(
+                            "patternType" => 'solid',
+                            "fgColor" => array(
+                                "rgb" => "FFF2F2F2"
+                            )
+                        )
+                    )
+                );
+
+                $arrayFilaExcel[] = array(
+                    "value" => $sfs->pronombre,
                     "style" => array(
                         "font" => array(
                             "sz" => "9",
