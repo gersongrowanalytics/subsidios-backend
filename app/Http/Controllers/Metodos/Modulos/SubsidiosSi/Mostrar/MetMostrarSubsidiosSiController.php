@@ -1545,15 +1545,14 @@ class MetMostrarSubsidiosSiController extends Controller
             )
         );
 
-        $descargarSdes = sdesubsidiosdetalles::join('cliclientes as cli', 'cli.cliid', 'sdesubsidiosdetalles.cliid')
-                                        ->join('fecfechas as fec', 'fec.fecid', 'sdesubsidiosdetalles.fecid')
+        $descargarSdes = sdesubsidiosdetalles::join('fecfechas as fec', 'fec.fecid', 'sdesubsidiosdetalles.fecid')
                                         ->where(function ($query) use($fechaInicio, $fechaFinal) {
                                             // if($fechaInicio != null){
                                                 $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
                                                 // $query->where('sdesubsidiosdetalles.fecid', 1104);
                                             // }
                                         })
-                                        ->where('sdevalidado', 'SIVALIDADOS')
+                                        // ->where('sdevalidado', 'SIVALIDADOS')
                                         ->groupBy('sdecodigodestinatario')
                                         ->selectRaw(
                                             'sdecodigodestinatario, fecanionumero, fecmesabreviacion, 
