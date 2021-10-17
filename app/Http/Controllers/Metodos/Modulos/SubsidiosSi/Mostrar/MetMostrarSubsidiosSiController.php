@@ -1575,10 +1575,7 @@ class MetMostrarSubsidiosSiController extends Controller
                                         })
                                         ->where('sdecodigodestinatario', 287493)
                                         ->selectRaw(
-                                            'sdecodigodestinatario, fecanionumero, fecmesabreviacion, 
-                                            SUM(sdebultosacordados) as sumaButlosAcordados, SUM(sdecantidadbultos) as sumaCantidadBultos,
-                                            SUM(sdemontoareconocer) as sumaMontoReconocer, SUM(sdecantidadbultosreal) as sumaCantidadBultosReal,
-                                            SUM(sdemontoareconocerreal) as sumaMontoReconocerReal'
+                                            'sdecodigodestinatario, fecanionumero, fecmesabreviacion'
                                         );
 
         foreach($descargarSdes as $posicionSde => $descargarSde){
