@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\sdesubsidiosdetalles;
 use App\Models\sfssubsidiosfacturassi;
 use App\Models\zonzonas;
+use DB;
 
 class MetMostrarSubsidiosSiController extends Controller
 {
