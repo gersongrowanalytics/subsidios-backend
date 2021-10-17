@@ -2181,6 +2181,7 @@ class MetMostrarSubsidiosSiController extends Controller
 
         $requestsalida = response()->json([
             "datos" => $nuevoArray,
+            "data" => $descargarSdes,
         ]);
 
         return $requestsalida;
