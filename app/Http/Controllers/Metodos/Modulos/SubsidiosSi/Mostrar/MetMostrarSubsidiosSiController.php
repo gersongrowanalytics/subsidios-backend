@@ -1575,13 +1575,17 @@ class MetMostrarSubsidiosSiController extends Controller
                                             // }
                                         })
                                         ->where('sdecodigodestinatario', "287493")
-                                        ->get(
-                                            [
-                                                "sdecodigodestinatario",
-                                                "fecanionumero",
-                                                "fecmesabreviacion"
-                                            ]
-                                        );
+                                        ->select(
+                                            "sdecodigodestinatario",
+                                            "fecanionumero",
+                                            "fecmesabreviacion",
+                                            DB::raw("SUM(sdebultosacordados) as sumaButlosAcordados"),
+                                            DB::raw("SUM(sdecantidadbultos) as sumaCantidadBultos"),
+                                            DB::raw("SUM(sdemontoareconocer) as sumaMontoReconocer"),
+                                            DB::raw("SUM(sdecantidadbultosreal) as sumaCantidadBultosReal"),
+                                            DB::raw("SUM(sdemontoareconocerreal) as sumaMontoReconocerReal"),
+                                        )
+                                        ->get();
 
         foreach($descargarSdes as $posicionSde => $descargarSde){
 
