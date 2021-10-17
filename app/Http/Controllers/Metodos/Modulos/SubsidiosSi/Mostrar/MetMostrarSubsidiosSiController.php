@@ -1575,10 +1575,12 @@ class MetMostrarSubsidiosSiController extends Controller
                                             // }
                                         })
                                         ->where('sdecodigodestinatario', "287493")
-                                        ->select(
-                                            "sdecodigodestinatario",
-                                            "fecanionumero",
-                                            "fecmesabreviacion"
+                                        ->get(
+                                            [
+                                                "sdecodigodestinatario",
+                                                "fecanionumero",
+                                                "fecmesabreviacion"
+                                            ]
                                         );
 
         foreach($descargarSdes as $posicionSde => $descargarSde){
