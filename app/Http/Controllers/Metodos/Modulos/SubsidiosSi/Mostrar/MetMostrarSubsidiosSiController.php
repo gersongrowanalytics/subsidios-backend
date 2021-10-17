@@ -1585,6 +1585,7 @@ class MetMostrarSubsidiosSiController extends Controller
                                             DB::raw("SUM(sdecantidadbultosreal) as sumaCantidadBultosReal"),
                                             DB::raw("SUM(sdemontoareconocerreal) as sumaMontoReconocerReal"),
                                         )
+                                        ->groupBy('sdecodigodestinatario')
                                         ->get();
 
         foreach($descargarSdes as $posicionSde => $descargarSde){
