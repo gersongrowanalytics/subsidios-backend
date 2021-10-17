@@ -1552,7 +1552,7 @@ class MetMostrarSubsidiosSiController extends Controller
                                         //         // $query->where('sdesubsidiosdetalles.fecid', 1104);
                                         //     // }
                                         // })
-                                        ->where('fecid', 1105)
+                                        ->where('fec.fecid', 1105)
                                         // ->where('sdevalidado', 'SIVALIDADOS')
                                         ->groupBy('sdecodigodestinatario')
                                         ->get([
