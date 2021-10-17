@@ -1546,26 +1546,25 @@ class MetMostrarSubsidiosSiController extends Controller
         );
 
         $descargarSdes = sdesubsidiosdetalles::join('fecfechas as fec', 'fec.fecid', 'sdesubsidiosdetalles.fecid')
-                                        // ->where(function ($query) use($fechaInicio, $fechaFinal) {
-                                        //     // if($fechaInicio != null){
-                                        //         $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
-                                        //         // $query->where('sdesubsidiosdetalles.fecid', 1104);
-                                        //     // }
-                                        // })
-                                        ->where('fec.fecid', 1105)
-                                        // ->where('sdevalidado', 'SIVALIDADOS')
-                                        ->groupBy('sdecodigodestinatario')
-                                        // ->get([
-                                        //     'sdecodigodestinatario',
-                                        //     'fecmesabreviacion',
-                                        //     'fecanionumero'
-                                        // ]);
-                                        ->selectRaw(
-                                            'sdecodigodestinatario, fecanionumero, fecmesabreviacion, 
-                                            SUM(sdebultosacordados) as sumaButlosAcordados, SUM(sdecantidadbultos) as sumaCantidadBultos,
-                                            SUM(sdemontoareconocer) as sumaMontoReconocer, SUM(sdecantidadbultosreal) as sumaCantidadBultosReal,
-                                            SUM(sdemontoareconocerreal) as sumaMontoReconocerReal'
-                                        );
+                                        ->where(function ($query) use($fechaInicio, $fechaFinal) {
+                                            // if($fechaInicio != null){
+                                                $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
+                                                // $query->where('sdesubsidiosdetalles.fecid', 1104);
+                                            // }
+                                        })
+                                        ->where('sdevalidado', 'SIVALIDADOS')
+                                        ->distinct('sdecodigodestinatario')
+                                        ->get([
+                                            'sdecodigodestinatario',
+                                            'fecmesabreviacion',
+                                            'fecanionumero'
+                                        ]);
+                                        // ->selectRaw(
+                                        //     'sdecodigodestinatario, fecanionumero, fecmesabreviacion, 
+                                        //     SUM(sdebultosacordados) as sumaButlosAcordados, SUM(sdecantidadbultos) as sumaCantidadBultos,
+                                        //     SUM(sdemontoareconocer) as sumaMontoReconocer, SUM(sdecantidadbultosreal) as sumaCantidadBultosReal,
+                                        //     SUM(sdemontoareconocerreal) as sumaMontoReconocerReal'
+                                        // );
 
         foreach($descargarSdes as $posicionSde => $descargarSde){
 
