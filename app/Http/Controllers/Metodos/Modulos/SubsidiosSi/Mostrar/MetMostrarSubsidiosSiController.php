@@ -1546,12 +1546,13 @@ class MetMostrarSubsidiosSiController extends Controller
         );
 
         $descargarSdes = sdesubsidiosdetalles::join('fecfechas as fec', 'fec.fecid', 'sdesubsidiosdetalles.fecid')
-                                        ->where(function ($query) use($fechaInicio, $fechaFinal) {
-                                            // if($fechaInicio != null){
-                                                $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
-                                                // $query->where('sdesubsidiosdetalles.fecid', 1104);
-                                            // }
-                                        })
+                                        // ->where(function ($query) use($fechaInicio, $fechaFinal) {
+                                        //     // if($fechaInicio != null){
+                                        //         $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
+                                        //         // $query->where('sdesubsidiosdetalles.fecid', 1104);
+                                        //     // }
+                                        // })
+                                        ->where('fecid', 1105)
                                         // ->where('sdevalidado', 'SIVALIDADOS')
                                         ->groupBy('sdecodigodestinatario')
                                         ->get([
