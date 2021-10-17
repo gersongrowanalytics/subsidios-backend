@@ -1578,12 +1578,7 @@ class MetMostrarSubsidiosSiController extends Controller
                                         ->select(
                                             "sdecodigodestinatario",
                                             "fecanionumero",
-                                            "fecmesabreviacion",
-                                            DB::raw("SUM(sdebultosacordados) as sumaButlosAcordados"),
-                                            DB::raw("SUM(sdecantidadbultos) as sumaCantidadBultos"),
-                                            DB::raw("SUM(sdemontoareconocer) as sumaMontoReconocer"),
-                                            DB::raw("SUM(sdecantidadbultosreal) as sumaCantidadBultosReal"),
-                                            DB::raw("SUM(sdemontoareconocerreal) as sumaMontoReconocerReal"),
+                                            "fecmesabreviacion"
                                         );
 
         foreach($descargarSdes as $posicionSde => $descargarSde){
