@@ -1554,12 +1554,17 @@ class MetMostrarSubsidiosSiController extends Controller
                                         })
                                         // ->where('sdevalidado', 'SIVALIDADOS')
                                         ->groupBy('sdecodigodestinatario')
-                                        ->selectRaw(
-                                            'sdecodigodestinatario, fecanionumero, fecmesabreviacion, 
-                                            SUM(sdebultosacordados) as sumaButlosAcordados, SUM(sdecantidadbultos) as sumaCantidadBultos,
-                                            SUM(sdemontoareconocer) as sumaMontoReconocer, SUM(sdecantidadbultosreal) as sumaCantidadBultosReal,
-                                            SUM(sdemontoareconocerreal) as sumaMontoReconocerReal'
-                                        );
+                                        ->get([
+                                            'sdecodigodestinatario',
+                                            'fecmesabreviacion',
+                                            'fecanionumero'
+                                        ]);
+                                        // ->selectRaw(
+                                        //     'sdecodigodestinatario, fecanionumero, fecmesabreviacion, 
+                                        //     SUM(sdebultosacordados) as sumaButlosAcordados, SUM(sdecantidadbultos) as sumaCantidadBultos,
+                                        //     SUM(sdemontoareconocer) as sumaMontoReconocer, SUM(sdecantidadbultosreal) as sumaCantidadBultosReal,
+                                        //     SUM(sdemontoareconocerreal) as sumaMontoReconocerReal'
+                                        // );
 
         foreach($descargarSdes as $posicionSde => $descargarSde){
 
