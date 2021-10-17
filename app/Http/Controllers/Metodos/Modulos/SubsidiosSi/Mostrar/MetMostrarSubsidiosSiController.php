@@ -1555,17 +1555,17 @@ class MetMostrarSubsidiosSiController extends Controller
                                         ->where('fec.fecid', 1105)
                                         // ->where('sdevalidado', 'SIVALIDADOS')
                                         ->groupBy('sdecodigodestinatario')
-                                        ->get([
-                                            'sdecodigodestinatario',
-                                            'fecmesabreviacion',
-                                            'fecanionumero'
-                                        ]);
-                                        // ->selectRaw(
-                                        //     'sdecodigodestinatario, fecanionumero, fecmesabreviacion, 
-                                        //     SUM(sdebultosacordados) as sumaButlosAcordados, SUM(sdecantidadbultos) as sumaCantidadBultos,
-                                        //     SUM(sdemontoareconocer) as sumaMontoReconocer, SUM(sdecantidadbultosreal) as sumaCantidadBultosReal,
-                                        //     SUM(sdemontoareconocerreal) as sumaMontoReconocerReal'
-                                        // );
+                                        // ->get([
+                                        //     'sdecodigodestinatario',
+                                        //     'fecmesabreviacion',
+                                        //     'fecanionumero'
+                                        // ]);
+                                        ->selectRaw(
+                                            'sdecodigodestinatario, fecanionumero, fecmesabreviacion, 
+                                            SUM(sdebultosacordados) as sumaButlosAcordados, SUM(sdecantidadbultos) as sumaCantidadBultos,
+                                            SUM(sdemontoareconocer) as sumaMontoReconocer, SUM(sdecantidadbultosreal) as sumaCantidadBultosReal,
+                                            SUM(sdemontoareconocerreal) as sumaMontoReconocerReal'
+                                        );
 
         foreach($descargarSdes as $posicionSde => $descargarSde){
 
