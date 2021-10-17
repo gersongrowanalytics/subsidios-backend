@@ -1566,7 +1566,25 @@ class MetMostrarSubsidiosSiController extends Controller
                                         //     SUM(sdemontoareconocerreal) as sumaMontoReconocerReal'
                                         // );
 
+        $sumaSde = sdesubsidiosdetalles::join('fecfechas as fec', 'fec.fecid', 'sdesubsidiosdetalles.fecid')
+                                        ->where(function ($query) use($fechaInicio, $fechaFinal) {
+                                            // if($fechaInicio != null){
+                                                $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
+                                                // $query->where('sdesubsidiosdetalles.fecid', 1104);
+                                            // }
+                                        })
+                                        ->where('sdecodigodestinatario', 287493)
+                                        ->selectRaw(
+                                            'sdecodigodestinatario, fecanionumero, fecmesabreviacion, 
+                                            SUM(sdebultosacordados) as sumaButlosAcordados, SUM(sdecantidadbultos) as sumaCantidadBultos,
+                                            SUM(sdemontoareconocer) as sumaMontoReconocer, SUM(sdecantidadbultosreal) as sumaCantidadBultosReal,
+                                            SUM(sdemontoareconocerreal) as sumaMontoReconocerReal'
+                                        );
+
         foreach($descargarSdes as $posicionSde => $descargarSde){
+
+            
+
 
             $sfss = sfssubsidiosfacturassi::join('sdesubsidiosdetalles as sde', 'sde.sdeid', 'sfssubsidiosfacturassi.sdeid')
                                         ->join('fecfechas as fec', 'fec.fecid', 'sde.fecid')
@@ -2186,6 +2204,7 @@ class MetMostrarSubsidiosSiController extends Controller
         $requestsalida = response()->json([
             "datos" => $nuevoArray,
             "data" => $descargarSdes,
+            "sumas" => $sumaSde,
         ]);
 
         return $requestsalida;
