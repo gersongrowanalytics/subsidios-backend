@@ -1577,8 +1577,6 @@ class MetMostrarSubsidiosSiController extends Controller
                                         ->where('sdecodigodestinatario', "287493")
                                         ->select(
                                             "sdecodigodestinatario",
-                                            "fecanionumero",
-                                            "fecmesabreviacion",
                                             DB::raw("SUM(sdebultosacordados) as sumaButlosAcordados"),
                                             DB::raw("SUM(sdecantidadbultos) as sumaCantidadBultos"),
                                             DB::raw("SUM(sdemontoareconocer) as sumaMontoReconocer"),
