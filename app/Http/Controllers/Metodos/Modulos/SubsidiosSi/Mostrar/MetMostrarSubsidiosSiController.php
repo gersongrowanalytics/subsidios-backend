@@ -1574,7 +1574,7 @@ class MetMostrarSubsidiosSiController extends Controller
                                                 // $query->where('sdesubsidiosdetalles.fecid', 1104);
                                             // }
                                         })
-                                        ->where('sdecodigodestinatario', 287493)
+                                        ->where('sdecodigodestinatario', "287493")
                                         ->select(
                                             "sdecodigodestinatario",
                                             "fecanionumero",
