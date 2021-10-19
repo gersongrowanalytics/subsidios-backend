@@ -204,11 +204,12 @@ class MetMostrarSubsidiosSoController extends Controller
                     array("title" => "", "width" => array("wpx" => 100)),
                     array("title" => "", "width" => array("wpx" => 100)),
                     array("title" => "", "width" => array("wpx" => 100)),
+                    array("title" => "", "width" => array("wpx" => 150)),
+                    array("title" => "", "width" => array("wpx" => 150)),
+                    array("title" => "", "width" => array("wpx" => 150)),
                     array("title" => "", "width" => array("wpx" => 200)),
                     array("title" => "", "width" => array("wpx" => 200)),
                     array("title" => "", "width" => array("wpx" => 200)),
-                    array("title" => "", "width" => array("wpx" => 100)),
-                    array("title" => "", "width" => array("wpx" => 100)),
                 );
 
                 $nuevoArray[0]['columns'] = $arrayTitulos;
