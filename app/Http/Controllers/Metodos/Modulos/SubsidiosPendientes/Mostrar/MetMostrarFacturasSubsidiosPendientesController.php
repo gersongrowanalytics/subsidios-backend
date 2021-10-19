@@ -11,9 +11,11 @@ class MetMostrarFacturasSubsidiosPendientesController extends Controller
 {
     public function MetMostrarFacturasSubsidiosPendientes(Request $request)
     {
-        $coddestinatario = $request['sdecodigodestinatario'];
-        $coddestinatariodos = $request['sdecodigodestinatario'];
-        $coddestinatariotres = $request['sdecodigodestinatario'];
+        $coddestinatario       = $request['sdecodigodestinatario'];
+        $coddestinatariodos    = $request['sdecodigodestinatario'];
+        $coddestinatariotres   = $request['sdecodigodestinatario'];
+        $coddestinatariocuatro = $request['sdecodigodestinatario'];
+        $coddestinatariocinco  = $request['sdecodigodestinatario'];
 
         if($coddestinatario == "170209"){
             $coddestinatario = "170418";
@@ -28,6 +30,28 @@ class MetMostrarFacturasSubsidiosPendientesController extends Controller
             $coddestinatario = "96474";
             $coddestinatariodos = "96474";
             $coddestinatariotres = "96474";
+        }else if($coddestinatario == "287493"){
+            $coddestinatario = "289634";
+            $coddestinatariodos = "289634";
+            $coddestinatariotres = "289634";
+        }else if($coddestinatario == "143397"){
+            $coddestinatario = "143398";
+            $coddestinatariodos = "143398";
+            $coddestinatariotres = "143398";
+        }else if($coddestinatario == "160864"){
+            $coddestinatario = "148921";
+            $coddestinatariodos = "148921";
+            $coddestinatariotres = "148921";
+        }else if($coddestinatario == "166945"){
+            $coddestinatario = "146628";
+            $coddestinatariodos = "151379";
+            $coddestinatariotres = "151379";
+        }else if($coddestinatario == "144124"){
+            $coddestinatario = "108016";
+            $coddestinatariodos = "168098";
+            $coddestinatariotres = "241834";
+            $coddestinatariocuatro = "252650";
+            $coddestinatariocinco  = "80133";
         }
 
         $fsis = fdsfacturassidetalles::join('fsifacturassi as fsi', 'fsi.fsiid', 'fdsfacturassidetalles.fsiid')
@@ -36,6 +60,8 @@ class MetMostrarFacturasSubsidiosPendientesController extends Controller
                                 ->orwhere('fsi.fsidestinatario', $coddestinatario)
                                 ->orwhere('fsi.fsidestinatario', $coddestinatariodos)
                                 ->orwhere('fsi.fsidestinatario', $coddestinatariotres)
+                                ->orwhere('fsi.fsidestinatario', $coddestinatariocuatro)
+                                ->orwhere('fsi.fsidestinatario', $coddestinatariocinco)
                                 // ->where('fdssaldo', '>', 0)
                                 ->orderBy('fdssaldo', 'desc')
                                 ->get([
