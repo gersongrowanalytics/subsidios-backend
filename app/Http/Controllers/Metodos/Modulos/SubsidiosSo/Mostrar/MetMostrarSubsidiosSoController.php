@@ -170,7 +170,10 @@ class MetMostrarSubsidiosSoController extends Controller
                                             "prosku",
                                             "cliclientesac",
                                             "sdeterritorio",
-                                            "sdevalidado"
+                                            "sdevalidado",
+                                            "sdebultosnoreconocido",
+                                            "sdebultosacido",
+                                            "sdemontoacido"
                                         ]);
 
         foreach($descargarSdes as $posicionSde => $descargarSde){
@@ -649,7 +652,7 @@ class MetMostrarSubsidiosSoController extends Controller
                         )
                     ),
                     array(
-                        "value" => "BULTOS ACORDADOS",
+                        "value" => "BULTOS (ACORDADOS)",
                         "style" => array(
                             "font" => array(
                                 "sz" => "9",
@@ -670,7 +673,7 @@ class MetMostrarSubsidiosSoController extends Controller
 
 
                     array(
-                        "value" => "CANTIDAD (BULTOS DT)",
+                        "value" => "BULTOS (DISTRIBUIDOR)",
                         "style" => array(
                             "font" => array(
                                 "sz" => "9",
@@ -711,7 +714,7 @@ class MetMostrarSubsidiosSoController extends Controller
 
 
                     array(
-                        "value" => "CANTIDAD (BULTOS SOFTYS)",
+                        "value" => "BULTOS (SOFTYS)",
                         "style" => array(
                             "font" => array(
                                 "sz" => "9",
@@ -750,24 +753,66 @@ class MetMostrarSubsidiosSoController extends Controller
                     ),
 
                     array(
-                        "value" => "CANTIDAD NO RECONOCIDA (TEMA DE FACTURAS)",
+                        "value" => "BULTOS NO RECONOCIDOS (TEMA DE FACTURAS)",
                         "style" => array(
                             "font" => array(
                                 "sz" => "9",
                                 "bold" => true,
                                 "color" => array(
-                                    "rgb" => "FFFFFFFF"
+                                    "rgb" => "FF000000"
                                 )
                             ),
                             "fill" => array(
                                 "patternType" => 'solid',
                                 "fgColor" => array(
-                                    "rgb" => "FFFFFF00"
+                                    "rgb" => "FFF79646"
                                 )
                             )
                             
                         )
                     ),
+
+                    array(
+                        "value" => "BULTOS ACIDOS (SOFTYS)",
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                                "color" => array(
+                                    "rgb" => "FF000000"
+                                )
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => "FFF79646"
+                                )
+                            )
+                            
+                        )
+                    ),
+
+                    array(
+                        "value" => "MONTO ACIDO S/IGV (SOFTYS)",
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                                "color" => array(
+                                    "rgb" => "FF000000"
+                                )
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => "FFF79646"
+                                )
+                            )
+                            
+                        )
+                    ),
+
+
 
                     array(
                         "value" => "STATUS DE SUBSIDIOS",
@@ -1296,7 +1341,41 @@ class MetMostrarSubsidiosSoController extends Controller
                 ),
 
                 array(
-                    "value" => floatval(0), 
+                    "value" => floatval($descargarSde->sdebultosnoreconocido), 
+                    "style" => array(
+                        "font" => array(
+                            "sz" => "9",
+                            "bold" => true,
+                        ),
+                        "fill" => array(
+                            "patternType" => 'solid',
+                            "fgColor" => array(
+                                "rgb" => "FFF2F2F2"
+                            )
+                        ),
+                        "numFmt" => "#,##0.00"
+                    )
+                ),
+
+                array(
+                    "value" => floatval($descargarSde->sdebultosacido), 
+                    "style" => array(
+                        "font" => array(
+                            "sz" => "9",
+                            "bold" => true,
+                        ),
+                        "fill" => array(
+                            "patternType" => 'solid',
+                            "fgColor" => array(
+                                "rgb" => "FFF2F2F2"
+                            )
+                        ),
+                        "numFmt" => "#,##0.00"
+                    )
+                ),
+
+                array(
+                    "value" => floatval($descargarSde->sdemontoacido), 
                     "style" => array(
                         "font" => array(
                             "sz" => "9",
