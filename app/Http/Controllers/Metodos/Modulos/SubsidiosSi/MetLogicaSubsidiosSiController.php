@@ -55,7 +55,7 @@ class MetLogicaSubsidiosSiController extends Controller
             $meses = [$mesAnteriorId, $dosMesesAnteriorId, $tresMesesAnteriorId];
 
             // REINICIAR
-            $this->ActualizarReconocimientoSaldosFacturas($fecid);
+            // $this->ActualizarReconocimientoSaldosFacturas($fecid);
 
             $sdes = sdesubsidiosdetalles::where('fecid', $fecid)
                                         ->where('sdeaprobado', true)
@@ -89,31 +89,6 @@ class MetLogicaSubsidiosSiController extends Controller
                 if(sizeof($idFacturaEncontrada) > 0){
 
                     $montoReconocerReal = $sde->sdemontoareconocerreal;
-
-                    // foreach($idFacturaEncontrada as $idFactura){
-
-                    //     $fds = fdsfacturassidetalles::find($idFactura);
-
-                    //     $valorizado = 0;
-
-                    //     if($montoReconocerReal <=  $fds->fdssaldo){
-                    //         $valorizado = $montoReconocerReal;
-                    //         $montoReconocerReal = 0;
-                    //     }else{
-                    //         $valorizado = $fds->fdssaldo;
-                    //         $montoReconocerReal = $montoReconocerReal - $fds->fdssaldo;
-                    //     }
-
-                    //     $sfsn = new sfssubsidiosfacturassi;
-                    //     $sfsn->fecid = $fecid;
-                    //     $sfsn->sdeid = $sde->sdeid;
-                    //     $sfsn->fsiid = $fds->fsiid;
-                    //     $sfsn->fdsid = $idFactura;
-                    //     $sfsn->nsiid = null;
-                    //     $sfsn->ndsid = null;
-                    //     $sfsn->sfsvalorizado = $valorizado;
-                    //     $sfsn->save();
-                    // }
 
                     foreach($facturasAfectadas as $facturaAfectada){
                         $fds = fdsfacturassidetalles::find($facturaAfectada['id']);
@@ -211,7 +186,7 @@ class MetLogicaSubsidiosSiController extends Controller
                                 "sdeencontrofactura" => 0
                             ]);
 
-        $fdss = fdsfacturassidetalles::all();
+        $fdss = fdsfacturassidetalles::get(['fdsid']);
 
         foreach($fdss as $fds){
             $fdse = fdsfacturassidetalles::find($fds->fdsid);
@@ -231,22 +206,34 @@ class MetLogicaSubsidiosSiController extends Controller
 
         $espendiente = true;
 
-        $fds = fdsfacturassidetalles::where('proid', $proid)
-                                    ->where('fecid', $fecid)
-                                    ->where('cliid', $cliid)
+        $fds = fdsfacturassidetalles::join('fsifacturassi as fsi', 'fsi.fsiid', 'fdsfacturassidetalles.fsiid')
+                                    ->where('fdsfacturassidetalles.proid', $proid)
+                                    ->where('fdsfacturassidetalles.fecid', $fecid)
+                                    ->where('fdsfacturassidetalles.cliid', $cliid)
                                     ->where(function ($query) use($idFacturaEncontrada) {
                                         foreach($idFacturaEncontrada as $id){
                                             $query->where('fdsid', '!=', $id);
                                         }
                                     })
+                                    ->where('fdsanulada', 0)
+                                    ->where('fdssaldo', '>', 0)
                                     ->where('fdssaldo', '!=', '0')
                                     ->where('fdssaldo', '!=', 0)
-                                    ->first();
+                                    ->where('fsiclase', '!=', "ZPF9")
+                                    ->first([
+                                        'fdsfacturassidetalles.fdsid',
+                                        'fdsnotacredito',
+                                        'fdstreintaporciento',
+                                        'fdsreconocer',
+                                        'fdssaldo',
+                                        'fdspedido'
+                                    ]);
 
         if($fds){
 
             $sumanotascredito = ndsnotascreditossidetalles::where('ndspedidooriginal', $fds->fdspedido)
                                                             ->where('proid', $proid)
+                                                            ->where('ndsanulada', 0)
                                                             ->sum('ndsvalorneto'); // DATO EN NEGATIVO
 
             $sumanotascredito = abs($sumanotascredito); // VUELVE EL NÚMERO EN POSITIVO
@@ -324,17 +311,28 @@ class MetLogicaSubsidiosSiController extends Controller
 
             foreach($meses as $mes){
 
-                $fds = fdsfacturassidetalles::where('proid', $proid)
-                                    ->where('fecid', $mes)
-                                    ->where('cliid', $cliid)
+                $fds = fdsfacturassidetalles::join('fsifacturassi as fsi', 'fsi.fsiid', 'fdsfacturassidetalles.fsiid')
+                                    ->where('fdsfacturassidetalles.proid', $proid)
+                                    ->where('fdsfacturassidetalles.fecid', $mes)
+                                    ->where('fdsfacturassidetalles.cliid', $cliid)
                                     ->where(function ($query) use($idFacturaEncontrada) {
                                         foreach($idFacturaEncontrada as $id){
                                             $query->where('fdsid', '!=', $id);
                                         }
                                     })
+                                    ->where('fdsanulada', 0)
+                                    ->where('fdssaldo', '>', 0)
                                     ->where('fdssaldo', '!=', '0')
                                     ->where('fdssaldo', '!=', 0)
-                                    ->first();
+                                    ->where('fsiclase', '!=', "ZPF9")
+                                    ->first([
+                                        'fdsfacturassidetalles.fdsid',
+                                        'fdsnotacredito',
+                                        'fdstreintaporciento',
+                                        'fdsreconocer',
+                                        'fdssaldo',
+                                        'fdspedido'
+                                    ]);
 
                 if($fds){
                     
@@ -342,6 +340,7 @@ class MetLogicaSubsidiosSiController extends Controller
 
                     $sumanotascredito = ndsnotascreditossidetalles::where('ndspedidooriginal', $fds->fdspedido)
                                                                     ->where('proid', $proid)
+                                                                    ->where('ndsanulada', 0)
                                                                     ->sum('ndsvalorneto');
 
                     $sumanotascredito = abs($sumanotascredito);
@@ -428,17 +427,28 @@ class MetLogicaSubsidiosSiController extends Controller
                 
                 // $espendiente = true;
 
-                $fds = fdsfacturassidetalles::where('proid', $proid)
+                $fds = fdsfacturassidetalles::join('fsifacturassi as fsi', 'fsi.fsiid', 'fdsfacturassidetalles.fsiid')
+                                    ->where('fdsfacturassidetalles.proid', $proid)
                                     // ->where('fecid', $mes)
-                                    ->where('cliid', $cliid)
+                                    ->where('fdsfacturassidetalles.cliid', $cliid)
                                     ->where(function ($query) use($idFacturaEncontrada) {
                                         foreach($idFacturaEncontrada as $id){
                                             $query->where('fdsid', '!=', $id);
                                         }
                                     })
+                                    ->where('fdsanulada', 0)
+                                    ->where('fdssaldo', '>', 0)
                                     ->where('fdssaldo', '!=', '0')
                                     ->where('fdssaldo', '!=', 0)
-                                    ->first();
+                                    ->where('fsiclase', '!=', "ZPF9")
+                                    ->first([
+                                        'fdsfacturassidetalles.fdsid',
+                                        'fdsnotacredito',
+                                        'fdstreintaporciento',
+                                        'fdsreconocer',
+                                        'fdssaldo',
+                                        'fdspedido'
+                                    ]);
 
                 if($fds){
                     
@@ -446,6 +456,7 @@ class MetLogicaSubsidiosSiController extends Controller
 
                     $sumanotascredito = ndsnotascreditossidetalles::where('ndspedidooriginal', $fds->fdspedido)
                                                                     ->where('proid', $proid)
+                                                                    ->where('ndsanulada', 0)
                                                                     ->sum('ndsvalorneto');
                     
                     $sumanotascredito = abs($sumanotascredito);
