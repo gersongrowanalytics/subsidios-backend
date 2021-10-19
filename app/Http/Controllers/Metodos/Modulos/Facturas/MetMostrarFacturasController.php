@@ -409,7 +409,7 @@ class MetMostrarFacturasController extends Controller
                 $nuevoArray[0]['data'][] = $arrayFilaExcel;
             }            
 
-            $sumanotascredito = ndsnotascreditossidetalles::where('ndspedidooriginal', $fds->fdspedido)
+            $sumanotascredito = ndsnotascreditossidetalles::where('ndspedidooriginal', $fsi->fdspedido)
                                                             ->where('proid', 1)
                                                             ->where('ndsanulada', 0)
                                                             ->sum('ndsvalorneto'); // DATO EN NEGATIVO
