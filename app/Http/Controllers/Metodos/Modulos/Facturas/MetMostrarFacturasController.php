@@ -84,31 +84,35 @@ class MetMostrarFacturasController extends Controller
             )
         );
 
-        $ndss = ndsnotascreditossidetalles::join('fecfechas as fec', 'fec.fecid', 'ndsnotascreditossidetalles.fecid')
-                                            ->where(function ($query) use($fechaInicio, $fechaFinal) {
-                                                // if($fechaInicio != null){
-                                                    $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
-                                                // }
-                                            })
-                                            ->get([
-                                                'fec.fecanionumero',
-                                                'fec.fecmesabreviacion',
-                                                'fec.fecfecha',
-                                                'ndsmaterial',
-                                                'ndsclase',
-                                                'ndsnotacredito',
-                                                'ndsvalorneto',
-                                                'ndspedido',
-                                                'ndspedidooriginal'
-                                            ]);
+        // $ndss = ndsnotascreditossidetalles::join('fecfechas as fec', 'fec.fecid', 'ndsnotascreditossidetalles.fecid')
+        //                                     ->where(function ($query) use($fechaInicio, $fechaFinal) {
+        //                                         // if($fechaInicio != null){
+        //                                             $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
+        //                                         // }
+        //                                     })
+        //                                     ->get([
+        //                                         'fec.fecanionumero',
+        //                                         'fec.fecmesabreviacion',
+        //                                         'fec.fecfecha',
+        //                                         'ndsmaterial',
+        //                                         'ndsclase',
+        //                                         'ndsnotacredito',
+        //                                         'ndsvalorneto',
+        //                                         'ndspedido',
+        //                                         'ndspedidooriginal'
+        //                                     ]);
+
+        $ndss = array();
 
         $fsis = fdsfacturassidetalles::join('fecfechas as fec', 'fec.fecid', 'fdsfacturassidetalles.fecid')
-                            ->join('fsifacturassi as fsi', 'fsi.fsiid', 'fdsfacturassidetalles.fsiid')
-                            ->where(function ($query) use($fechaInicio, $fechaFinal) {
-                                // if($fechaInicio != null){
-                                    $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
-                                // }
-                            })
+                            ->leftjoin('fsifacturassi as fsi', 'fsi.fsiid', 'fdsfacturassidetalles.fsiid')
+                            ->where('fdsfacturassidetalles.cliid', 1504)
+                            ->where('fdsfacturassidetalles.proid', 1)
+                            // ->where(function ($query) use($fechaInicio, $fechaFinal) {
+                            //     // if($fechaInicio != null){
+                            //         $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
+                            //     // }
+                            // })
                             // ->limit(50)
                             ->get([
                                 'fec.fecanionumero',
@@ -122,7 +126,9 @@ class MetMostrarFacturasController extends Controller
                                 'fsifactura',
                                 'fdsvalorneto',
                                 'fsipedido',
-                                'fsipedidooriginal'
+                                'fsipedidooriginal',
+                                'fdspedido',
+                                'fdsanulada'
                             ]);
 
         foreach($fsis as $posicionFsi => $fsi){
@@ -358,10 +364,58 @@ class MetMostrarFacturasController extends Controller
                             
                         )
                     ),
+
+                    array(
+                        "value" => "NT",
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                                "color" => array(
+                                    "rgb" => "FFFFFFFF"
+                                )
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => "FF1EBFED"
+                                )
+                            )
+                            
+                        )
+                    ),
+
+                    array(
+                        "value" => "ANULADA",
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                                "color" => array(
+                                    "rgb" => "FFFFFFFF"
+                                )
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => "FF1EBFED"
+                                )
+                            )
+                            
+                        )
+                    ),
                 ); 
 
                 $nuevoArray[0]['data'][] = $arrayFilaExcel;
             }            
+
+            $sumanotascredito = ndsnotascreditossidetalles::where('ndspedidooriginal', $fds->fdspedido)
+                                                            ->where('proid', 1)
+                                                            ->where('ndsanulada', 0)
+                                                            ->sum('ndsvalorneto'); // DATO EN NEGATIVO
+
+            $sumanotascredito = abs($sumanotascredito); // VUELVE EL NÚMERO EN POSITIVO
+
 
             $arrayFilaExcel = array(
                 array(
@@ -413,7 +467,8 @@ class MetMostrarFacturasController extends Controller
                 ),
 
                 array(
-                    "value" => $fsi->fsidestinatario,
+                    // "value" => $fsi->fsidestinatario,
+                    "value" => "130157",
                     "style" => array(
                         "font" => array(
                             "sz" => "9",
@@ -540,147 +595,9 @@ class MetMostrarFacturasController extends Controller
                         )
                     )
                 ),
-                
-            );
-
-            $nuevoArray[0]['data'][] = $arrayFilaExcel;
-
-        }
-
-
-        foreach($ndss as $nds){
-
-            $arrayFilaExcel = array(
-                array(
-                    "value" => $nds->fecanionumero,
-                    "style" => array(
-                        "font" => array(
-                            "sz" => "9",
-                            "bold" => true,
-                        ),
-                        "fill" => array(
-                            "patternType" => 'solid',
-                            "fgColor" => array(
-                                "rgb" => "FFF2F2F2"
-                            )
-                        )
-                    )
-                ),
 
                 array(
-                    "value" => $nds->fecmesabreviacion,
-                    "style" => array(
-                        "font" => array(
-                            "sz" => "9",
-                            "bold" => true,
-                        ),
-                        "fill" => array(
-                            "patternType" => 'solid',
-                            "fgColor" => array(
-                                "rgb" => "FFF2F2F2"
-                            )
-                        )
-                    )
-                ),
-
-                array(
-                    "value" => "-",
-                    "style" => array(
-                        "font" => array(
-                            "sz" => "9",
-                            "bold" => true,
-                        ),
-                        "fill" => array(
-                            "patternType" => 'solid',
-                            "fgColor" => array(
-                                "rgb" => "FFF2F2F2"
-                            )
-                        )
-                    )
-                ),
-
-                array(
-                    "value" => "-",
-                    "style" => array(
-                        "font" => array(
-                            "sz" => "9",
-                            "bold" => true,
-                        ),
-                        "fill" => array(
-                            "patternType" => 'solid',
-                            "fgColor" => array(
-                                "rgb" => "FFF2F2F2"
-                            )
-                        )
-                    )
-                ),
-
-                array(
-                    "value" => $nds->ndsmaterial,
-                    "style" => array(
-                        "font" => array(
-                            "sz" => "9",
-                            "bold" => true,
-                        ),
-                        "fill" => array(
-                            "patternType" => 'solid',
-                            "fgColor" => array(
-                                "rgb" => "FFF2F2F2"
-                            )
-                        )
-                    )
-                ),
-
-                array(
-                    "value" => $nds->ndsclase,
-                    "style" => array(
-                        "font" => array(
-                            "sz" => "9",
-                            "bold" => true,
-                        ),
-                        "fill" => array(
-                            "patternType" => 'solid',
-                            "fgColor" => array(
-                                "rgb" => "FFF2F2F2"
-                            )
-                        )
-                    )
-                ),
-
-                array(
-                    "value" => $nds->fecfecha,
-                    "style" => array(
-                        "font" => array(
-                            "sz" => "9",
-                            "bold" => true,
-                        ),
-                        "fill" => array(
-                            "patternType" => 'solid',
-                            "fgColor" => array(
-                                "rgb" => "FFF2F2F2"
-                            )
-                        )
-                    )
-                ),
-
-                array(
-                    "value" => $nds->ndsnotacredito,
-                    "style" => array(
-                        "font" => array(
-                            "sz" => "9",
-                            "bold" => true,
-                        ),
-                        "fill" => array(
-                            "patternType" => 'solid',
-                            "fgColor" => array(
-                                "rgb" => "FFF2F2F2"
-                            )
-                        )
-                    )
-                ),
-
-                array(
-                    "value" => floatval($nds->ndsvalorneto),
+                    "value" => floatval($sumanotascredito),
                     "style" => array(
                         "font" => array(
                             "sz" => "9",
@@ -697,23 +614,7 @@ class MetMostrarFacturasController extends Controller
                 ),
 
                 array(
-                    "value" => $nds->ndspedido,
-                    "style" => array(
-                        "font" => array(
-                            "sz" => "9",
-                            "bold" => true,
-                        ),
-                        "fill" => array(
-                            "patternType" => 'solid',
-                            "fgColor" => array(
-                                "rgb" => "FFF2F2F2"
-                            )
-                        )
-                    )
-                ),
-
-                array(
-                    "value" => $nds->ndspedidooriginal,
+                    "value" => floatval($fsi->fdsanulada),
                     "style" => array(
                         "font" => array(
                             "sz" => "9",
@@ -731,7 +632,6 @@ class MetMostrarFacturasController extends Controller
             );
 
             $nuevoArray[0]['data'][] = $arrayFilaExcel;
-
 
         }
 
@@ -1981,5 +1881,669 @@ class MetMostrarFacturasController extends Controller
             $nuevoArray[0]['data'][] = $arrayFilaExcel;
 
         }
+    }
+
+    private function ArmarExcelDescargaFacturasSibk($fechaInicio, $fechaFinal)
+    {
+        $nuevoArray = array(
+            array(
+                "columns" => [],
+                "data"    => []
+            )
+        );
+
+        $ndss = ndsnotascreditossidetalles::join('fecfechas as fec', 'fec.fecid', 'ndsnotascreditossidetalles.fecid')
+                                            ->where(function ($query) use($fechaInicio, $fechaFinal) {
+                                                // if($fechaInicio != null){
+                                                    $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
+                                                // }
+                                            })
+                                            ->get([
+                                                'fec.fecanionumero',
+                                                'fec.fecmesabreviacion',
+                                                'fec.fecfecha',
+                                                'ndsmaterial',
+                                                'ndsclase',
+                                                'ndsnotacredito',
+                                                'ndsvalorneto',
+                                                'ndspedido',
+                                                'ndspedidooriginal'
+                                            ]);
+
+        $fsis = fdsfacturassidetalles::join('fecfechas as fec', 'fec.fecid', 'fdsfacturassidetalles.fecid')
+                            ->join('fsifacturassi as fsi', 'fsi.fsiid', 'fdsfacturassidetalles.fsiid')
+                            ->where(function ($query) use($fechaInicio, $fechaFinal) {
+                                // if($fechaInicio != null){
+                                    $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
+                                // }
+                            })
+                            // ->limit(50)
+                            ->get([
+                                'fec.fecanionumero',
+                                'fec.fecmesabreviacion',
+                                'fsi.fsiid',
+                                'fsisolicitante',
+                                'fsidestinatario',
+                                'fdsmaterial',
+                                'fsiclase',
+                                'fsifecha',
+                                'fsifactura',
+                                'fdsvalorneto',
+                                'fsipedido',
+                                'fsipedidooriginal'
+                            ]);
+
+        foreach($fsis as $posicionFsi => $fsi){
+
+            if($posicionFsi == 0){
+
+                $arrayTitulos = array(
+                    array("title" => "", "width" => array("wpx" => 100)),
+                    array("title" => "", "width" => array("wpx" => 100)),
+                    array("title" => "", "width" => array("wpx" => 100)),
+                    array("title" => "", "width" => array("wpx" => 100)),
+                    array("title" => "", "width" => array("wpx" => 100)),
+                    array("title" => "", "width" => array("wpx" => 100)),
+                    array("title" => "", "width" => array("wpx" => 100)),
+                    array("title" => "", "width" => array("wpx" => 100)),
+                    array("title" => "", "width" => array("wpx" => 100)),
+                    array("title" => "", "width" => array("wpx" => 100)),
+                    array("title" => "", "width" => array("wpx" => 100)),
+                );
+
+                $nuevoArray[0]['columns'] = $arrayTitulos;
+
+
+                $arrayFilaExcel = array(
+                    array(
+                        "value" => "AÑO",
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                                "color" => array(
+                                    "rgb" => "FFFFFFFF"
+                                )
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => "FF1EBFED"
+                                )
+                            )
+                            
+                        )
+                    ),
+
+                    array(
+                        "value" => "MES",
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                                "color" => array(
+                                    "rgb" => "FFFFFFFF"
+                                )
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => "FF1EBFED"
+                                )
+                            )
+                            
+                        )
+                    ),
+
+                    array(
+                        "value" => "SOLIC.",
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                                "color" => array(
+                                    "rgb" => "FFFFFFFF"
+                                )
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => "FF1EBFED"
+                                )
+                            )
+                            
+                        )
+                    ),
+                    array(
+                        "value" => "DEST.",
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                                "color" => array(
+                                    "rgb" => "FFFFFFFF"
+                                )
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => "FF1EBFED"
+                                )
+                            )
+                            
+                        )
+                    ),
+                    array(
+                        "value" => "MATERIAL",
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                                "color" => array(
+                                    "rgb" => "FFFFFFFF"
+                                )
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => "FF1EBFED"
+                                )
+                            )
+                            
+                        )
+                    ),
+                    array(
+                        "value" => "ClFac",
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                                "color" => array(
+                                    "rgb" => "FFFFFFFF"
+                                )
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => "FF1EBFED"
+                                )
+                            )
+                            
+                        )
+                    ),
+                    array(
+                        "value" => "FECHA FAC.",
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                                "color" => array(
+                                    "rgb" => "FFFFFFFF"
+                                )
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => "FF1EBFED"
+                                )
+                            )
+                            
+                        )
+                    ),
+                    array(
+                        "value" => "FAC SELL IN",
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                                "color" => array(
+                                    "rgb" => "FFFFFFFF"
+                                )
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => "FF1EBFED"
+                                )
+                            )
+                            
+                        )
+                    ),
+                    array(
+                        "value" => "VALOR NETO",
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                                "color" => array(
+                                    "rgb" => "FFFFFFFF"
+                                )
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => "FF1EBFED"
+                                )
+                            )
+                            
+                        )
+                    ),
+                    array(
+                        "value" => "PEDIDO",
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                                "color" => array(
+                                    "rgb" => "FFFFFFFF"
+                                )
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => "FF1EBFED"
+                                )
+                            )
+                            
+                        )
+                    ),
+                    array(
+                        "value" => "PEDIDO ORIG.",
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                                "color" => array(
+                                    "rgb" => "FFFFFFFF"
+                                )
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => "FF1EBFED"
+                                )
+                            )
+                            
+                        )
+                    ),
+                ); 
+
+                $nuevoArray[0]['data'][] = $arrayFilaExcel;
+            }            
+
+            $arrayFilaExcel = array(
+                array(
+                    "value" => $fsi->fecanionumero,
+                    "style" => array(
+                        "font" => array(
+                            "sz" => "9",
+                            "bold" => true,
+                        ),
+                        "fill" => array(
+                            "patternType" => 'solid',
+                            "fgColor" => array(
+                                "rgb" => "FFF2F2F2"
+                            )
+                        )
+                    )
+                ),
+
+                array(
+                    "value" => $fsi->fecmesabreviacion,
+                    "style" => array(
+                        "font" => array(
+                            "sz" => "9",
+                            "bold" => true,
+                        ),
+                        "fill" => array(
+                            "patternType" => 'solid',
+                            "fgColor" => array(
+                                "rgb" => "FFF2F2F2"
+                            )
+                        )
+                    )
+                ),
+
+                array(
+                    "value" => $fsi->fsisolicitante,
+                    "style" => array(
+                        "font" => array(
+                            "sz" => "9",
+                            "bold" => true,
+                        ),
+                        "fill" => array(
+                            "patternType" => 'solid',
+                            "fgColor" => array(
+                                "rgb" => "FFF2F2F2"
+                            )
+                        )
+                    )
+                ),
+
+                array(
+                    "value" => $fsi->fsidestinatario,
+                    "style" => array(
+                        "font" => array(
+                            "sz" => "9",
+                            "bold" => true,
+                        ),
+                        "fill" => array(
+                            "patternType" => 'solid',
+                            "fgColor" => array(
+                                "rgb" => "FFF2F2F2"
+                            )
+                        )
+                    )
+                ),
+
+                array(
+                    "value" => $fsi->fdsmaterial,
+                    "style" => array(
+                        "font" => array(
+                            "sz" => "9",
+                            "bold" => true,
+                        ),
+                        "fill" => array(
+                            "patternType" => 'solid',
+                            "fgColor" => array(
+                                "rgb" => "FFF2F2F2"
+                            )
+                        )
+                    )
+                ),
+
+                array(
+                    "value" => $fsi->fsiclase,
+                    "style" => array(
+                        "font" => array(
+                            "sz" => "9",
+                            "bold" => true,
+                        ),
+                        "fill" => array(
+                            "patternType" => 'solid',
+                            "fgColor" => array(
+                                "rgb" => "FFF2F2F2"
+                            )
+                        )
+                    )
+                ),
+
+                array(
+                    "value" => $fsi->fsifecha,
+                    "style" => array(
+                        "font" => array(
+                            "sz" => "9",
+                            "bold" => true,
+                        ),
+                        "fill" => array(
+                            "patternType" => 'solid',
+                            "fgColor" => array(
+                                "rgb" => "FFF2F2F2"
+                            )
+                        )
+                    )
+                ),
+
+                array(
+                    "value" => $fsi->fsifactura,
+                    "style" => array(
+                        "font" => array(
+                            "sz" => "9",
+                            "bold" => true,
+                        ),
+                        "fill" => array(
+                            "patternType" => 'solid',
+                            "fgColor" => array(
+                                "rgb" => "FFF2F2F2"
+                            )
+                        )
+                    )
+                ),
+
+                array(
+                    "value" => floatval($fsi->fdsvalorneto),
+                    "style" => array(
+                        "font" => array(
+                            "sz" => "9",
+                            "bold" => true,
+                        ),
+                        "fill" => array(
+                            "patternType" => 'solid',
+                            "fgColor" => array(
+                                "rgb" => "FFF2F2F2"
+                            )
+                        ),
+                        "numFmt" => "#,##0.00"
+                    )
+                ),
+
+                array(
+                    "value" => $fsi->fsipedido,
+                    "style" => array(
+                        "font" => array(
+                            "sz" => "9",
+                            "bold" => true,
+                        ),
+                        "fill" => array(
+                            "patternType" => 'solid',
+                            "fgColor" => array(
+                                "rgb" => "FFF2F2F2"
+                            )
+                        )
+                    )
+                ),
+
+                array(
+                    "value" => $fsi->fsipedidooriginal,
+                    "style" => array(
+                        "font" => array(
+                            "sz" => "9",
+                            "bold" => true,
+                        ),
+                        "fill" => array(
+                            "patternType" => 'solid',
+                            "fgColor" => array(
+                                "rgb" => "FFF2F2F2"
+                            )
+                        )
+                    )
+                ),
+                
+            );
+
+            $nuevoArray[0]['data'][] = $arrayFilaExcel;
+
+        }
+
+
+        foreach($ndss as $nds){
+
+            $arrayFilaExcel = array(
+                array(
+                    "value" => $nds->fecanionumero,
+                    "style" => array(
+                        "font" => array(
+                            "sz" => "9",
+                            "bold" => true,
+                        ),
+                        "fill" => array(
+                            "patternType" => 'solid',
+                            "fgColor" => array(
+                                "rgb" => "FFF2F2F2"
+                            )
+                        )
+                    )
+                ),
+
+                array(
+                    "value" => $nds->fecmesabreviacion,
+                    "style" => array(
+                        "font" => array(
+                            "sz" => "9",
+                            "bold" => true,
+                        ),
+                        "fill" => array(
+                            "patternType" => 'solid',
+                            "fgColor" => array(
+                                "rgb" => "FFF2F2F2"
+                            )
+                        )
+                    )
+                ),
+
+                array(
+                    "value" => "-",
+                    "style" => array(
+                        "font" => array(
+                            "sz" => "9",
+                            "bold" => true,
+                        ),
+                        "fill" => array(
+                            "patternType" => 'solid',
+                            "fgColor" => array(
+                                "rgb" => "FFF2F2F2"
+                            )
+                        )
+                    )
+                ),
+
+                array(
+                    "value" => "-",
+                    "style" => array(
+                        "font" => array(
+                            "sz" => "9",
+                            "bold" => true,
+                        ),
+                        "fill" => array(
+                            "patternType" => 'solid',
+                            "fgColor" => array(
+                                "rgb" => "FFF2F2F2"
+                            )
+                        )
+                    )
+                ),
+
+                array(
+                    "value" => $nds->ndsmaterial,
+                    "style" => array(
+                        "font" => array(
+                            "sz" => "9",
+                            "bold" => true,
+                        ),
+                        "fill" => array(
+                            "patternType" => 'solid',
+                            "fgColor" => array(
+                                "rgb" => "FFF2F2F2"
+                            )
+                        )
+                    )
+                ),
+
+                array(
+                    "value" => $nds->ndsclase,
+                    "style" => array(
+                        "font" => array(
+                            "sz" => "9",
+                            "bold" => true,
+                        ),
+                        "fill" => array(
+                            "patternType" => 'solid',
+                            "fgColor" => array(
+                                "rgb" => "FFF2F2F2"
+                            )
+                        )
+                    )
+                ),
+
+                array(
+                    "value" => $nds->fecfecha,
+                    "style" => array(
+                        "font" => array(
+                            "sz" => "9",
+                            "bold" => true,
+                        ),
+                        "fill" => array(
+                            "patternType" => 'solid',
+                            "fgColor" => array(
+                                "rgb" => "FFF2F2F2"
+                            )
+                        )
+                    )
+                ),
+
+                array(
+                    "value" => $nds->ndsnotacredito,
+                    "style" => array(
+                        "font" => array(
+                            "sz" => "9",
+                            "bold" => true,
+                        ),
+                        "fill" => array(
+                            "patternType" => 'solid',
+                            "fgColor" => array(
+                                "rgb" => "FFF2F2F2"
+                            )
+                        )
+                    )
+                ),
+
+                array(
+                    "value" => floatval($nds->ndsvalorneto),
+                    "style" => array(
+                        "font" => array(
+                            "sz" => "9",
+                            "bold" => true,
+                        ),
+                        "fill" => array(
+                            "patternType" => 'solid',
+                            "fgColor" => array(
+                                "rgb" => "FFF2F2F2"
+                            )
+                        ),
+                        "numFmt" => "#,##0.00"
+                    )
+                ),
+
+                array(
+                    "value" => $nds->ndspedido,
+                    "style" => array(
+                        "font" => array(
+                            "sz" => "9",
+                            "bold" => true,
+                        ),
+                        "fill" => array(
+                            "patternType" => 'solid',
+                            "fgColor" => array(
+                                "rgb" => "FFF2F2F2"
+                            )
+                        )
+                    )
+                ),
+
+                array(
+                    "value" => $nds->ndspedidooriginal,
+                    "style" => array(
+                        "font" => array(
+                            "sz" => "9",
+                            "bold" => true,
+                        ),
+                        "fill" => array(
+                            "patternType" => 'solid',
+                            "fgColor" => array(
+                                "rgb" => "FFF2F2F2"
+                            )
+                        )
+                    )
+                ),
+                
+            );
+
+            $nuevoArray[0]['data'][] = $arrayFilaExcel;
+
+
+        }
+
+
+        return $nuevoArray;
     }
 }
