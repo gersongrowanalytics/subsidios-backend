@@ -115,6 +115,12 @@ class MetAsignarFacturasController extends Controller
                     }
                 }
 
+                $suma = sfssubsidiosfacturassi::where('sdeid', $sde->sdeid)->sum('sfsvalorizado');
+
+                $sdee = sdesubsidiosdetalles::where('sdeid', $sde->sdeid)->first();
+                $sdee->sumsfsvalorizado = $suma;
+                $sdee->update();
+
             }else{
                 $respuesta = false;
                 $mensaje   = "No se encontro el subsidio seleccionado";
