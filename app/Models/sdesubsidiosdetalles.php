@@ -52,7 +52,10 @@ class sdesubsidiosdetalles extends Model
         "sdependiente",
         "sdeeditado",
         "sdevalidado",
-        "sdebonificacion"
+        "sdebonificacion",
+        "sdebultosnoreconocido",
+        "sdebultosacido",
+        "sdemontoacido"
     ];
 
 
