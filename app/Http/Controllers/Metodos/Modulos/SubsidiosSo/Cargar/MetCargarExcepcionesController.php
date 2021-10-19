@@ -100,7 +100,7 @@ class MetCargarExcepcionesController extends Controller
                         if($i == 3){
                             $fec = fecfechas::where('fecmesabreviacion', $ex_mes)
                                             ->where('fecanionumero', $ex_anio)
-                                            ->first(['fecid']);
+                                            ->first(['fecid', 'fecmesabierto']);
 
                             if($fec){
                                 $fecid = $fec->fecid;
@@ -118,8 +118,14 @@ class MetCargarExcepcionesController extends Controller
                                     if(is_numeric($ex_bultosnoreonocidos)){
 
                                         if($ex_bultosnoreonocidos != 0){
-                                            $bultosAcidos = $sdee->sdecantidadbultosreal - $ex_bultosnoreonocidos;
 
+                                            if($fec->fecmesabierto == true){
+                                                $bultosAcidos = $sdee->sdecantidadbultosreal - $ex_bultosnoreonocidos;
+                                            }else{
+                                                $bultosAcidos = $sdee->sdecantidadbultosreal + $ex_bultosnoreonocidos;
+                                            }
+
+                                            
                                             $sdee->sdebultosnoreconocido = $ex_bultosnoreonocidos;
                                             $sdee->sdebultosacido = $bultosAcidos;
                                             $sdee->sdemontoacido  = $bultosAcidos * $sdee->sdedsctodos;
