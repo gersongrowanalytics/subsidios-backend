@@ -52,6 +52,14 @@ class MetMostrarFacturasSubsidiosPendientesController extends Controller
             $coddestinatariotres = "241834";
             $coddestinatariocuatro = "252650";
             $coddestinatariocinco  = "80133";
+        }else if($coddestinatario == "130157"){
+            $coddestinatario = "271678";
+            $coddestinatariodos = "271678";
+            $coddestinatariotres = "271678";
+        }else if($coddestinatario == "54237"){
+            $coddestinatario = "54239";
+            $coddestinatariodos = "171802";
+            $coddestinatariotres = "171802";
         }
 
         $fsis = fdsfacturassidetalles::join('fsifacturassi as fsi', 'fsi.fsiid', 'fdsfacturassidetalles.fsiid')
