@@ -106,7 +106,8 @@ class MetMostrarFacturasController extends Controller
 
         $fsis = fdsfacturassidetalles::join('fecfechas as fec', 'fec.fecid', 'fdsfacturassidetalles.fecid')
                             ->leftjoin('fsifacturassi as fsi', 'fsi.fsiid', 'fdsfacturassidetalles.fsiid')
-                            ->where('fdsfacturassidetalles.cliid', 1504)
+                            // ->where('fdsfacturassidetalles.cliid', 1504)
+                            ->where('fsi.fsidestinatario', "271678")
                             ->where('fdsfacturassidetalles.proid', 1)
                             // ->where(function ($query) use($fechaInicio, $fechaFinal) {
                             //     // if($fechaInicio != null){
