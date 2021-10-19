@@ -176,7 +176,7 @@ class SalvacionController extends Controller
                                         // }
                                     })
                                     ->distinct('cli.clizona')
-                                    ->orderBy('clizonacodigo', 'DESC')
+                                    // ->orderBy('clizonacodigo', 'DESC')
                                     // ->where('sdestatus', '!=', null)
                                     ->get([
                                         'cli.clizona'
