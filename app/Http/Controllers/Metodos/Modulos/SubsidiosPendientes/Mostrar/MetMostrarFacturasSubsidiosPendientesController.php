@@ -87,32 +87,57 @@ class MetMostrarFacturasSubsidiosPendientesController extends Controller
                                     'fdsnotacredito',
                                     'fsipedido',
                                     'fdsreconocer',
-                                    'fsipedidooriginal'
+                                    'fsipedidooriginal',
+                                    'fsiclase'
                                 ]);
-
+        
+        $nuevoFsis = array();
+        
         foreach($fsis as $posicionFsi => $fsi){
-            $ndsSuma = ndsnotascreditossidetalles::where('ndspedidooriginal', $fsi->fsipedidooriginal)
-                                                ->where('ndsmaterial', $fsi->fdsmaterial)
-                                                ->sum('ndsvalorneto');
+            if($fsi->fsiclase != "ZPF9"){
+                $ndsSuma = ndsnotascreditossidetalles::where('ndspedidooriginal', $fsi->fsipedidooriginal)
+                                                    ->where('ndsmaterial', $fsi->fdsmaterial)
+                                                    ->sum('ndsvalorneto');
 
-            $sumanotascredito = abs($ndsSuma); // VUELVE EL NÚMERO EN POSITIVO
-            $fsis[$posicionFsi]['fdsnotacredito'] = $sumanotascredito;
+                $sumanotascredito = abs($ndsSuma); // VUELVE EL NÚMERO EN POSITIVO
+                $fsis[$posicionFsi]['fdsnotacredito'] = $sumanotascredito;
 
-            $reconocido = $fsi->fdsreconocer + $sumanotascredito;
-            
-            $saldosin = $fsi->fdsvalorneto * 30/100;
+                $reconocido = $fsi->fdsreconocer + $sumanotascredito;
+                
+                $saldosin = $fsi->fdsvalorneto * 30/100;
 
-            $nuevoSaldo = $saldosin - $reconocido;
+                $nuevoSaldo = $saldosin - $reconocido;
 
-            if($nuevoSaldo < 0){
-                $fsis[$posicionFsi]['fdssaldo'] = 0;
-            }else{
-                $fsis[$posicionFsi]['fdssaldo'] = $nuevoSaldo;
+                if($nuevoSaldo < 0){
+                    $nuevoSaldo = 0;
+                    $fsis[$posicionFsi]['fdssaldo'] = 0;
+                }else{
+                    $fsis[$posicionFsi]['fdssaldo'] = $nuevoSaldo;
+                }
+
+                $nuevoFsis[] = array(
+                    "fdsid" => $fsi->fdsid,
+                    "fsiid" => $fsi->fsiid,
+                    "fecfecha" => $fsi->fecfecha,
+                    "fsifactura" => $fsi->fsifactura,
+                    "fdsmaterial" => $fsi->fdsmaterial,
+                    "proid" => $fsi->proid,
+                    "prosku" => $fsi->prosku,
+                    "pronombre" => $fsi->pronombre,
+                    "fdsvalorneto" => $fsi->fdsvalorneto,
+                    "fdssaldo" => $nuevoSaldo,
+                    "fdsnotacredito" => $sumanotascredito,
+                    "fsipedido" => $fsi->fsipedido,
+                    "fdsreconocer" => $fsi->fdsreconocer,
+                    "fsipedidooriginal" => $fsi->fsipedidooriginal,
+                    "fsiclase" => $fsi->fsiclase,
+                );
+
             }
         }
 
         $requestsalida = response()->json([
-            "datos" => $fsis
+            "datos" => $nuevoFsis
         ]);
 
         return $requestsalida;
