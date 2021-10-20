@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\sdesubsidiosdetalles;
 use App\Models\sfssubsidiosfacturassi;
 use App\Models\zonzonas;
+use App\Models\cliclientes;
 use DB;
 
 class MetMostrarSubsidiosSiController extends Controller
@@ -185,7 +186,7 @@ class MetMostrarSubsidiosSiController extends Controller
 
     }
 
-    public function ArmarExcelDescargaSubsidiosSi (Request $request)
+    public function ArmarExcelDescargaSubsidiosSiDestinatario (Request $request)
     {
 
         $fechaInicio = $request['fechaInicio'];
@@ -1528,7 +1529,7 @@ class MetMostrarSubsidiosSiController extends Controller
         // return $nuevoArray;
     }
 
-    public function ArmarExcelDescargaSubsidiosSiDestinatario (Request $request)
+    public function ArmarExcelDescargaSubsidiosSi(Request $request)
     {
 
         $fechaInicio = $request['fechaInicio'];
@@ -1539,12 +1540,36 @@ class MetMostrarSubsidiosSiController extends Controller
             $fechaFinal  = date("Y-m-d", strtotime($fechaFinal));
         }
 
+
+
+
         $nuevoArray = array(
             array(
                 "columns" => [],
                 "data"    => []
             )
         );
+
+        // $descargarSdes = sdesubsidiosdetalles::join('fecfechas as fec', 'fec.fecid', 'sdesubsidiosdetalles.fecid')
+        //                                 ->where(function ($query) use($fechaInicio, $fechaFinal) {
+        //                                     // if($fechaInicio != null){
+        //                                         $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
+        //                                         // $query->where('sdesubsidiosdetalles.fecid', 1104);
+        //                                     // }
+        //                                 })
+        //                                 ->where('sdevalidado', 'SIVALIDADOS')
+        //                                 ->distinct('sdecodigodestinatario')
+        //                                 ->get([
+        //                                     'sdecodigodestinatario',
+        //                                     'fecmesabreviacion',
+        //                                     'fecanionumero'
+        //                                 ]);
+                                        // ->selectRaw(
+                                        //     'sdecodigodestinatario, fecanionumero, fecmesabreviacion, 
+                                        //     SUM(sdebultosacordados) as sumaButlosAcordados, SUM(sdecantidadbultos) as sumaCantidadBultos,
+                                        //     SUM(sdemontoareconocer) as sumaMontoReconocer, SUM(sdecantidadbultosreal) as sumaCantidadBultosReal,
+                                        //     SUM(sdemontoareconocerreal) as sumaMontoReconocerReal'
+                                        // );
 
         $descargarSdes = sdesubsidiosdetalles::join('fecfechas as fec', 'fec.fecid', 'sdesubsidiosdetalles.fecid')
                                         ->where(function ($query) use($fechaInicio, $fechaFinal) {
@@ -1553,31 +1578,15 @@ class MetMostrarSubsidiosSiController extends Controller
                                                 // $query->where('sdesubsidiosdetalles.fecid', 1104);
                                             // }
                                         })
-                                        ->where('sdevalidado', 'SIVALIDADOS')
-                                        ->distinct('sdecodigodestinatario')
-                                        ->get([
-                                            'sdecodigodestinatario',
-                                            'fecmesabreviacion',
-                                            'fecanionumero'
-                                        ]);
-                                        // ->selectRaw(
-                                        //     'sdecodigodestinatario, fecanionumero, fecmesabreviacion, 
-                                        //     SUM(sdebultosacordados) as sumaButlosAcordados, SUM(sdecantidadbultos) as sumaCantidadBultos,
-                                        //     SUM(sdemontoareconocer) as sumaMontoReconocer, SUM(sdecantidadbultosreal) as sumaCantidadBultosReal,
-                                        //     SUM(sdemontoareconocerreal) as sumaMontoReconocerReal'
-                                        // );
-
-        $sumaSde = sdesubsidiosdetalles::join('fecfechas as fec', 'fec.fecid', 'sdesubsidiosdetalles.fecid')
-                                        ->where(function ($query) use($fechaInicio, $fechaFinal) {
-                                            // if($fechaInicio != null){
-                                                $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
-                                                // $query->where('sdesubsidiosdetalles.fecid', 1104);
-                                            // }
-                                        })
                                         ->select(
                                             "sdecodigodestinatario",
-                                            "fecanionumero",
-                                            "fecmesabreviacion",
+                                            "sdecodigounitario",
+                                            // "sdeterritorio",
+                                            // "sdezona as clizona",
+                                            // "sdeterritorio as sdeterritorio",
+                                            // "sdecliente as clinombre",
+                                            // "fecanionumero",
+                                            // "fecmesabreviacion",
                                             DB::raw("SUM(sdebultosacordados) as sumaButlosAcordados"),
                                             DB::raw("SUM(sdecantidadbultos) as sumaCantidadBultos"),
                                             DB::raw("SUM(sdemontoareconocer) as sumaMontoReconocer"),
@@ -1585,15 +1594,37 @@ class MetMostrarSubsidiosSiController extends Controller
                                             DB::raw("SUM(sdemontoareconocerreal) as sumaMontoReconocerReal"),
                                         )
                                         ->groupBy('sdecodigodestinatario')
-                                        ->get([
-                                            "sdecodigodestinatario",
-                                            "fecanionumero",
-                                            "fecmesabreviacion"
-                                        ]);
+                                        ->groupBy('sdecodigounitario')
+                                        ->get();
 
+        $arrayCli = array();
+        
         foreach($descargarSdes as $posicionSde => $descargarSde){
 
-            
+            $clienteSeleccionado = array();
+
+            $encontroCli = false;
+
+            if(sizeof($arrayCli) > 0){
+                
+                foreach($arrayCli as $arcli){
+                    if($arcli['dest'] == $descargarSde->sdecodigodestinatario){
+                        $encontroCli = true;
+                        $clienteSeleccionado = $arcli['cli'];
+                    }
+                }
+            }
+
+            if($encontroCli == false){
+                $cli = cliclientes::where('clicodigoshipto', $descargarSde->sdecodigodestinatario)->first();
+                $encontroCli[] = array(
+                    "dest" => $descargarSde->sdecodigodestinatario,
+                    "cli"  => $cli
+                );
+                $clienteSeleccionado = $cli;
+            }
+
+
 
 
             $sfss = sfssubsidiosfacturassi::join('sdesubsidiosdetalles as sde', 'sde.sdeid', 'sfssubsidiosfacturassi.sdeid')
@@ -1602,6 +1633,7 @@ class MetMostrarSubsidiosSiController extends Controller
                                         ->join('fdsfacturassidetalles as fds', 'fds.fdsid', 'sfssubsidiosfacturassi.fdsid')
                                         ->join('proproductos as pro', 'pro.proid', 'fds.proid')
                                         ->where('sdecodigodestinatario', $descargarSde->sdecodigodestinatario)
+                                        ->where('sdecodigounitario', $descargarSde->sdecodigounitario)
                                         ->where(function ($query) use($fechaInicio, $fechaFinal) {
                                             // if($fechaInicio != null){
                                                 $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
@@ -1618,6 +1650,7 @@ class MetMostrarSubsidiosSiController extends Controller
             $sfssSuma = sfssubsidiosfacturassi::join('sdesubsidiosdetalles as sde', 'sde.sdeid', 'sfssubsidiosfacturassi.sdeid')
                                         ->join('fecfechas as fec', 'fec.fecid', 'sde.fecid')
                                         ->where('sdecodigodestinatario', $descargarSde->sdecodigodestinatario)
+                                        ->where('sdecodigounitario', $descargarSde->sdecodigounitario)
                                         ->where(function ($query) use($fechaInicio, $fechaFinal) {
                                             // if($fechaInicio != null){
                                                 $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
@@ -1631,6 +1664,7 @@ class MetMostrarSubsidiosSiController extends Controller
                     array("title" => "", "width" => array("wpx" => 100)),
                     array("title" => "", "width" => array("wpx" => 100)),
                     array("title" => "", "width" => array("wpx" => 100)),
+                    array("title" => "", "width" => array("wpx" => 150)),
                     array("title" => "", "width" => array("wpx" => 150)),
                     array("title" => "", "width" => array("wpx" => 150)),
                     array("title" => "", "width" => array("wpx" => 150)),
@@ -1746,6 +1780,26 @@ class MetMostrarSubsidiosSiController extends Controller
 
                     array(
                         "value" => "CODIGO DESTINATARIO",
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                                "color" => array(
+                                    "rgb" => "FFFFFFFF"
+                                )
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => "FF004FB8"
+                                )
+                            )
+                            
+                        )
+                    ),
+
+                    array(
+                        "value" => "CODIGO PRODUCTO",
                         "style" => array(
                             "font" => array(
                                 "sz" => "9",
@@ -1956,7 +2010,8 @@ class MetMostrarSubsidiosSiController extends Controller
 
             $arrayFilaExcel = array(
                 array(
-                    "value" => $descargarSde->fecanionumero,
+                    // "value" => $descargarSde->fecanionumero,
+                    "value" => "2021",
                     "style" => array(
                         "font" => array(
                             "sz" => "9",
@@ -1972,7 +2027,7 @@ class MetMostrarSubsidiosSiController extends Controller
                 ),
 
                 array(
-                    "value" => $descargarSde->fecmesabreviacion,
+                    "value" => "SET",
                     "style" => array(
                         "font" => array(
                             "sz" => "9",
@@ -1988,7 +2043,7 @@ class MetMostrarSubsidiosSiController extends Controller
                 ),
 
                 array(
-                    "value" => $descargarSde->clizona,
+                    "value" => $clienteSeleccionado['clizona'],
                     "style" => array(
                         "font" => array(
                             "sz" => "9",
@@ -2004,7 +2059,7 @@ class MetMostrarSubsidiosSiController extends Controller
                 ),
 
                 array(
-                    "value" => $descargarSde->sdeterritorio, 
+                    "value" => $clienteSeleccionado['clitv'], 
                     "style" => array(
                         "font" => array(
                             "sz" => "9",
@@ -2020,7 +2075,7 @@ class MetMostrarSubsidiosSiController extends Controller
                 ),
 
                 array(
-                    "value" => $descargarSde->clinombre, 
+                    "value" => $clienteSeleccionado['clinombre'], 
                     "style" => array(
                         "font" => array(
                             "sz" => "9",
@@ -2037,6 +2092,22 @@ class MetMostrarSubsidiosSiController extends Controller
 
                 array(
                     "value" => $descargarSde->sdecodigodestinatario, 
+                    "style" => array(
+                        "font" => array(
+                            "sz" => "9",
+                            "bold" => true,
+                        ),
+                        "fill" => array(
+                            "patternType" => 'solid',
+                            "fgColor" => array(
+                                "rgb" => "FFF2F2F2"
+                            )
+                        )
+                    )
+                ),
+
+                array(
+                    "value" => $descargarSde->sdecodigounitario, 
                     "style" => array(
                         "font" => array(
                             "sz" => "9",
@@ -2213,8 +2284,8 @@ class MetMostrarSubsidiosSiController extends Controller
 
         $requestsalida = response()->json([
             "datos" => $nuevoArray,
-            "data" => $descargarSdes,
-            "sumas" => $sumaSde,
+            "data"  => $descargarSdes,
+            // "sumas" => $sumaSde,
         ]);
 
         return $requestsalida;
