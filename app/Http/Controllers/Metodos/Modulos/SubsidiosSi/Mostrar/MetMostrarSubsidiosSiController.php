@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\sdesubsidiosdetalles;
 use App\Models\sfssubsidiosfacturassi;
+use App\Models\subsidiossiagrupado;
 use App\Models\zonzonas;
 use App\Models\cliclientes;
 use DB;
@@ -1581,6 +1582,7 @@ class MetMostrarSubsidiosSiController extends Controller
                                         ->select(
                                             "sdecodigodestinatario",
                                             "sdecodigounitario",
+                                            "cliid",
                                             // "sdeterritorio",
                                             // "sdezona as clizona",
                                             // "sdeterritorio as sdeterritorio",
@@ -1595,6 +1597,7 @@ class MetMostrarSubsidiosSiController extends Controller
                                         )
                                         ->groupBy('sdecodigodestinatario')
                                         ->groupBy('sdecodigounitario')
+                                        ->groupBy('cliid')
                                         ->get();
 
         $arrayCli = array();
@@ -1608,7 +1611,7 @@ class MetMostrarSubsidiosSiController extends Controller
             if(sizeof($arrayCli) > 0){
                 
                 foreach($arrayCli as $arcli){
-                    if($arcli['dest'] == $descargarSde->sdecodigodestinatario){
+                    if($arcli['dest'] == $descargarSde->cliid){
                         $encontroCli = true;
                         $clienteSeleccionado = $arcli['cli'];
                     }
@@ -1616,9 +1619,9 @@ class MetMostrarSubsidiosSiController extends Controller
             }
 
             if($encontroCli == false){
-                $cli = cliclientes::where('clicodigoshipto', $descargarSde->sdecodigodestinatario)->first();
-                $encontroCli[] = array(
-                    "dest" => $descargarSde->sdecodigodestinatario,
+                $cli = cliclientes::where('cliid', $descargarSde->cliid)->first();
+                $arrayCli[] = array(
+                    "dest" => $descargarSde->cliid,
                     "cli"  => $cli
                 );
                 $clienteSeleccionado = $cli;
@@ -1626,7 +1629,20 @@ class MetMostrarSubsidiosSiController extends Controller
 
 
 
-
+            // $sfss = subsidiossiagrupado::where('sdecodigodestinatario', $descargarSde->sdecodigodestinatario)
+            //                             ->where('sdecodigounitario', $descargarSde->sdecodigounitario)
+            //                             ->where(function ($query) use($fechaInicio, $fechaFinal) {
+            //                                 // if($fechaInicio != null){
+            //                                     $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
+            //                                     // $query->where('sdesubsidiosdetalles.fecid', 1104);
+            //                                 // }
+            //                             })
+            //                             ->get([
+            //                                 'fsifactura',
+            //                                 'sfsvalorizado',
+            //                                 'fdsmaterial',
+            //                                 'pronombre'
+            //                             ]);
             $sfss = sfssubsidiosfacturassi::join('sdesubsidiosdetalles as sde', 'sde.sdeid', 'sfssubsidiosfacturassi.sdeid')
                                         ->join('fecfechas as fec', 'fec.fecid', 'sde.fecid')
                                         ->join('fsifacturassi as fsi', 'fsi.fsiid', 'sfssubsidiosfacturassi.fsiid')
@@ -1641,19 +1657,21 @@ class MetMostrarSubsidiosSiController extends Controller
                                             // }
                                         })
                                         ->groupBy('fsifactura')
+                                        ->groupBy('fdsmaterial')
+                                        ->groupBy('pronombre')
                                         ->select(
                                             "fsifactura",
                                             DB::raw("SUM(sfsvalorizado) as sfsvalorizado"),
-                                            // 'pronombre',
-                                            // 'fdsmaterial'
+                                            'fdsmaterial',
+                                            'pronombre',
                                         )
                                         ->get([
                                             'fsi.fsifactura',
                                             'sfsvalorizado',
-                                            // 'pronombre',
-                                            // 'fdsmaterial'
+                                            'fdsmaterial',
+                                            'pronombre'
                                         ]);
-
+            // $sfssSuma = 0;
             $sfssSuma = sfssubsidiosfacturassi::join('sdesubsidiosdetalles as sde', 'sde.sdeid', 'sfssubsidiosfacturassi.sdeid')
                                         ->join('fecfechas as fec', 'fec.fecid', 'sde.fecid')
                                         ->where('sdecodigodestinatario', $descargarSde->sdecodigodestinatario)
