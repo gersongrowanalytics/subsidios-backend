@@ -187,7 +187,7 @@ class MetMostrarSubsidiosSiController extends Controller
 
     }
 
-    public function ArmarExcelDescargaSubsidiosSi (Request $request)
+    public function ArmarExcelDescargaSubsidiosSiDestinatario (Request $request)
     {
 
         $fechaInicio = $request['fechaInicio'];
@@ -1530,7 +1530,7 @@ class MetMostrarSubsidiosSiController extends Controller
         // return $nuevoArray;
     }
 
-    public function ArmarExcelDescargaSubsidiosSiDestinatario(Request $request)
+    public function ArmarExcelDescargaSubsidiosSi(Request $request)
     {
 
         $fechaInicio = $request['fechaInicio'];
