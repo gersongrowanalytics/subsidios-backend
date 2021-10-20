@@ -1845,7 +1845,7 @@ class MetMostrarSubsidiosSiController extends Controller
 
 
                     array(
-                        "value" => "BULTOS ACORDADOS",
+                        "value" => "BULTOS (ACORDADOS)",
                         "style" => array(
                             "font" => array(
                                 "sz" => "9",
@@ -1865,7 +1865,7 @@ class MetMostrarSubsidiosSiController extends Controller
                     ),
 
                     array(
-                        "value" => "CANTIDAD (BULTOS SOFTYS)",
+                        "value" => "BULTOS (SOFTYS)",
                         "style" => array(
                             "font" => array(
                                 "sz" => "9",
@@ -1885,7 +1885,7 @@ class MetMostrarSubsidiosSiController extends Controller
                     ),
 
                     array(
-                        "value" => "MONTO  (S/IGV SOFTYS)",
+                        "value" => "MONTO (S/IGV SOFTYS)",
                         "style" => array(
                             "font" => array(
                                 "sz" => "9",
