@@ -186,7 +186,7 @@ class MetMostrarSubsidiosSiController extends Controller
 
     }
 
-    public function ArmarExcelDescargaSubsidiosSi (Request $request)
+    public function ArmarExcelDescargaSubsidiosSiDestinatario (Request $request)
     {
 
         $fechaInicio = $request['fechaInicio'];
@@ -1529,7 +1529,7 @@ class MetMostrarSubsidiosSiController extends Controller
         // return $nuevoArray;
     }
 
-    public function ArmarExcelDescargaSubsidiosSiDestinatario(Request $request)
+    public function ArmarExcelDescargaSubsidiosSi(Request $request)
     {
 
         $fechaInicio = $request['fechaInicio'];
@@ -1640,11 +1640,18 @@ class MetMostrarSubsidiosSiController extends Controller
                                                 // $query->where('sdesubsidiosdetalles.fecid', 1104);
                                             // }
                                         })
+                                        ->groupBy('fsifactura')
+                                        ->select(
+                                            "fsifactura",
+                                            DB::raw("SUM(sfsvalorizado) as sfsvalorizado"),
+                                            // 'pronombre',
+                                            // 'fdsmaterial'
+                                        )
                                         ->get([
                                             'fsi.fsifactura',
                                             'sfsvalorizado',
-                                            'pronombre',
-                                            'fdsmaterial'
+                                            // 'pronombre',
+                                            // 'fdsmaterial'
                                         ]);
 
             $sfssSuma = sfssubsidiosfacturassi::join('sdesubsidiosdetalles as sde', 'sde.sdeid', 'sfssubsidiosfacturassi.sdeid')
