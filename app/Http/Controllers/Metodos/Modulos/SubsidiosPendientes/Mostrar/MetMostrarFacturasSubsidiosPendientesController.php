@@ -76,14 +76,14 @@ class MetMostrarFacturasSubsidiosPendientesController extends Controller
         $fsis = fdsfacturassidetalles::join('fsifacturassi as fsi', 'fsi.fsiid', 'fdsfacturassidetalles.fsiid')
                                 ->join('fecfechas as fec', 'fec.fecid', 'fsi.fecid')
                                 ->join('proproductos as pro', 'pro.proid', 'fdsfacturassidetalles.proid')
-                                ->where('fsi.fsidestinatario', $coddestinatario)
-                                // ->where(function ($query) use($tieneDestinatarios, $coddestinatario, $coddestinatariodos, $coddestinatariotres, $coddestinatariocuatro, $coddestinatariocinco) {
-                                //     $query->orwhere('fsi.fsidestinatario', $coddestinatario);
-                                //     $query->orwhere('fsi.fsidestinatario', $coddestinatariodos);
-                                //     $query->orwhere('fsi.fsidestinatario', $coddestinatariotres);
-                                //     $query->orwhere('fsi.fsidestinatario', $coddestinatariocuatro);
-                                //     $query->orwhere('fsi.fsidestinatario', $coddestinatariocinco);
-                                // })
+                                // ->where('fsi.fsidestinatario', $coddestinatario)
+                                ->where(function ($query) use($tieneDestinatarios, $coddestinatario, $coddestinatariodos, $coddestinatariotres, $coddestinatariocuatro, $coddestinatariocinco) {
+                                    $query->orwhere('fsi.fsidestinatario', $coddestinatario);
+                                    $query->orwhere('fsi.fsidestinatario', $coddestinatariodos);
+                                    $query->orwhere('fsi.fsidestinatario', $coddestinatariotres);
+                                    $query->orwhere('fsi.fsidestinatario', $coddestinatariocuatro);
+                                    $query->orwhere('fsi.fsidestinatario', $coddestinatariocinco);
+                                })
                                 // ->orwhere('fsi.fsidestinatario', $coddestinatariodos)
                                 // ->orwhere('fsi.fsidestinatario', $coddestinatariotres)
                                 // ->orwhere('fsi.fsidestinatario', $coddestinatariocuatro)
