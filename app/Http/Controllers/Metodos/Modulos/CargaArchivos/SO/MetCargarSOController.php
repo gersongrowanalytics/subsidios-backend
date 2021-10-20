@@ -304,17 +304,22 @@ class MetCargarSOController extends Controller
                                     ->get();
 
         foreach($sdes as $sde){
-            $fso = fsofacturasso::where('fecid', $sde->fecid)
+            $fso = fsofacturasso::join('proproductos as pro', 'pro.proid', 'fsofacturasso.proid')
+                                ->where('fecid', $sde->fecid)
                                 ->where('cliid', $sde->cliid)
-                                ->where('proid', $sde->proid)
+                                // ->where('proid', $sde->proid)
+                                ->where('prosku', $sde->sdecodigounitario)
                                 ->where('fsoruc', $sde->sderucsubcliente)
-                                ->first();
+                                ->first([
+                                    'fsofacturasso.fsoid',
+                                    'fsofacturasso.proid'
+                                ]);
 
             if($fso){
 
                 $fsosuma = fsofacturasso::where('fecid', $sde->fecid)
                                 ->where('cliid', $sde->cliid)
-                                ->where('proid', $sde->proid)
+                                ->where('proid', $fso->proid)
                                 ->where('fsoruc', $sde->sderucsubcliente)
                                 ->sum('fsocantidadbulto');
 
