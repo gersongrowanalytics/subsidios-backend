@@ -90,6 +90,7 @@ class MetMostrarFacturasSubsidiosPendientesController extends Controller
                                 // ->orwhere('fsi.fsidestinatario', $coddestinatariocinco)
                                 // ->where('fdssaldo', '>', 0)
                                 ->where('fsiclase', '!=', 'ZPF9')
+                                ->where('fdsanulada', false)
                                 ->orderBy('fdssaldo', 'desc')
                                 ->get([
                                     'fdsfacturassidetalles.fdsid',
