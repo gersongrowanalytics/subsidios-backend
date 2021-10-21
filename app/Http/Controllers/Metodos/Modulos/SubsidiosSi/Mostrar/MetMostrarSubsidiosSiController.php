@@ -1905,7 +1905,7 @@ class MetMostrarSubsidiosSiController extends Controller
                     ),
 
                     array(
-                        "value" => "TOTAL LIQUIDADO",
+                        "value" => "LIQUIDACIÓN (S/IGV SOFTYS)",
                         "style" => array(
                             "font" => array(
                                 "sz" => "9",
@@ -1925,7 +1925,7 @@ class MetMostrarSubsidiosSiController extends Controller
                     ),
 
                     array(
-                        "value" => "FALTA LIQUIDAR",
+                        "value" => "LIQUIDACIÓN PENDIENTE",
                         "style" => array(
                             "font" => array(
                                 "sz" => "9",
