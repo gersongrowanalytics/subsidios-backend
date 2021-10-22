@@ -323,50 +323,7 @@ class MetCargarSOController extends Controller
                                 ->where('fsoruc', $sde->sderucsubcliente)
                                 ->sum('fsocantidadbulto');
 
-                
-
-                $montoAReconocerReal = 0;
-
-                $pos = strpos($sde->sdebonificacion, "X");
-
-                if($pos !== false){
-                    
-                    $montoAReconocerReal = floatval($sde->sdecantidadbultos);
-
-                }else{
-                    if(is_numeric($sde->sdecantidadbultos)){
-                        if($sde->sdecantidadbultos == 0){
-    
-                            $montoAReconocerReal = 0;
-        
-                        }else{
-        
-                            if(floatval($fsosuma) > floatval($sde->sdecantidadbultos)){
-                                $montoAReconocerReal = floatval($sde->sdecantidadbultos);
-                            }else{
-                                $montoAReconocerReal = floatval($fsosuma);
-                            }
-        
-                        }
-                    }else{
-                        $montoAReconocerReal = 0;
-                    }
-                }
-
-                $status = "OK";
-
-                // if($fsosuma == $sde->sdecantidadbultos){
-                if($fsosuma == $sde->sdebultosacordados){
-
-                    // if($sde->sdemontoareconocer == $fso->fsoventasinigv){
-
-                    // }else{
-                    //     $status = "ERROR PRECIO";
-                    // }
-
-                }else{
-                    $status = "ERROR CANTIDADES";
-                }
+                $montoAReconocerReal = $fsosuma + $sde->sdecantidadbultosreal;
 
             
 
@@ -381,31 +338,31 @@ class MetCargarSOController extends Controller
                 
                 
             }else{
-                $status = "OK";
+                // $status = "OK";
 
-                // if($fsosuma == $sde->sdecantidadbultos){
-                if(0 == $sde->sdebultosacordados){
+                // // if($fsosuma == $sde->sdecantidadbultos){
+                // if(0 == $sde->sdebultosacordados){
 
-                    // if($sde->sdemontoareconocer == $fso->fsoventasinigv){
+                //     // if($sde->sdemontoareconocer == $fso->fsoventasinigv){
 
-                    // }else{
-                    //     $status = "ERROR PRECIO";
-                    // }
+                //     // }else{
+                //     //     $status = "ERROR PRECIO";
+                //     // }
 
-                }else{
-                    $status = "ERROR CANTIDADES";
-                }
-                $sdee = sdesubsidiosdetalles::find($sde->sdeid);
-                $sdee->sdecantidadbultosreal = 0;
-                $sdee->sdemontoareconocerreal = 0;
-                $sdee->sdestatus = $status;
-                $sdee->sdeaprobado = false;
+                // }else{
+                //     $status = "ERROR CANTIDADES";
+                // }
+                // $sdee = sdesubsidiosdetalles::find($sde->sdeid);
+                // $sdee->sdecantidadbultosreal = 0;
+                // $sdee->sdemontoareconocerreal = 0;
+                // $sdee->sdestatus = $status;
+                // $sdee->sdeaprobado = false;
 
-                $sdee->sdebultosnoreconocido = 0;
-                $sdee->sdebultosacido = 0;
-                $sdee->sdemontoacido = 0;
+                // $sdee->sdebultosnoreconocido = 0;
+                // $sdee->sdebultosacido = 0;
+                // $sdee->sdemontoacido = 0;
 
-                $sdee->update();
+                // $sdee->update();
             }
         
         }
