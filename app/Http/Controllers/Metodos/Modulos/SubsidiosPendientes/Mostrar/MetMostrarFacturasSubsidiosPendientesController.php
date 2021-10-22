@@ -39,6 +39,11 @@ class MetMostrarFacturasSubsidiosPendientesController extends Controller
             $coddestinatariodos = "289634";
             $coddestinatariotres = "289634";
             $tieneDestinatarios = true;
+        }else if($coddestinatario == "143397"){
+            $coddestinatario = "143398";
+            $coddestinatariodos = "143398";
+            $coddestinatariotres = "143398";
+            $tieneDestinatarios = true;
         }else if($coddestinatario == "160864"){
             $coddestinatario = "148921";
             $coddestinatariodos = "148921";
