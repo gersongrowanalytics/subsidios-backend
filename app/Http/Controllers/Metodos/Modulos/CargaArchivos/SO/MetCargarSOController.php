@@ -83,96 +83,96 @@ class MetCargarSOController extends Controller
 
         if (move_uploaded_file($_FILES['file']['tmp_name'], $fichero_subido)) {
             
-            $data = [
-                'archivo' => $_FILES['file']['name'], "tipo" => "Facturas Sell Out", "usuario" => $usu->usuusuario,
-                "url_archivo" => env('APP_URL').$ubicacionArchivo
-            ];
-            Mail::to(env('USUARIO_ENVIAR_MAIL'))->send(new MailCargaArchivoOutlook($data));
+            // $data = [
+            //     'archivo' => $_FILES['file']['name'], "tipo" => "Facturas Sell Out", "usuario" => $usu->usuusuario,
+            //     "url_archivo" => env('APP_URL').$ubicacionArchivo
+            // ];
+            // Mail::to(env('USUARIO_ENVIAR_MAIL'))->send(new MailCargaArchivoOutlook($data));
 
-            // $objPHPExcel    = IOFactory::load($fichero_subido);
-            // $objPHPExcel->setActiveSheetIndex(0);
-            // $numRows        = $objPHPExcel->setActiveSheetIndex(0)->getHighestRow();
-            // $ultimaColumna  = $objPHPExcel->setActiveSheetIndex(0)->getHighestColumn();
+            $objPHPExcel    = IOFactory::load($fichero_subido);
+            $objPHPExcel->setActiveSheetIndex(0);
+            $numRows        = $objPHPExcel->setActiveSheetIndex(0)->getHighestRow();
+            $ultimaColumna  = $objPHPExcel->setActiveSheetIndex(0)->getHighestColumn();
 
-            // $logs['NUMERO_LINEAS_EXCEL'] = $numRows;
+            $logs['NUMERO_LINEAS_EXCEL'] = $numRows;
 
-            // // // fsofacturasso::where('fsoid', '>', '0')->delete();
-            // $fsoultimo = fsofacturasso::orderby('fsoid', 'desc')->first();
-            // $pkid = $fsoultimo->fsoid + 1;
+            // // fsofacturasso::where('fsoid', '>', '0')->delete();
+            $fsoultimo = fsofacturasso::orderby('fsoid', 'desc')->first();
+            $pkid = $fsoultimo->fsoid + 1;
 
-            // $fec = fecfechas::where('fecmesabierto', true)->first(['fecid']);
+            $fec = fecfechas::where('fecmesabierto', true)->first(['fecid']);
 
-            // for ($i=2; $i <= $numRows ; $i++) {
-            //     $ex_codigo              = $objPHPExcel->getActiveSheet()->getCell('A'.$i)->getCalculatedValue();
-            //     // $ex_codigodistribuidor  = $objPHPExcel->getActiveSheet()->getCell('B'.$i)->getCalculatedValue();
-            //     $ex_codigofecha     = $objPHPExcel->getActiveSheet()->getCell('B'.$i)->getCalculatedValue();
-            //     $ex_codigocliente   = $objPHPExcel->getActiveSheet()->getCell('C'.$i)->getCalculatedValue();
-            //     $ex_codigoproducto  = $objPHPExcel->getActiveSheet()->getCell('D'.$i)->getCalculatedValue();
-            //     $ex_ruc             = $objPHPExcel->getActiveSheet()->getCell('E'.$i)->getCalculatedValue();
-            //     $ex_cantidadbultos  = $objPHPExcel->getActiveSheet()->getCell('F'.$i)->getCalculatedValue();
-            //     $ex_ventasinigv     = $objPHPExcel->getActiveSheet()->getCell('G'.$i)->getCalculatedValue();
+            for ($i=2; $i <= $numRows ; $i++) {
+                $ex_codigo              = $objPHPExcel->getActiveSheet()->getCell('A'.$i)->getCalculatedValue();
+                // $ex_codigodistribuidor  = $objPHPExcel->getActiveSheet()->getCell('B'.$i)->getCalculatedValue();
+                $ex_codigofecha     = $objPHPExcel->getActiveSheet()->getCell('B'.$i)->getCalculatedValue();
+                $ex_codigocliente   = $objPHPExcel->getActiveSheet()->getCell('C'.$i)->getCalculatedValue();
+                $ex_codigoproducto  = $objPHPExcel->getActiveSheet()->getCell('D'.$i)->getCalculatedValue();
+                $ex_ruc             = $objPHPExcel->getActiveSheet()->getCell('E'.$i)->getCalculatedValue();
+                $ex_cantidadbultos  = $objPHPExcel->getActiveSheet()->getCell('F'.$i)->getCalculatedValue();
+                $ex_ventasinigv     = $objPHPExcel->getActiveSheet()->getCell('G'.$i)->getCalculatedValue();
 
-            //     $ex_codigofecha = Date::excelToDateTimeObject($ex_codigofecha);
-            //     $ex_codigofecha = json_encode($ex_codigofecha);
-            //     $ex_codigofecha = json_decode($ex_codigofecha);
-            //     $ex_fecha = date("Y-m-d", strtotime($ex_codigofecha->date));
-            //     $ex_codigofecha = date("Y-m", strtotime($ex_codigofecha->date));
+                $ex_codigofecha = Date::excelToDateTimeObject($ex_codigofecha);
+                $ex_codigofecha = json_encode($ex_codigofecha);
+                $ex_codigofecha = json_decode($ex_codigofecha);
+                $ex_fecha = date("Y-m-d", strtotime($ex_codigofecha->date));
+                $ex_codigofecha = date("Y-m", strtotime($ex_codigofecha->date));
 
                 
-            //     // $fec = fecfechas::where('fecfecha', 'LIKE', "%".$ex_codigofecha."%")
-            //     //             ->first(['fecid']);
+                // $fec = fecfechas::where('fecfecha', 'LIKE', "%".$ex_codigofecha."%")
+                //             ->first(['fecid']);
                 
                 
-            //     if($fec){
+                if($fec){
 
-            //         if($i == 2){
-            //             fsofacturasso::where('fecid', $fec->fecid)->delete();
-            //             $fecid = $fec->fecid;
-            //         }
+                    if($i == 2){
+                        fsofacturasso::where('fecid', $fec->fecid)->delete();
+                        $fecid = $fec->fecid;
+                    }
 
-            //         $pro = proproductos::where('prosku', $ex_codigoproducto)->first(['proid']);
+                    $pro = proproductos::where('prosku', $ex_codigoproducto)->first(['proid']);
 
-            //         if($pro){
+                    if($pro){
 
-            //             $cli = cliclientes::where('clicodigoshipto', $ex_codigo)->first(['cliid']);
+                        $cli = cliclientes::where('clicodigoshipto', $ex_codigo)->first(['cliid']);
 
-            //             if($cli){
+                        if($cli){
 
-            //                 $fson = new fsofacturasso;
-            //                 $fson->fsoid            = $pkid;
-            //                 $fson->fecid            = $fec->fecid;
-            //                 $fson->cliid            = $cli->cliid;
-            //                 $fson->proid            = $pro->proid;
-            //                 $fson->fsoruc           = $ex_ruc;
-            //                 $fson->fsocantidadbulto = $ex_cantidadbultos;
-            //                 $fson->fsofecha = $ex_fecha;
-            //                 if($ex_ventasinigv){
-            //                     $fson->fsoventasinigv   = $ex_ventasinigv;
-            //                     $pkid = $pkid + 1;
-            //                 }else{
-            //                     $fson->fsoventasinigv   = 0;
-            //                 }
-            //                 $fson->save();
+                            $fson = new fsofacturasso;
+                            $fson->fsoid            = $pkid;
+                            $fson->fecid            = $fec->fecid;
+                            $fson->cliid            = $cli->cliid;
+                            $fson->proid            = $pro->proid;
+                            $fson->fsoruc           = $ex_ruc;
+                            $fson->fsocantidadbulto = $ex_cantidadbultos;
+                            $fson->fsofecha = $ex_fecha;
+                            if($ex_ventasinigv){
+                                $fson->fsoventasinigv   = $ex_ventasinigv;
+                                $pkid = $pkid + 1;
+                            }else{
+                                $fson->fsoventasinigv   = 0;
+                            }
+                            $fson->save();
 
-            //             }else{
-            //                 $respuesta = false;
-            //                 $mensaje = "Lo sentimos, hubieron algunos codigos de solicitante que no se encontraron registrados, recomendamos actualizar la maestra de clientes e intentar nuevamente gracias.";
-            //                 $logs["CLIENTES_NO_ENCONTRADOS"] = $this->EliminarDuplicidad( $logs["CLIENTES_NO_ENCONTRADOS"], $ex_codigo, $i);
-            //             }
+                        }else{
+                            $respuesta = false;
+                            $mensaje = "Lo sentimos, hubieron algunos codigos de solicitante que no se encontraron registrados, recomendamos actualizar la maestra de clientes e intentar nuevamente gracias.";
+                            $logs["CLIENTES_NO_ENCONTRADOS"] = $this->EliminarDuplicidad( $logs["CLIENTES_NO_ENCONTRADOS"], $ex_codigo, $i);
+                        }
 
-            //         }else{
-            //             $respuesta = false;
-            //             $mensaje = "Lo sentimos, hubieron algunos skus que no se encontraron registrados, recomendamos actualizar la maestra de productos e intentar nuevamente gracias.";
-            //             $logs["PRODUCTOS_NO_ENCONTRADOS"] = $this->EliminarDuplicidad( $logs["PRODUCTOS_NO_ENCONTRADOS"], $ex_codigoproducto, $i);
-            //         } 
+                    }else{
+                        $respuesta = false;
+                        $mensaje = "Lo sentimos, hubieron algunos skus que no se encontraron registrados, recomendamos actualizar la maestra de productos e intentar nuevamente gracias.";
+                        $logs["PRODUCTOS_NO_ENCONTRADOS"] = $this->EliminarDuplicidad( $logs["PRODUCTOS_NO_ENCONTRADOS"], $ex_codigoproducto, $i);
+                    } 
 
-            //     }else{
-            //         $respuesta = false;
-            //         $mensaje = "Lo sentimos, el mes o año asignado no se encuentra en los registros, recomendamos actualizar la maestra de fechas e intentar nuevamente gracias";
-            //         $logs["FECHA_NO_REGISTRADA"] = "FECHA: ".$ex_codigofecha;
-            //         break;
-            //     }
-            // }
+                }else{
+                    $respuesta = false;
+                    $mensaje = "Lo sentimos, el mes o año asignado no se encuentra en los registros, recomendamos actualizar la maestra de fechas e intentar nuevamente gracias";
+                    $logs["FECHA_NO_REGISTRADA"] = "FECHA: ".$ex_codigofecha;
+                    break;
+                }
+            }
 
 
             // 
@@ -182,56 +182,56 @@ class MetCargarSOController extends Controller
             $fec = fecfechas::where('fecmesabierto', true)->first(['fecid']);
             $fecid = $fec->fecid;
 
-            $espe = espestadospendientes::where('fecid', $fecid)
-                                        ->where('espbasedato', "Sell Out (Efectivo)")
-                                        ->first();
+            // $espe = espestadospendientes::where('fecid', $fecid)
+            //                             ->where('espbasedato', "Sell Out (Efectivo)")
+            //                             ->first();
 
-            if($espe){
-                if($usu->perid == 1 || $usu->perid == 3 || $usu->perid == 7 || $usu->perid == 10){
+            // if($espe){
+            //     if($usu->perid == 1 || $usu->perid == 3 || $usu->perid == 7 || $usu->perid == 10){
                     
-                }else{
-                    $espe->perid = $usu->perid;
-                }
+            //     }else{
+            //         $espe->perid = $usu->perid;
+            //     }
                 
-                $espe->espfechactualizacion = $fechaActual;
+            //     $espe->espfechactualizacion = $fechaActual;
 
-                $date1 = new DateTime($fechaActual);
-                $fecha_carga_real = date("Y-m-d", strtotime($espe->espfechaprogramado));
-                $date2 = new DateTime($fecha_carga_real);
+            //     $date1 = new DateTime($fechaActual);
+            //     $fecha_carga_real = date("Y-m-d", strtotime($espe->espfechaprogramado));
+            //     $date2 = new DateTime($fecha_carga_real);
 
-                $diff = $date1->diff($date2);
+            //     $diff = $date1->diff($date2);
 
-                if($date1 > $date2){
-                    if($diff->days > 0){
-                        $espe->espdiaretraso = $diff->days;
-                    }else{
-                        $espe->espdiaretraso = "0";
-                    }
-                }else{
-                    $espe->espdiaretraso = "0";
-                }
+            //     if($date1 > $date2){
+            //         if($diff->days > 0){
+            //             $espe->espdiaretraso = $diff->days;
+            //         }else{
+            //             $espe->espdiaretraso = "0";
+            //         }
+            //     }else{
+            //         $espe->espdiaretraso = "0";
+            //     }
 
-                $espe->update();
+            //     $espe->update();
 
 
-                $aree = areareasestados::where('areid', $espe->areid)->first();
+            //     $aree = areareasestados::where('areid', $espe->areid)->first();
 
-                if($aree){
+            //     if($aree){
 
-                    $espcount = espestadospendientes::where('fecid', $fecid)
-                                        ->where('espbasedato', "Sell Out (Efectivo)")
-                                        ->where('espfechactualizacion', '!=', null)
-                                        ->first();
+            //         $espcount = espestadospendientes::where('fecid', $fecid)
+            //                             ->where('espbasedato', "Sell Out (Efectivo)")
+            //                             ->where('espfechactualizacion', '!=', null)
+            //                             ->first();
 
-                    if($espcount){
-                        $aree->areporcentaje = "100";
-                    }else{
-                        $aree->areporcentaje = "50";
-                    }
+            //         if($espcount){
+            //             $aree->areporcentaje = "100";
+            //         }else{
+            //             $aree->areporcentaje = "50";
+            //         }
 
-                    $aree->update();
-                } 
-            }
+            //         $aree->update();
+            //     } 
+            // }
 
             $care = carcargasarchivos::find($carid);
             $care->carexito = 1;
@@ -323,50 +323,7 @@ class MetCargarSOController extends Controller
                                 ->where('fsoruc', $sde->sderucsubcliente)
                                 ->sum('fsocantidadbulto');
 
-                
-
-                $montoAReconocerReal = 0;
-
-                $pos = strpos($sde->sdebonificacion, "X");
-
-                if($pos !== false){
-                    
-                    $montoAReconocerReal = floatval($sde->sdecantidadbultos);
-
-                }else{
-                    if(is_numeric($sde->sdecantidadbultos)){
-                        if($sde->sdecantidadbultos == 0){
-    
-                            $montoAReconocerReal = 0;
-        
-                        }else{
-        
-                            if(floatval($fsosuma) > floatval($sde->sdecantidadbultos)){
-                                $montoAReconocerReal = floatval($sde->sdecantidadbultos);
-                            }else{
-                                $montoAReconocerReal = floatval($fsosuma);
-                            }
-        
-                        }
-                    }else{
-                        $montoAReconocerReal = 0;
-                    }
-                }
-
-                $status = "OK";
-
-                // if($fsosuma == $sde->sdecantidadbultos){
-                if($fsosuma == $sde->sdebultosacordados){
-
-                    // if($sde->sdemontoareconocer == $fso->fsoventasinigv){
-
-                    // }else{
-                    //     $status = "ERROR PRECIO";
-                    // }
-
-                }else{
-                    $status = "ERROR CANTIDADES";
-                }
+                $montoAReconocerReal = $fsosuma + $sde->sdecantidadbultosreal;
 
             
 
@@ -381,31 +338,31 @@ class MetCargarSOController extends Controller
                 
                 
             }else{
-                $status = "OK";
+                // $status = "OK";
 
-                // if($fsosuma == $sde->sdecantidadbultos){
-                if(0 == $sde->sdebultosacordados){
+                // // if($fsosuma == $sde->sdecantidadbultos){
+                // if(0 == $sde->sdebultosacordados){
 
-                    // if($sde->sdemontoareconocer == $fso->fsoventasinigv){
+                //     // if($sde->sdemontoareconocer == $fso->fsoventasinigv){
 
-                    // }else{
-                    //     $status = "ERROR PRECIO";
-                    // }
+                //     // }else{
+                //     //     $status = "ERROR PRECIO";
+                //     // }
 
-                }else{
-                    $status = "ERROR CANTIDADES";
-                }
-                $sdee = sdesubsidiosdetalles::find($sde->sdeid);
-                $sdee->sdecantidadbultosreal = 0;
-                $sdee->sdemontoareconocerreal = 0;
-                $sdee->sdestatus = $status;
-                $sdee->sdeaprobado = false;
+                // }else{
+                //     $status = "ERROR CANTIDADES";
+                // }
+                // $sdee = sdesubsidiosdetalles::find($sde->sdeid);
+                // $sdee->sdecantidadbultosreal = 0;
+                // $sdee->sdemontoareconocerreal = 0;
+                // $sdee->sdestatus = $status;
+                // $sdee->sdeaprobado = false;
 
-                $sdee->sdebultosnoreconocido = 0;
-                $sdee->sdebultosacido = 0;
-                $sdee->sdemontoacido = 0;
+                // $sdee->sdebultosnoreconocido = 0;
+                // $sdee->sdebultosacido = 0;
+                // $sdee->sdemontoacido = 0;
 
-                $sdee->update();
+                // $sdee->update();
             }
         
         }
