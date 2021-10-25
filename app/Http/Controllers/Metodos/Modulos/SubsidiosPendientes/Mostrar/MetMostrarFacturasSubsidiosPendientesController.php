@@ -158,6 +158,7 @@ class MetMostrarFacturasSubsidiosPendientesController extends Controller
                         "fsipedidooriginal" => $fsi->fsipedidooriginal,
                         "fsiclase" => $fsi->fsiclase,
                         "fsisolicitante" => $fsi->fsisolicitante,
+                        "fsidestinatario" => $fsi->fsidestinatario,
                     );
                 }
 
