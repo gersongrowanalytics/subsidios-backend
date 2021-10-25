@@ -92,6 +92,7 @@ class MetMostrarFacturasSubsidiosPendientesController extends Controller
                                 ->where('fsiclase', '!=', 'ZPF9')
                                 ->where('fdsanulada', false)
                                 ->orderBy('fdssaldo', 'desc')
+                                ->limit(50)
                                 ->get([
                                     'fdsfacturassidetalles.fdsid',
                                     'fdsfacturassidetalles.fsiid',
@@ -108,7 +109,9 @@ class MetMostrarFacturasSubsidiosPendientesController extends Controller
                                     'fsipedido',
                                     'fdsreconocer',
                                     'fsipedidooriginal',
-                                    'fsiclase'
+                                    'fsiclase',
+                                    'fsidestinatario',
+                                    'fsisolicitante'
                                 ]);
         
         $nuevoFsis = array();
@@ -135,26 +138,43 @@ class MetMostrarFacturasSubsidiosPendientesController extends Controller
                     $fsis[$posicionFsi]['fdssaldo'] = $nuevoSaldo;
                 }
 
-                $nuevoFsis[] = array(
-                    "fdsid" => $fsi->fdsid,
-                    "fsiid" => $fsi->fsiid,
-                    "fecfecha" => $fsi->fecfecha,
-                    "fsifactura" => $fsi->fsifactura,
-                    "fdsmaterial" => $fsi->fdsmaterial,
-                    "proid" => $fsi->proid,
-                    "prosku" => $fsi->prosku,
-                    "pronombre" => $fsi->pronombre,
-                    "fdsvalorneto" => $fsi->fdsvalorneto,
-                    "fdssaldo" => $nuevoSaldo,
-                    "fdsnotacredito" => $sumanotascredito,
-                    "fsipedido" => $fsi->fsipedido,
-                    "fdsreconocer" => $fsi->fdsreconocer,
-                    "fsipedidooriginal" => $fsi->fsipedidooriginal,
-                    "fsiclase" => $fsi->fsiclase,
-                );
+                if($nuevoSaldo > 1){
+                    $nuevoFsis[] = array(
+                        "fdsid" => $fsi->fdsid,
+                        "fsiid" => $fsi->fsiid,
+                        "fecfecha" => $fsi->fecfecha,
+                        "fsifactura" => $fsi->fsifactura,
+                        "fdsmaterial" => $fsi->fdsmaterial,
+                        "proid" => $fsi->proid,
+                        "prosku" => $fsi->prosku,
+                        "pronombre" => $fsi->pronombre,
+                        "fdsvalorneto" => $fsi->fdsvalorneto,
+                        "fdssaldo" => $nuevoSaldo,
+                        "fdsnotacredito" => $sumanotascredito,
+                        "fsipedido" => $fsi->fsipedido,
+                        "fdsreconocer" => $fsi->fdsreconocer,
+                        "fsipedidooriginal" => $fsi->fsipedidooriginal,
+                        "fsiclase" => $fsi->fsiclase,
+                    );
+                }
 
             }
         }
+
+
+        usort(
+            $nuevoFsis,
+            function ($a, $b)  {
+                if ($a['fdssaldo'] > $b['fdssaldo']) {
+                    return -1;
+                } else if ($a['fdssaldo'] < $b['fdssaldo']) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
+        );
+
 
         $requestsalida = response()->json([
             "datos" => $nuevoFsis
