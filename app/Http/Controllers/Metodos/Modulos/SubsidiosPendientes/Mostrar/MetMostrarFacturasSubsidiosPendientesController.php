@@ -138,6 +138,8 @@ class MetMostrarFacturasSubsidiosPendientesController extends Controller
                     $fsis[$posicionFsi]['fdssaldo'] = $nuevoSaldo;
                 }
 
+                $nuevoSaldo = floatval($nuevoSaldo);
+
                 if($nuevoSaldo > 1){
                     $nuevoFsis[] = array(
                         "fdsid" => $fsi->fdsid,
