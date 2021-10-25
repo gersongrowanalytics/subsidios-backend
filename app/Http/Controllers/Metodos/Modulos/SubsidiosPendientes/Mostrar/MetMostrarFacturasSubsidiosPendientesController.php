@@ -169,9 +169,9 @@ class MetMostrarFacturasSubsidiosPendientesController extends Controller
         usort(
             $nuevoFsis,
             function ($a, $b)  {
-                if ($a['fdssaldo'] > $b['fdssaldo']) {
+                if ($a['fdssaldo'] < $b['fdssaldo']) {
                     return -1;
-                } else if ($a['fdssaldo'] < $b['fdssaldo']) {
+                } else if ($a['fdssaldo'] > $b['fdssaldo']) {
                     return 1;
                 } else {
                     return 0;
