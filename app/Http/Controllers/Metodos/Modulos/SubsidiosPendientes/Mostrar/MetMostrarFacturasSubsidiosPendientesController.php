@@ -155,6 +155,7 @@ class MetMostrarFacturasSubsidiosPendientesController extends Controller
                         "fdsreconocer" => $fsi->fdsreconocer,
                         "fsipedidooriginal" => $fsi->fsipedidooriginal,
                         "fsiclase" => $fsi->fsiclase,
+                        "fsisolicitante" => $fsi->fsisolicitante,
                     );
                 }
 
