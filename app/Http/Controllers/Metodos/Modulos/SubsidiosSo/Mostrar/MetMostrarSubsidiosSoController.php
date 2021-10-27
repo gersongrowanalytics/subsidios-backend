@@ -83,6 +83,7 @@ class MetMostrarSubsidiosSoController extends Controller
                                     ->groupBy('pro.proid')
                                     ->groupBy('cliid')
                                     ->groupBy('cat.catid')
+                                    ->groupBy('sdeid')
                                     ->get([
                                         'cli.cliid',
                                         'clizona',
@@ -96,6 +97,7 @@ class MetMostrarSubsidiosSoController extends Controller
                                         'propresentacion',
                                         'prosku',
                                         'pronombre',
+                                        'sdeid',
                                         'sdecantidadbultos',
                                         'sdemontoareconocer',
                                         'sdecantidadbultosreal',
