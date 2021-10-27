@@ -1595,6 +1595,8 @@ class MetMostrarSubsidiosSiController extends Controller
                                             DB::raw("SUM(sdecantidadbultosreal) as sumaCantidadBultosReal"),
                                             DB::raw("SUM(sdemontoareconocerreal) as sumaMontoReconocerReal"),
                                         )
+                                        ->groupBy('fecanionumero')
+                                        ->groupBy('fecmesabreviacion')
                                         ->groupBy('sdecodigodestinatario')
                                         ->groupBy('sdecodigounitario')
                                         ->groupBy('cliid')
@@ -2035,8 +2037,8 @@ class MetMostrarSubsidiosSiController extends Controller
 
             $arrayFilaExcel = array(
                 array(
-                    // "value" => $descargarSde->fecanionumero,
-                    "value" => "2021",
+                    "value" => $descargarSde->fecanionumero,
+                    // "value" => "2021",
                     "style" => array(
                         "font" => array(
                             "sz" => "9",
@@ -2052,7 +2054,8 @@ class MetMostrarSubsidiosSiController extends Controller
                 ),
 
                 array(
-                    "value" => "SET",
+                    "value" => $descargarSde->fecmesabreviacion,
+                    // "value" => "SET",
                     "style" => array(
                         "font" => array(
                             "sz" => "9",
