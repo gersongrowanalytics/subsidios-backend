@@ -79,13 +79,16 @@ class MetMostrarSubsidiosSoController extends Controller
                                     ->orderBy('sdesubcliente' , 'DESC')
                                     ->orderBy('sdesector' , 'DESC')
                                     ->orderBy('sdecantidadbultos' , 'DESC')
+                                    ->groupBy('sdecodigodestinatario')
+                                    ->groupBy('prosku')
+                                    // ->groupBy('cliid')
                                     ->get([
                                         'cli.cliid',
                                         'clizona',
                                         'clisuchml',
                                         'clihml as clinombre',
                                         // 'clinombre',
-                                        'sdesubcliente',
+                                        // 'sdesubcliente',
                                         'catnombre',
                                         'propresentacion',
                                         'prosku',
@@ -103,6 +106,9 @@ class MetMostrarSubsidiosSoController extends Controller
                                         'sdevalidado',
                                         'clicodigoshipto'
                                     ]);
+
+            $
+
 
             $zonas[$posicionZon]['data'] = $sdes;
         }
