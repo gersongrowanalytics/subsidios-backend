@@ -116,6 +116,25 @@ class MetMostrarSubsidiosSoController extends Controller
                                         // 'clicodigoshipto'
                                     )
                                     ->get();
+                                
+            foreach($sdes as $posicionSde => $sde){
+
+                $sdes[$posicionSde]['clizona'] = $zon['clizona'];
+                $sdes[$posicionSde]['clisuchml'] = '';
+                $sdes[$posicionSde]['clihml'] = '';
+                $sdes[$posicionSde]['clinombre'] = '';
+                $sdes[$posicionSde]['sdesubcliente'] = '';
+
+                $sdes[$posicionSde]['sdestatus'] = '';
+                $sdes[$posicionSde]['sdediferenciaahorro'] = '';
+                $sdes[$posicionSde]['sdebultosacordados'] = '';
+                $sdes[$posicionSde]['sdesac'] = '';
+                $sdes[$posicionSde]['sdesector'] = '';
+                $sdes[$posicionSde]['sdeterritorio'] = '';
+                $sdes[$posicionSde]['sdevalidado'] = '';
+                $sdes[$posicionSde]['clicodigoshipto'] = '';
+
+            }
 
             
 
