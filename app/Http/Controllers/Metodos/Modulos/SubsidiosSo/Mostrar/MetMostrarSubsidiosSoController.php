@@ -82,6 +82,7 @@ class MetMostrarSubsidiosSoController extends Controller
                                     ->groupBy('sdecodigodestinatario')
                                     ->groupBy('prosku')
                                     ->groupBy('cliid')
+                                    ->groupBy('cat.catid')
                                     ->get([
                                         'cli.cliid',
                                         'clizona',
@@ -89,6 +90,7 @@ class MetMostrarSubsidiosSoController extends Controller
                                         'clihml as clinombre',
                                         // 'clinombre',
                                         // 'sdesubcliente',
+                                        'cat.catid',
                                         'catnombre',
                                         'propresentacion',
                                         'prosku',
