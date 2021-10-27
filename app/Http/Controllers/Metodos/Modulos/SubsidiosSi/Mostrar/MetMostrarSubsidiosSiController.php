@@ -1587,16 +1587,14 @@ class MetMostrarSubsidiosSiController extends Controller
                                             // "sdezona as clizona",
                                             // "sdeterritorio as sdeterritorio",
                                             // "sdecliente as clinombre",
-                                            "fecanionumero",
-                                            "fecmesabreviacion",
+                                            // "fecanionumero",
+                                            // "fecmesabreviacion",
                                             DB::raw("SUM(sdebultosacordados) as sumaButlosAcordados"),
                                             DB::raw("SUM(sdecantidadbultos) as sumaCantidadBultos"),
                                             DB::raw("SUM(sdemontoareconocer) as sumaMontoReconocer"),
                                             DB::raw("SUM(sdecantidadbultosreal) as sumaCantidadBultosReal"),
                                             DB::raw("SUM(sdemontoareconocerreal) as sumaMontoReconocerReal"),
                                         )
-                                        ->groupBy('fecanionumero')
-                                        ->groupBy('fecmesabreviacion')
                                         ->groupBy('sdecodigodestinatario')
                                         ->groupBy('sdecodigounitario')
                                         ->groupBy('cliid')
@@ -2037,8 +2035,8 @@ class MetMostrarSubsidiosSiController extends Controller
 
             $arrayFilaExcel = array(
                 array(
-                    "value" => $descargarSde->fecanionumero,
-                    // "value" => "2021",
+                    // "value" => $descargarSde->fecanionumero,
+                    "value" => "2021",
                     "style" => array(
                         "font" => array(
                             "sz" => "9",
@@ -2054,8 +2052,7 @@ class MetMostrarSubsidiosSiController extends Controller
                 ),
 
                 array(
-                    "value" => $descargarSde->fecmesabreviacion,
-                    // "value" => "SET",
+                    "value" => "SET",
                     "style" => array(
                         "font" => array(
                             "sz" => "9",
