@@ -81,7 +81,7 @@ class MetMostrarSubsidiosSoController extends Controller
                                     ->orderBy('sdecantidadbultos' , 'DESC')
                                     ->groupBy('sdecodigodestinatario')
                                     ->groupBy('prosku')
-                                    // ->groupBy('cliid')
+                                    ->groupBy('cliid')
                                     ->get([
                                         'cli.cliid',
                                         'clizona',
@@ -107,7 +107,7 @@ class MetMostrarSubsidiosSoController extends Controller
                                         'clicodigoshipto'
                                     ]);
 
-            $
+            
 
 
             $zonas[$posicionZon]['data'] = $sdes;
