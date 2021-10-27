@@ -106,7 +106,7 @@ class MetMostrarSubsidiosSoController extends Controller
                                         'prosku',
                                         'pronombre',
                                         // 'sdeid', 
-                                        'sdestatus',
+                                        // 'sdestatus',
                                         'sdediferenciaahorro',
                                         'sdebultosacordados',
                                         'sdesac',
