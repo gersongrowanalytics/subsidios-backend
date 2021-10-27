@@ -84,7 +84,15 @@ class MetMostrarSubsidiosSoController extends Controller
                                     ->groupBy('cliid')
                                     ->groupBy('cat.catid')
                                     ->groupBy('sdeid')
-                                    ->get([
+                                    ->select(
+                                        "sdecodigodestinatario",
+                                        "cliid",
+                                        DB::raw("SUM(sdebultosacordados) as sdebultosacordados"),
+                                        DB::raw("SUM(sdecantidadbultos) as sdecantidadbultos"),
+                                        DB::raw("SUM(sdemontoareconocer) as sdemontoareconocer"),
+                                        DB::raw("SUM(sdecantidadbultosreal) as sdecantidadbultosreal"),
+                                        DB::raw("SUM(sdemontoareconocerreal) as sdemontoareconocerreal"),
+
                                         'cli.cliid',
                                         'clizona',
                                         'clisuchml',
@@ -97,11 +105,7 @@ class MetMostrarSubsidiosSoController extends Controller
                                         'propresentacion',
                                         'prosku',
                                         'pronombre',
-                                        'sdeid',
-                                        'sdecantidadbultos',
-                                        'sdemontoareconocer',
-                                        'sdecantidadbultosreal',
-                                        'sdemontoareconocerreal',
+                                        'sdeid', 
                                         'sdestatus',
                                         'sdediferenciaahorro',
                                         'sdebultosacordados',
@@ -110,7 +114,8 @@ class MetMostrarSubsidiosSoController extends Controller
                                         'sdeterritorio',
                                         'sdevalidado',
                                         'clicodigoshipto'
-                                    ]);
+                                    )
+                                    ->get();
 
             
 
