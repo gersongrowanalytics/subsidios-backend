@@ -80,7 +80,7 @@ class MetMostrarSubsidiosSoController extends Controller
                                     ->orderBy('sdesector' , 'DESC')
                                     ->orderBy('sdecantidadbultos' , 'DESC')
                                     ->groupBy('sdecodigodestinatario')
-                                    ->groupBy('prosku')
+                                    ->groupBy('pro.proid')
                                     ->groupBy('cliid')
                                     ->groupBy('cat.catid')
                                     ->get([
@@ -92,6 +92,7 @@ class MetMostrarSubsidiosSoController extends Controller
                                         // 'sdesubcliente',
                                         'cat.catid',
                                         'catnombre',
+                                        'pro.proid',
                                         'propresentacion',
                                         'prosku',
                                         'pronombre',
