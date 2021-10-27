@@ -137,9 +137,9 @@ class MetMostrarSubsidiosSoController extends Controller
                 }
 
                 if($encontroCli == false){
-                    $cli = cliclientes::where('cliid', $descargarSde->cliid)->first();
+                    $cli = cliclientes::where('clicodigo', $sde->sdecodigodestinatario)->first();
                     $arrayCli[] = array(
-                        "dest" => $descargarSde->cliid,
+                        "dest" => $sde->sdecodigodestinatario,
                         "cli"  => $cli
                     );
                     $clienteSeleccionado = $cli;
