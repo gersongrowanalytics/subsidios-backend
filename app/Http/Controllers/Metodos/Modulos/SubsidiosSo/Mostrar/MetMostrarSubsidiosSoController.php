@@ -129,7 +129,7 @@ class MetMostrarSubsidiosSoController extends Controller
                 if(sizeof($arrayCli) > 0){
                     
                     foreach($arrayCli as $arcli){
-                        if($arcli['dest'] == $descargarSde->cliid){
+                        if($arcli['dest'] == $sde->sdecodigodestinatario){
                             $encontroCli = true;
                             $clienteSeleccionado = $arcli['cli'];
                         }
