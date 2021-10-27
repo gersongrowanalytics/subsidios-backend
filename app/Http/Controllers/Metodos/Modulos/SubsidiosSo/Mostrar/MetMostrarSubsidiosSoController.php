@@ -83,12 +83,12 @@ class MetMostrarSubsidiosSoController extends Controller
                                     // ->orderBy('sdecantidadbultos' , 'DESC')
                                     ->groupBy('sdecodigodestinatario')
                                     ->groupBy('pro.proid')
-                                    // ->groupBy('cliid')
+                                    ->groupBy('cliid')
                                     // ->groupBy('cat.catid')
                                     // ->groupBy('sdeid')
                                     ->select(
                                         "sdecodigodestinatario",
-                                        // 'cli.cliid',                                        
+                                        'cli.cliid',
                                         DB::raw("SUM(sdebultosacordados) as sdebultosacordados"),
                                         DB::raw("SUM(sdecantidadbultos) as sdecantidadbultos"),
                                         DB::raw("SUM(sdemontoareconocer) as sdemontoareconocer"),
@@ -129,7 +129,7 @@ class MetMostrarSubsidiosSoController extends Controller
                 if(sizeof($arrayCli) > 0){
                     
                     foreach($arrayCli as $arcli){
-                        if($arcli['dest'] == $sde->sdecodigodestinatario){
+                        if($arcli['dest'] == $sde->cliid){
                             $encontroCli = true;
                             $clienteSeleccionado = $arcli['cli'];
                         }
@@ -137,9 +137,9 @@ class MetMostrarSubsidiosSoController extends Controller
                 }
 
                 if($encontroCli == false){
-                    $cli = cliclientes::where('clicodigo', $sde->sdecodigodestinatario)->first();
+                    $cli = cliclientes::where('cliid', $sde->cliid)->first();
                     $arrayCli[] = array(
-                        "dest" => $sde->sdecodigodestinatario,
+                        "dest" => $sde->cliid,
                         "cli"  => $cli
                     );
                     $clienteSeleccionado = $cli;
