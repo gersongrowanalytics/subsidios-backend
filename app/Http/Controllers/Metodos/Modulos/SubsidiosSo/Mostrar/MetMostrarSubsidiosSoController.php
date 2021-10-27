@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\sdesubsidiosdetalles;
 use App\Models\zonzonas;
+use App\Models\cliclientes;
 use DB;
 
 class MetMostrarSubsidiosSoController extends Controller
