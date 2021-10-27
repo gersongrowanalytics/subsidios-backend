@@ -116,23 +116,47 @@ class MetMostrarSubsidiosSoController extends Controller
                                         // 'clicodigoshipto'
                                     )
                                     ->get();
-                                
+            
+            $arrayCli = array();
+                                    
             foreach($sdes as $posicionSde => $sde){
 
-                $sdes[$posicionSde]['clizona'] = $zon['clizona'];
-                $sdes[$posicionSde]['clisuchml'] = '';
-                $sdes[$posicionSde]['clihml'] = '';
-                $sdes[$posicionSde]['clinombre'] = '';
-                $sdes[$posicionSde]['sdesubcliente'] = '';
+                $clienteSeleccionado = array();
 
-                $sdes[$posicionSde]['sdestatus'] = '';
+                $encontroCli = false;
+
+                if(sizeof($arrayCli) > 0){
+                    
+                    foreach($arrayCli as $arcli){
+                        if($arcli['dest'] == $descargarSde->cliid){
+                            $encontroCli = true;
+                            $clienteSeleccionado = $arcli['cli'];
+                        }
+                    }
+                }
+
+                if($encontroCli == false){
+                    $cli = cliclientes::where('cliid', $descargarSde->cliid)->first();
+                    $arrayCli[] = array(
+                        "dest" => $descargarSde->cliid,
+                        "cli"  => $cli
+                    );
+                    $clienteSeleccionado = $cli;
+                }
+
+                $sdes[$posicionSde]['clizona'] = $zon['clizona'];
+                $sdes[$posicionSde]['clisuchml'] = $clienteSeleccionado['clisuchml'];
+                // $sdes[$posicionSde]['clihml'] = $clienteSeleccionado['clihml'];
+                $sdes[$posicionSde]['clinombre'] = $clienteSeleccionado['clihml'];
+                // $sdes[$posicionSde]['sdesubcliente'] = '';
+
+                $sdes[$posicionSde]['sdestatus'] = '-';
                 $sdes[$posicionSde]['sdediferenciaahorro'] = '';
-                $sdes[$posicionSde]['sdebultosacordados'] = '';
-                $sdes[$posicionSde]['sdesac'] = '';
-                $sdes[$posicionSde]['sdesector'] = '';
-                $sdes[$posicionSde]['sdeterritorio'] = '';
-                $sdes[$posicionSde]['sdevalidado'] = '';
-                $sdes[$posicionSde]['clicodigoshipto'] = '';
+                $sdes[$posicionSde]['sdesac'] = $clienteSeleccionado['cliclientesac'];
+                $sdes[$posicionSde]['sdesector'] = '-';
+                $sdes[$posicionSde]['sdeterritorio'] = $clienteSeleccionado['clitv'];
+                $sdes[$posicionSde]['sdevalidado'] = '-';
+                $sdes[$posicionSde]['clicodigoshipto'] = $clienteSeleccionado['clicodigoshipto'];
 
             }
 
