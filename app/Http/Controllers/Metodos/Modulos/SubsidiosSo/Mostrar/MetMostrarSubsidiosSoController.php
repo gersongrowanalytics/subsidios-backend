@@ -107,12 +107,12 @@ class MetMostrarSubsidiosSoController extends Controller
                                         'pronombre',
                                         // 'sdeid', 
                                         // 'sdestatus',
-                                        'sdediferenciaahorro',
-                                        'sdebultosacordados',
-                                        'sdesac',
-                                        'sdesector',
-                                        'sdeterritorio',
-                                        'sdevalidado'
+                                        // 'sdediferenciaahorro',
+                                        // 'sdebultosacordados',
+                                        // 'sdesac',
+                                        // 'sdesector',
+                                        // 'sdeterritorio',
+                                        // 'sdevalidado'
                                         // 'clicodigoshipto'
                                     )
                                     ->get();
