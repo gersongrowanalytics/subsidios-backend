@@ -82,12 +82,12 @@ class MetMostrarSubsidiosSoController extends Controller
                                     ->orderBy('sdecantidadbultos' , 'DESC')
                                     ->groupBy('sdecodigodestinatario')
                                     ->groupBy('pro.proid')
-                                    ->groupBy('cliid')
-                                    ->groupBy('cat.catid')
-                                    ->groupBy('sdeid')
+                                    // ->groupBy('cliid')
+                                    // ->groupBy('cat.catid')
+                                    // ->groupBy('sdeid')
                                     ->select(
                                         "sdecodigodestinatario",
-                                        'cli.cliid',                                        
+                                        // 'cli.cliid',                                        
                                         DB::raw("SUM(sdebultosacordados) as sdebultosacordados"),
                                         DB::raw("SUM(sdecantidadbultos) as sdecantidadbultos"),
                                         DB::raw("SUM(sdemontoareconocer) as sdemontoareconocer"),
