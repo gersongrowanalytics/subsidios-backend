@@ -87,14 +87,13 @@ class MetMostrarSubsidiosSoController extends Controller
                                     ->groupBy('sdeid')
                                     ->select(
                                         "sdecodigodestinatario",
-                                        "cliid",
+                                        'cli.cliid',                                        
                                         DB::raw("SUM(sdebultosacordados) as sdebultosacordados"),
                                         DB::raw("SUM(sdecantidadbultos) as sdecantidadbultos"),
                                         DB::raw("SUM(sdemontoareconocer) as sdemontoareconocer"),
                                         DB::raw("SUM(sdecantidadbultosreal) as sdecantidadbultosreal"),
                                         DB::raw("SUM(sdemontoareconocerreal) as sdemontoareconocerreal"),
 
-                                        'cli.cliid',
                                         'clizona',
                                         'clisuchml',
                                         'clihml as clinombre',
