@@ -6,8 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\sdesubsidiosdetalles;
 use App\Models\zonzonas;
-use App\Models\cliclientes;
-use DB;
 
 class MetMostrarSubsidiosSoController extends Controller
 {
@@ -75,94 +73,36 @@ class MetMostrarSubsidiosSoController extends Controller
                                         // }
                                     })
                                     // ->orderBy('sdestatus' , 'DESC')
-                                    // ->orderBy('sdeterritorio' , 'ASC')
-                                    // ->orderBy('clihml' , 'ASC')
-                                    // ->orderBy('clisuchml' , 'ASC')
-                                    // ->orderBy('sdesubcliente' , 'DESC')
-                                    // ->orderBy('sdesector' , 'DESC')
-                                    // ->orderBy('sdecantidadbultos' , 'DESC')
-                                    ->groupBy('sdecodigodestinatario')
-                                    ->groupBy('pro.proid')
-                                    ->groupBy('cliid')
-                                    // ->groupBy('cat.catid')
-                                    // ->groupBy('sdeid')
-                                    ->select(
-                                        "sdecodigodestinatario",
+                                    ->orderBy('sdeterritorio' , 'ASC')
+                                    ->orderBy('clihml' , 'ASC')
+                                    ->orderBy('clisuchml' , 'ASC')
+                                    ->orderBy('sdesubcliente' , 'DESC')
+                                    ->orderBy('sdesector' , 'DESC')
+                                    ->orderBy('sdecantidadbultos' , 'DESC')
+                                    ->get([
                                         'cli.cliid',
-                                        DB::raw("SUM(sdebultosacordados) as sdebultosacordados"),
-                                        DB::raw("SUM(sdecantidadbultos) as sdecantidadbultos"),
-                                        DB::raw("SUM(sdemontoareconocer) as sdemontoareconocer"),
-                                        DB::raw("SUM(sdecantidadbultosreal) as sdecantidadbultosreal"),
-                                        DB::raw("SUM(sdemontoareconocerreal) as sdemontoareconocerreal"),
-
-                                        // 'clizona',
-                                        // 'clisuchml',
-                                        // 'clihml as clinombre',
+                                        'clizona',
+                                        'clisuchml',
+                                        'clihml as clinombre',
                                         // 'clinombre',
-                                        // 'sdesubcliente',
-                                        'cat.catid',
+                                        'sdesubcliente',
                                         'catnombre',
-                                        'pro.proid',
                                         'propresentacion',
                                         'prosku',
                                         'pronombre',
-                                        // 'sdeid', 
-                                        // 'sdestatus',
-                                        // 'sdediferenciaahorro',
-                                        // 'sdebultosacordados',
-                                        // 'sdesac',
-                                        // 'sdesector',
-                                        // 'sdeterritorio',
-                                        // 'sdevalidado'
-                                        // 'clicodigoshipto'
-                                    )
-                                    ->get();
-            
-            $arrayCli = array();
-                                    
-            foreach($sdes as $posicionSde => $sde){
-
-                $clienteSeleccionado = array();
-
-                $encontroCli = false;
-
-                if(sizeof($arrayCli) > 0){
-                    
-                    foreach($arrayCli as $arcli){
-                        if($arcli['dest'] == $sde->cliid){
-                            $encontroCli = true;
-                            $clienteSeleccionado = $arcli['cli'];
-                        }
-                    }
-                }
-
-                if($encontroCli == false){
-                    $cli = cliclientes::where('cliid', $sde->cliid)->first();
-                    $arrayCli[] = array(
-                        "dest" => $sde->cliid,
-                        "cli"  => $cli
-                    );
-                    $clienteSeleccionado = $cli;
-                }
-
-                $sdes[$posicionSde]['clizona'] = $zon['clizona'];
-                $sdes[$posicionSde]['clisuchml'] = $clienteSeleccionado['clisuchml'];
-                // $sdes[$posicionSde]['clihml'] = $clienteSeleccionado['clihml'];
-                $sdes[$posicionSde]['clinombre'] = $clienteSeleccionado['clihml'];
-                // $sdes[$posicionSde]['sdesubcliente'] = '';
-
-                $sdes[$posicionSde]['sdestatus'] = '-';
-                $sdes[$posicionSde]['sdediferenciaahorro'] = '';
-                $sdes[$posicionSde]['sdesac'] = $clienteSeleccionado['cliclientesac'];
-                $sdes[$posicionSde]['sdesector'] = '-';
-                $sdes[$posicionSde]['sdeterritorio'] = $clienteSeleccionado['clitv'];
-                $sdes[$posicionSde]['sdevalidado'] = '-';
-                $sdes[$posicionSde]['clicodigoshipto'] = $clienteSeleccionado['clicodigoshipto'];
-
-            }
-
-            
-
+                                        'sdecantidadbultos',
+                                        'sdemontoareconocer',
+                                        'sdecantidadbultosreal',
+                                        'sdemontoareconocerreal',
+                                        'sdestatus',
+                                        'sdediferenciaahorro',
+                                        'sdebultosacordados',
+                                        'sdesac',
+                                        'sdesector',
+                                        'sdeterritorio',
+                                        'sdevalidado',
+                                        'clicodigoshipto'
+                                    ]);
 
             $zonas[$posicionZon]['data'] = $sdes;
         }
