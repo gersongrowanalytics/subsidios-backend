@@ -94,9 +94,9 @@ class MetMostrarSubsidiosSoController extends Controller
                                         DB::raw("SUM(sdecantidadbultosreal) as sdecantidadbultosreal"),
                                         DB::raw("SUM(sdemontoareconocerreal) as sdemontoareconocerreal"),
 
-                                        'clizona',
-                                        'clisuchml',
-                                        'clihml as clinombre',
+                                        // 'clizona',
+                                        // 'clisuchml',
+                                        // 'clihml as clinombre',
                                         // 'clinombre',
                                         // 'sdesubcliente',
                                         'cat.catid',
@@ -112,8 +112,8 @@ class MetMostrarSubsidiosSoController extends Controller
                                         'sdesac',
                                         'sdesector',
                                         'sdeterritorio',
-                                        'sdevalidado',
-                                        'clicodigoshipto'
+                                        'sdevalidado'
+                                        // 'clicodigoshipto'
                                     )
                                     ->get();
 
