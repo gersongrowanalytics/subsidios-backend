@@ -264,7 +264,7 @@ class SalvacionController extends Controller
 
     public function MostrarPedidosRepetidos()
     {
-        $sfss = sfssubsidiosfacturassi::join('fsifacturassi as fsid', 'fsi.fsid', 'sfssubsidiosfacturassi.fsid')
+        $sfss = sfssubsidiosfacturassi::join('fsifacturassi as fsi', 'fsi.fsid', 'sfssubsidiosfacturassi.fsid')
                                     ->select(
                                         DB::raw("distinct(fsifactura) as fsifactura"),
                                         'fsipedido'
