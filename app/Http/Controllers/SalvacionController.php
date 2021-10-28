@@ -269,7 +269,7 @@ class SalvacionController extends Controller
                                         DB::raw("distinct(fsifactura) as fsifactura"),
                                         'fsi.fsiid',
                                         'sfssubsidiosfacturassi.fdsid',
-                                        'fsipedido',
+                                        'fsipedido'
                                     )
                                     ->where('sfssubsidiosfacturassi.fecid', '1105')
                                     ->limit(50)
@@ -281,21 +281,32 @@ class SalvacionController extends Controller
 
             $fsis = fsifacturassi::where('fsipedido', $sfs->fsipedido)
                                 ->where('fsifactura', "!=", $sfs->fsifactura)
-                                ->get();
+                                ->first();
 
-            if(sizeof($fsis) > 0){
-                $facturas = array();
-                foreach($fsis as $fsi){
-                    $facturas[] = array(
-                        "fsiid" => $fsi->fsiid,
-                        "factura" => $fsi->fsifactura,
-                    );
+            if($fsis){
+                $fdss = fdsfacturassidetalles::where('fsiid', $sfs->fsiid)->get();
+                foreach($fdss as $posicionFds => $fds){
+                    if($fds->fdsid == $sfs->fdsid){
+
+                        $array[] = array(
+                            "cantidad" => sizeof($fdss),
+                            "posicion" => $posicionFds
+                        );
+                        break;
+                    }
                 }
-                $array[] = array(
-                    "pedido" => $sfs->fsipedido,
-                    "facturaori" => $sfs->fsifactura,
-                    "facturas" => $facturas
-                );
+                // $facturas = array();
+                // foreach($fsis as $fsi){
+                //     $facturas[] = array(
+                //         "fsiid" => $fsi->fsiid,
+                //         "factura" => $fsi->fsifactura,
+                //     );
+                // }
+                // $array[] = array(
+                //     "pedido" => $sfs->fsipedido,
+                //     "facturaori" => $sfs->fsifactura,
+                //     "facturas" => $facturas
+                // );
             }
 
         }
