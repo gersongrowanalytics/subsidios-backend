@@ -14,6 +14,7 @@ use App\Models\sfssubsidiosfacturassi;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\MailCargaArchivoOutlook;
 use Illuminate\Support\Facades\Hash;
+use DB;
 
 class SalvacionController extends Controller
 {
