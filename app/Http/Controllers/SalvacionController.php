@@ -293,6 +293,7 @@ class SalvacionController extends Controller
                 }
                 $array[] = array(
                     "pedido" => $sfs->fsipedido,
+                    "facturaori" => $sfs->fsifactura,
                     "facturas" => $facturas
                 );
             }
