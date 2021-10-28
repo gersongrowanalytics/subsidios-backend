@@ -40,6 +40,7 @@ $router->post('/crear-ambiente', 'Configuracion\CrearAmbienteHomeController@Crea
         $router->get('/salvacion/cambiar-validados/{fecid}', 'SalvacionController@CambiarValidados');
 
         $router->post('/salvacion/enviar-correo', 'SalvacionController@EnviarCorreo');
+        $router->post('/salvacion/mostrar-pedidos-repetidos', 'SalvacionController@MostrarPedidosRepetidos');
 
         $router->group(['prefix' => 'perfil'], function () use ($router) {
             $router->post('/editar', 'Validaciones\Modulos\Perfil\EditarPerfilController@ValEditarPerfil');

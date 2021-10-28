@@ -261,4 +261,35 @@ class SalvacionController extends Controller
 
     }
 
+    public function MostrarPedidosRepetidos()
+    {
+        $sfss = sfssubsidiosfacturassi::join('fsifacturassi as fsid', 'fsi.fsid', 'sfssubsidiosfacturassi.fsid')
+                                    ->select(
+                                        DB::raw("distinct(fsifactura) as fsifactura"),
+                                        'fsipedido'
+                                    )
+                                    ->where('sfssubsidiosfacturassi.fecid', '1105')
+                                    ->get();
+        
+        $array = array();
+
+        foreach($sfss as $sfs){
+            foreach($sfss as $sfsn){
+                
+                if($sfs->fsifactura != $sfsn->fsifactura ){
+                    if($sfs->fsipedido == $sfsn->fsipedido){
+                        $array[] = array(
+                            "factura1" => $sfs->fsifactura,
+                            "factura2" => $sfsn->fsifactura,
+                            "pedido" => $sfsn->fsipedido
+                        );
+                    }
+                }
+
+            }
+        }
+
+        dd($array);
+    }
+
 }
