@@ -267,27 +267,36 @@ class SalvacionController extends Controller
         $sfss = sfssubsidiosfacturassi::join('fsifacturassi as fsi', 'fsi.fsiid', 'sfssubsidiosfacturassi.fsiid')
                                     ->select(
                                         DB::raw("distinct(fsifactura) as fsifactura"),
-                                        'fsipedido'
+                                        'fsiid',
+                                        'sfssubsidiosfacturassi.fdsid',
+                                        'fsipedido',
                                     )
                                     ->where('sfssubsidiosfacturassi.fecid', '1105')
+                                    ->limit(50)
                                     ->get();
         
         $array = array();
 
         foreach($sfss as $sfs){
-            foreach($sfss as $sfsn){
-                
-                if($sfs->fsifactura != $sfsn->fsifactura ){
-                    if($sfs->fsipedido == $sfsn->fsipedido){
-                        $array[] = array(
-                            "factura1" => $sfs->fsifactura,
-                            "factura2" => $sfsn->fsifactura,
-                            "pedido" => $sfsn->fsipedido
-                        );
-                    }
-                }
 
+            $fsis = fsifacturassi::where('fsipedido', $sfs->fsipedido)
+                                ->where('fsifactura', "!=", $sfs->fsifactura)
+                                ->get();
+
+            if(sizeof($fsis) > 0){
+                $facturas = array();
+                foreach($fsis as $fsi){
+                    $facturas[] = array(
+                        "fsiid" => $fsi->fsiid,
+                        "factura" => $fsi->fsifactura,
+                    );
+                }
+                $array[] = array(
+                    "pedido" => $sfs->fsipedido,
+                    "facturas" => $facturas
+                );
             }
+
         }
 
         dd($array);
