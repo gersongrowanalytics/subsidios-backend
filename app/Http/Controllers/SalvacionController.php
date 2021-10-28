@@ -267,7 +267,7 @@ class SalvacionController extends Controller
         $sfss = sfssubsidiosfacturassi::join('fsifacturassi as fsi', 'fsi.fsiid', 'sfssubsidiosfacturassi.fsiid')
                                     ->select(
                                         DB::raw("distinct(fsifactura) as fsifactura"),
-                                        'fsiid',
+                                        'fsi.fsiid',
                                         'sfssubsidiosfacturassi.fdsid',
                                         'fsipedido',
                                     )
