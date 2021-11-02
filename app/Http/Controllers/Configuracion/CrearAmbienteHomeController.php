@@ -29,6 +29,9 @@ class CrearAmbienteHomeController extends Controller
         $re_subsidiosreconocidomanual     = $request['re_subsidiosreconocidomanual'];
         $re_subsidiosreconocidoautomatico = $request['re_subsidiosreconocidoautomatico'];
 
+        $re_sacadm = $request['re_sacadm'];
+        $re_sacnc  = $request['re_sacnc'];
+
         $fecAbierto = fecfechas::where('fecmesabierto', true)->first();
 
         if($fecAbierto){
@@ -96,7 +99,31 @@ class CrearAmbienteHomeController extends Controller
                 $arencuatro->areporcentaje = "9090"; // EL PORCENTAJE DEBE SER 9090 YA QUE HAY UNA RESTRICCIÓN A ESTE PORCENTAJE EN EL FRONTEND
                 $arencuatro->save();
                 $areidSacSODetalle = $arencuatro->areid;
-                $pkare = $pkare +1 ;
+                $pkare = $pkare +1;
+
+                $arencinco = new areareasestados;
+                $arencinco->areid = $pkare;
+                $arencinco->fecid = $fecn->fecid;
+                $arencinco->tprid = 1;
+                $arencinco->areicono = "/Sistema/Modulos/Home/areas/iconoSac.png ";
+                $arencinco->arenombre = "SAC ADM";
+                $arencinco->areporcentaje = "0";
+                $arencinco->save();
+                $areidSacAdm = $arencinco->areid;
+                $pkare = $pkare +1;
+
+                $arenseis = new areareasestados;
+                $arenseis->areid = $pkare;
+                $arenseis->fecid = $fecn->fecid;
+                $arenseis->tprid = 1;
+                $arenseis->areicono = "/Sistema/Modulos/Home/areas/iconoSac.png ";
+                $arenseis->arenombre = "SAC NC";
+                $arenseis->areporcentaje = "0";
+                $arenseis->save();
+                $areidSacNc = $arenseis->areid;
+                $pkare = $pkare +1;
+
+
 
                 // REVENUE
                 $espn = new espestadospendientes;
@@ -107,7 +134,7 @@ class CrearAmbienteHomeController extends Controller
                 $espn->espfechaprogramado = $re_soefectivo;
                 $espn->espchacargareal = null;
                 $espn->espfechactualizacion = null;
-                $espn->espbasedato = "Subsidio Aprobado (Plantilla)";
+                $espn->espbasedato = "Sell Out (Efectivo)";
                 $espn->espresponsable = "Maria Yauri";
                 $espn->espdiaretraso = "0";
                 $espn->esporden = "0";
@@ -221,6 +248,42 @@ class CrearAmbienteHomeController extends Controller
                 $pkesp = $pkesp + 1;
                 
                 // FIN SELL OUT DETALLE
+
+                // SAC ADM
+                $espn = new espestadospendientes;
+                $espn->espid = $pkesp;
+                $espn->fecid = $fecn->fecid;
+                $espn->perid = null;
+                $espn->areid = $areidSacAdm;
+                $espn->espfechaprogramado = $re_sacadm;
+                $espn->espchacargareal = null;
+                $espn->espfechactualizacion = null;
+                $espn->espbasedato = "Aoribación de Subsidios SO";
+                $espn->espresponsable = "SAC";
+                $espn->espdiaretraso = "0";
+                $espn->esporden = "0";
+                $espn->cliid = null;
+                $espn->save();
+                $pkesp = $pkesp + 1;
+                // FIN SAC ADM
+
+                // SAC NC
+                $espn = new espestadospendientes;
+                $espn->espid = $pkesp;
+                $espn->fecid = $fecn->fecid;
+                $espn->perid = null;
+                $espn->areid = $areidSacNc;
+                $espn->espfechaprogramado = $re_sacnc;
+                $espn->espchacargareal = null;
+                $espn->espfechactualizacion = null;
+                $espn->espbasedato = "Liquidación SI Notas de Crédito";
+                $espn->espresponsable = "SAC";
+                $espn->espdiaretraso = "0";
+                $espn->esporden = "0";
+                $espn->cliid = null;
+                $espn->save();
+                $pkesp = $pkesp + 1;
+                // FIM SAC NC
 
                 // re_soefectivo
                 // re_subsidiosaprobados
