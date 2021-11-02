@@ -84,7 +84,7 @@ class MetLoginController extends Controller
             'datos'     => $datos,
             'fecha'     => $fechaDisponible,
             'subsidiospendientes' => true,
-            'fechaActualizacion' => "19 Octubre 2021",
+            'fechaActualizacion' => "25 Octubre 2021",
         ]);
     }
 }
