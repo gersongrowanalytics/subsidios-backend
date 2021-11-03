@@ -9,6 +9,7 @@ use Illuminate\Http\Response;
 use App\Models\usuusuarios;
 use App\Models\tuptiposusuariospermisos;
 use App\Models\fecfechas;
+use App\Models\sdesubsidiosdetalles;
 
 class MetLoginController extends Controller
 {
