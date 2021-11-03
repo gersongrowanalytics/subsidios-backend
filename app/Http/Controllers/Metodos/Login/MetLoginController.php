@@ -81,6 +81,7 @@ class MetLoginController extends Controller
                                             ->distinct('sdesubsidiosdetalles.fecid')
                                             ->get([
                                                 'sdesubsidiosdetalles.sdeid',
+                                                'sdesubsidiosdetalles.fecid',
                                                 'fec.fecmesabreviacion',
                                                 'fec.fecanionumero',
                                             ]);
@@ -113,7 +114,7 @@ class MetLoginController extends Controller
             'subsidiospendientes' => $subsidiospendientes,
             'fechaActualizacion' => "25 Octubre 2021",
             'mesespendientes' => $mesespendientes,
-            'mesespendientes' => $tiempo,
+            'tiempo' => $tiempo,
         ]);
     }
 }
