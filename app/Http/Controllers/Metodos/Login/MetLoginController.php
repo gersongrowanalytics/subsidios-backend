@@ -80,7 +80,6 @@ class MetLoginController extends Controller
                                             ->where('sdependiente', true)
                                             ->distinct('sdesubsidiosdetalles.fecid')
                                             ->get([
-                                                'sdesubsidiosdetalles.sdeid',
                                                 'sdesubsidiosdetalles.fecid',
                                                 'fec.fecmesabreviacion',
                                                 'fec.fecanionumero',
