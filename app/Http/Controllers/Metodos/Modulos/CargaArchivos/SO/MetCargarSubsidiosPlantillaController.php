@@ -508,7 +508,7 @@ class MetCargarSubsidiosPlantillaController extends Controller
                     $array[] = array(
                         "pk" => $dato,
                         "existe" => false,
-                        "dat" => [],
+                        "dat" => $cli,
                         "linea" => $linea
                     );
                     $dato = $cli;
@@ -523,7 +523,7 @@ class MetCargarSubsidiosPlantillaController extends Controller
                     $array[] = array(
                         "pk" => $dato, 
                         "existe" => true, 
-                        "dat" => $pro, 
+                        "dat" => $pro,
                         "linea" => $linea
                     );
                     $dato = $pro;
@@ -531,7 +531,7 @@ class MetCargarSubsidiosPlantillaController extends Controller
                     $array[] = array(
                         "pk" => $dato,
                         "existe" => false,
-                        "dat" => [],
+                        "dat" => $pro,
                         "linea" => $linea
                     );
                     $dato = $pro;
