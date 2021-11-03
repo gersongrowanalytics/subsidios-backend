@@ -124,6 +124,10 @@ class MetCargarSubsidiosPlantillaController extends Controller
                                     // ->update(["sdeeditado" => 0]);
                                     ->delete();
 
+
+                $pksclientes = [];
+                $pksproductos = [];
+
                 for ($i=6; $i <= $numRows ; $i++) {
                     $pksde = $pksde + 1;
 
@@ -174,11 +178,17 @@ class MetCargarSubsidiosPlantillaController extends Controller
                     $ex_diferenciaahorrocliente = $objPHPExcel->getActiveSheet()->getCell('AD'.$i)->getCalculatedValue();
     
                     
-    
-                    $pro = proproductos::where('prosku', $ex_codigouni)->first(['proid']);
-    
+                    
+                    // $pro = proproductos::where('prosku', $ex_codigouni)->first(['proid']);
+                    $eliminarDup = $this->EliminarDuplicidadPks($pksproductos, $ex_codigouni, $i, "productos");
+                    $pksproductos = $eliminarDup["array"];
+                    $pro = $eliminarDup["dato"];
+
                     if($pro){
-                        $cli = cliclientes::where('clicodigoshipto', $ex_codigodestinatario)->first(['cliid', 'cliclientesac']);
+                        // $cli = cliclientes::where('clicodigoshipto', $ex_codigodestinatario)->first(['cliid', 'cliclientesac']);
+                        $eliminarDup = $this->EliminarDuplicidadPks($pksclientes, $ex_codigodestinatario, $i, "clientes");
+                        $pksclientes = $eliminarDup["array"];
+                        $cli = $eliminarDup["dato"];
     
                         if($cli){
                             
@@ -391,7 +401,7 @@ class MetCargarSubsidiosPlantillaController extends Controller
                     if($aree){
 
                         $espcount = espestadospendientes::where('fecid', $fec->fecid)
-                                            ->where('espbasedato', "Subsidio Aprobado (Plantilla)")
+                                            ->where('espbasedato', "Sell Out (Efectivo)")
                                             ->where('espfechactualizacion', '!=', null)
                                             ->count();
 
@@ -464,5 +474,76 @@ class MetCargarSubsidiosPlantillaController extends Controller
         }
 
         return $array;
+    }
+
+    public function EliminarDuplicidadPks($array, $dato, $linea, $campo)
+    {
+        $encontroDato = false;
+        $dato = array();
+
+        foreach($array as $arr){
+            if($arr['pk'] == $dato){
+                $encontroDato = true;
+                $dato = $arr['dat'];
+                break;
+            }
+        }
+
+        if($encontroDato == false){
+
+            if($campo == "clientes"){
+
+                $cli = cliclientes::where('clicodigoshipto', $dato)
+                                    ->first(['cliid', 'cliclientesac']);
+
+                if($cli){
+                    $array[] = array(
+                        "pk" => $dato, 
+                        "existe" => true, 
+                        "dat" => $cli, 
+                        "linea" => $linea
+                    );
+                    $dato = $cli;
+                }else{
+                    $array[] = array(
+                        "pk" => $dato,
+                        "existe" => false,
+                        "dat" => [],
+                        "linea" => $linea
+                    );
+                    $dato = $cli;
+                }
+
+            }else if($campo == "productos"){
+                
+                $pro = proproductos::where('prosku', $dato)
+                                    ->first(['proid']);
+
+                if($pro){
+                    $array[] = array(
+                        "pk" => $dato, 
+                        "existe" => true, 
+                        "dat" => $pro, 
+                        "linea" => $linea
+                    );
+                    $dato = $pro;
+                }else{
+                    $array[] = array(
+                        "pk" => $dato,
+                        "existe" => false,
+                        "dat" => [],
+                        "linea" => $linea
+                    );
+                    $dato = $pro;
+                }
+
+            }
+
+        }
+
+        return array(
+            "array" => $array,
+            "dato" => $dato
+        );
     }
 }
