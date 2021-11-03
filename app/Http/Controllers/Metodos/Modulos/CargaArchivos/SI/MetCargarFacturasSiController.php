@@ -673,7 +673,7 @@ class MetCargarFacturasSiController extends Controller
                 if($aree){
                     
                     $espcount = espestadospendientes::where('fecid', $fec->fecid)
-                                        ->where('espbasedato', "Sell In (Factura Efectiva)")
+                                        ->where('espbasedato', "Operaciones Sunat")
                                         ->where('espfechactualizacion', '!=', null)
                                         ->count();
 
