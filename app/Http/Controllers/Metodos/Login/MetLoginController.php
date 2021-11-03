@@ -17,6 +17,7 @@ class MetLoginController extends Controller
     {
         $mesespendientes = [];
         $subsidiospendientes = false;
+        $tiempo = [];
 
         $estadoHttp = 200;
         $respuesta = true;
@@ -92,6 +93,7 @@ class MetLoginController extends Controller
                             "mes"  => $sde->fecanionumero
                         );
                     }
+                    $tiempo = $sdes;
                 }
 
             }else{
@@ -111,6 +113,7 @@ class MetLoginController extends Controller
             'subsidiospendientes' => $subsidiospendientes,
             'fechaActualizacion' => "25 Octubre 2021",
             'mesespendientes' => $mesespendientes,
+            'mesespendientes' => $tiempo,
         ]);
     }
 }
