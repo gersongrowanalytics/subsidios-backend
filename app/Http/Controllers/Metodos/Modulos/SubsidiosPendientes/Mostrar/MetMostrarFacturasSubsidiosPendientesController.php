@@ -100,7 +100,19 @@ class MetMostrarFacturasSubsidiosPendientesController extends Controller
                                 ->join('fecfechas as fec', 'fec.fecid', 'fsi.fecid')
                                 ->join('proproductos as pro', 'pro.proid', 'fdsfacturassidetalles.proid')
                                 // ->where('fsi.fsidestinatario', $coddestinatario)
-                                ->where(function ($query) use($tieneDestinatarios, $coddestinatario, $coddestinatariodos, $coddestinatariotres, $coddestinatariocuatro, $coddestinatariocinco) {
+                                ->where(function ($query) use(
+                                    $tieneDestinatarios,
+                                    $coddestinatario,
+                                    $coddestinatariodos,
+                                    $coddestinatariotres,
+                                    $coddestinatariocuatro,
+                                    $coddestinatariocinco,
+                                    $coddestinatarioseis,
+                                    $coddestinatariosiete,
+                                    $coddestinatarioocho,
+                                    $coddestinatarionueve,
+                                    $coddestinatariodiez,
+                                    $coddestinatarioonce) {
                                     $query->orwhere('fsi.fsidestinatario', $coddestinatario);
                                     $query->orwhere('fsi.fsidestinatario', $coddestinatariodos);
                                     $query->orwhere('fsi.fsidestinatario', $coddestinatariotres);
