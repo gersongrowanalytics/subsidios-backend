@@ -479,12 +479,12 @@ class MetCargarSubsidiosPlantillaController extends Controller
     public function EliminarDuplicidadPks($array, $dato, $linea, $campo)
     {
         $encontroDato = false;
-        $dato = array();
+        $data = array();
 
         foreach($array as $arr){
             if($arr['pk'] == $dato){
                 $encontroDato = true;
-                $dato = $arr['dat'];
+                $data = $arr['dat'];
                 break;
             }
         }
@@ -503,7 +503,7 @@ class MetCargarSubsidiosPlantillaController extends Controller
                         "dat" => $cli, 
                         "linea" => $linea
                     );
-                    $dato = $cli;
+                    $data = $cli;
                 }else{
                     $array[] = array(
                         "pk" => $dato,
@@ -511,7 +511,7 @@ class MetCargarSubsidiosPlantillaController extends Controller
                         "dat" => $cli,
                         "linea" => $linea
                     );
-                    $dato = $cli;
+                    $data = $cli;
                 }
 
             }else if($campo == "productos"){
@@ -526,7 +526,7 @@ class MetCargarSubsidiosPlantillaController extends Controller
                         "dat" => $pro,
                         "linea" => $linea
                     );
-                    $dato = $pro;
+                    $data = $pro;
                 }else{
                     $array[] = array(
                         "pk" => $dato,
@@ -534,7 +534,7 @@ class MetCargarSubsidiosPlantillaController extends Controller
                         "dat" => $pro,
                         "linea" => $linea
                     );
-                    $dato = $pro;
+                    $data = $pro;
                 }
 
             }
@@ -543,7 +543,7 @@ class MetCargarSubsidiosPlantillaController extends Controller
 
         return array(
             "array" => $array,
-            "dato" => $dato
+            "dato" => $data
         );
     }
 }
