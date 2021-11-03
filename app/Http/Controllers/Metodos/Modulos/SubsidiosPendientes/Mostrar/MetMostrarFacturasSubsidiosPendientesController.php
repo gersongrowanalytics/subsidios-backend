@@ -17,6 +17,13 @@ class MetMostrarFacturasSubsidiosPendientesController extends Controller
         $coddestinatariocuatro = $request['sdecodigodestinatario'];
         $coddestinatariocinco  = $request['sdecodigodestinatario'];
 
+        $coddestinatarioseis   = $request['sdecodigodestinatario'];
+        $coddestinatariosiete  = $request['sdecodigodestinatario'];
+        $coddestinatarioocho   = $request['sdecodigodestinatario'];
+        $coddestinatarionueve  = $request['sdecodigodestinatario'];
+        $coddestinatariodiez   = $request['sdecodigodestinatario'];
+        $coddestinatarioonce   = $request['sdecodigodestinatario'];
+
         $tieneDestinatarios = true;
 
         if($coddestinatario == "170209"){
@@ -71,6 +78,22 @@ class MetMostrarFacturasSubsidiosPendientesController extends Controller
             $coddestinatariodos = "171802";
             $coddestinatariotres = "171802";
             $tieneDestinatarios = true;
+        }else if($coddestinatario == "168098"){
+            
+            $coddestinatario = "168098";
+            $coddestinatariodos = "108016";
+            $coddestinatariotres = "144124";
+            $coddestinatariocuatro = "241834";
+            $coddestinatariocinco  = "252649";
+
+            $coddestinatarioseis  = "252650";
+            $coddestinatariosiete  = "143070";
+            $coddestinatarioocho  = "116986";
+            $coddestinatarionueve  = "138113";
+            $coddestinatariodiez  = "270535";
+            $coddestinatarioonce  = "80133";
+
+            $tieneDestinatarios = true;
         }
 
         $fsis = fdsfacturassidetalles::join('fsifacturassi as fsi', 'fsi.fsiid', 'fdsfacturassidetalles.fsiid')
@@ -83,6 +106,13 @@ class MetMostrarFacturasSubsidiosPendientesController extends Controller
                                     $query->orwhere('fsi.fsidestinatario', $coddestinatariotres);
                                     $query->orwhere('fsi.fsidestinatario', $coddestinatariocuatro);
                                     $query->orwhere('fsi.fsidestinatario', $coddestinatariocinco);
+
+                                    $query->orwhere('fsi.fsidestinatario', $coddestinatarioseis);
+                                    $query->orwhere('fsi.fsidestinatario', $coddestinatariosiete);
+                                    $query->orwhere('fsi.fsidestinatario', $coddestinatarioocho);
+                                    $query->orwhere('fsi.fsidestinatario', $coddestinatarionueve);
+                                    $query->orwhere('fsi.fsidestinatario', $coddestinatariodiez);
+                                    $query->orwhere('fsi.fsidestinatario', $coddestinatarioonce);
                                 })
                                 // ->orwhere('fsi.fsidestinatario', $coddestinatariodos)
                                 // ->orwhere('fsi.fsidestinatario', $coddestinatariotres)
@@ -92,11 +122,12 @@ class MetMostrarFacturasSubsidiosPendientesController extends Controller
                                 ->where('fsiclase', '!=', 'ZPF9')
                                 ->where('fdsanulada', false)
                                 ->orderBy('fdssaldo', 'desc')
-                                // ->limit(50)
+                                ->limit(50)
                                 ->get([
                                     'fdsfacturassidetalles.fdsid',
                                     'fdsfacturassidetalles.fsiid',
-                                    // 'fecfecha',
+                                    'fecanionumero',
+                                    'fecmesabreviacion',
                                     'fsifecha as fecfecha',
                                     'fsifactura',
                                     'fdsmaterial',
@@ -159,6 +190,8 @@ class MetMostrarFacturasSubsidiosPendientesController extends Controller
                         "fsiclase" => $fsi->fsiclase,
                         "fsisolicitante" => $fsi->fsisolicitante,
                         "fsidestinatario" => $fsi->fsidestinatario,
+                        "fecanionumero" => $fsi->fecanionumero,
+                        "fecmesabreviacion" => $fsi->fecmesabreviacion,
                     );
                 }
 
