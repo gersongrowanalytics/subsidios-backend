@@ -219,7 +219,7 @@ class MetCargarSOController extends Controller
                 if($aree){
 
                     $espcount = espestadospendientes::where('fecid', $fecid)
-                                        ->where('espbasedato', "Sell Out (Efectivo)")
+                                        ->where('espbasedato', "Subsidio Aprobado (Plantilla)")
                                         ->where('espfechactualizacion', '!=', null)
                                         ->first();
 
