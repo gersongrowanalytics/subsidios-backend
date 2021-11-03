@@ -678,9 +678,9 @@ class MetCargarFacturasSiController extends Controller
                                         ->count();
 
                     if($espcount == 1){
-                        $aree->areporcentaje = "50";
-                    }else{
                         $aree->areporcentaje = "100";
+                    }else{
+                        $aree->areporcentaje = "50";
                     }
 
                     $aree->update();
