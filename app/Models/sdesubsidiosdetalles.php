@@ -55,7 +55,8 @@ class sdesubsidiosdetalles extends Model
         "sdebonificacion",
         "sdebultosnoreconocido",
         "sdebultosacido",
-        "sdemontoacido"
+        "sdemontoacido",
+        "sderegularizacion"
     ];
 
 

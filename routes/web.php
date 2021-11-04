@@ -86,6 +86,10 @@ $router->post('/crear-ambiente', 'Configuracion\CrearAmbienteHomeController@Crea
             $router->post('/mostrar/notascreditos', 'Validaciones\Modulos\SubsidiosSi\Mostrar\MostrarNotasCreditoFacturaController@ValMostrarNotasCreditoFactura');
         });
 
+        $router->group(['prefix' => 'regularizacion-so'], function () use ($router) {
+            $router->post('/mostrar', 'Validaciones\Modulos\Regularizacion\ValMostrarRegularizacionesController@ValMostrarRegularizaciones');
+        });
+
         $router->group(['prefix' => 'SubsidiosPendientes'], function () use ($router) {
             $router->post('/mostrar', 'Validaciones\Modulos\SubsidiosPendientes\Mostrar\MostrarSubsidiosPendientesController@ValMostrarSubsidiosPendientes');
 
