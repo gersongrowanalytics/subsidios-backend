@@ -84,24 +84,6 @@ class MetMostrarFacturasController extends Controller
             )
         );
 
-        // $ndss = ndsnotascreditossidetalles::join('fecfechas as fec', 'fec.fecid', 'ndsnotascreditossidetalles.fecid')
-        //                                     ->where(function ($query) use($fechaInicio, $fechaFinal) {
-        //                                         // if($fechaInicio != null){
-        //                                             $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
-        //                                         // }
-        //                                     })
-        //                                     ->get([
-        //                                         'fec.fecanionumero',
-        //                                         'fec.fecmesabreviacion',
-        //                                         'fec.fecfecha',
-        //                                         'ndsmaterial',
-        //                                         'ndsclase',
-        //                                         'ndsnotacredito',
-        //                                         'ndsvalorneto',
-        //                                         'ndspedido',
-        //                                         'ndspedidooriginal'
-        //                                     ]);
-
         $ndss = array();
 
         $fsis = fdsfacturassidetalles::join('fecfechas as fec', 'fec.fecid', 'fdsfacturassidetalles.fecid')
@@ -468,8 +450,8 @@ class MetMostrarFacturasController extends Controller
                 ),
 
                 array(
-                    // "value" => $fsi->fsidestinatario,
-                    "value" => "130157",
+                    "value" => $fsi->fsidestinatario,
+                    // "value" => "130157",
                     "style" => array(
                         "font" => array(
                             "sz" => "9",
