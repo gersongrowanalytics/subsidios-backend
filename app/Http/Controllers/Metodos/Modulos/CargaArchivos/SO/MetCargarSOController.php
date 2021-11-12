@@ -323,7 +323,33 @@ class MetCargarSOController extends Controller
                                 ->where('fsoruc', $sde->sderucsubcliente)
                                 ->sum('fsocantidadbulto');
 
-                $montoAReconocerReal = $fsosuma;
+                $montoAReconocerReal = 0;
+
+                $pos = strpos($sde->sdebonificacion, "X");
+
+                if($pos !== false){
+                    
+                    $montoAReconocerReal = floatval($sde->sdecantidadbultos);
+
+                }else{
+                    if(is_numeric($sde->sdecantidadbultos)){
+                        if($sde->sdecantidadbultos == 0){
+    
+                            $montoAReconocerReal = 0;
+        
+                        }else{
+        
+                            if(floatval($fsosuma) > floatval($sde->sdecantidadbultos)){
+                                $montoAReconocerReal = floatval($sde->sdecantidadbultos);
+                            }else{
+                                $montoAReconocerReal = floatval($fsosuma);
+                            }
+        
+                        }
+                    }else{
+                        $montoAReconocerReal = 0;
+                    }
+                }
 
                 $sdee = sdesubsidiosdetalles::find($sde->sdeid);
                 $sdee->sdecantidadbultosreal = $montoAReconocerReal;
