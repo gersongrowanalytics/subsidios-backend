@@ -126,7 +126,7 @@ class MetCargarSOController extends Controller
                 if($fec){
 
                     if($i == 2){
-                        fsofacturasso::where('fecid', $fec->fecid)->delete();
+                        // fsofacturasso::where('fecid', $fec->fecid)->delete();
                         $fecid = $fec->fecid;
                     }
 
