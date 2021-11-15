@@ -1636,6 +1636,7 @@ class MetMostrarSubsidiosSiController extends Controller
                                         ->join('proproductos as pro', 'pro.proid', 'fds.proid')
                                         ->where('sdecodigodestinatario', $descargarSde->sdecodigodestinatario)
                                         ->where('sdecodigounitario', $descargarSde->sdecodigounitario)
+                                        ->where('sfsvalorizado', '>', 0.1)
                                         ->where(function ($query) use($fechaInicio, $fechaFinal) {
                                             // if($fechaInicio != null){
                                                 $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
