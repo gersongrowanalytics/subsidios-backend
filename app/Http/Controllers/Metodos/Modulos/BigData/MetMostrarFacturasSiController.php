@@ -40,7 +40,7 @@ class MetMostrarFacturasSiController extends Controller
                     
         $requestsalida = response()->json([
             "respuesta" => true,
-            "data" => $fdss,
+            "data" => [1,2,3],
             "descargable" => $fdssDescargable,
         ]);
 
