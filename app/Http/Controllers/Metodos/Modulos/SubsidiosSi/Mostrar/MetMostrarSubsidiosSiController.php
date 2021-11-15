@@ -106,7 +106,10 @@ class MetMostrarSubsidiosSiController extends Controller
                                         'sdeterritorio',
                                         'sdevalidado',
                                         'clicodigoshipto',
-                                        'sumsfsvalorizado'
+                                        'sumsfsvalorizado',
+                                        'sdebultosacido',
+                                        'sdedsctodos',
+                                        'sdemontoacido',
                                     ]);
 
             foreach($sdes as $posicionSde => $sde){
@@ -1551,27 +1554,6 @@ class MetMostrarSubsidiosSiController extends Controller
             )
         );
 
-        // $descargarSdes = sdesubsidiosdetalles::join('fecfechas as fec', 'fec.fecid', 'sdesubsidiosdetalles.fecid')
-        //                                 ->where(function ($query) use($fechaInicio, $fechaFinal) {
-        //                                     // if($fechaInicio != null){
-        //                                         $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
-        //                                         // $query->where('sdesubsidiosdetalles.fecid', 1104);
-        //                                     // }
-        //                                 })
-        //                                 ->where('sdevalidado', 'SIVALIDADOS')
-        //                                 ->distinct('sdecodigodestinatario')
-        //                                 ->get([
-        //                                     'sdecodigodestinatario',
-        //                                     'fecmesabreviacion',
-        //                                     'fecanionumero'
-        //                                 ]);
-                                        // ->selectRaw(
-                                        //     'sdecodigodestinatario, fecanionumero, fecmesabreviacion, 
-                                        //     SUM(sdebultosacordados) as sumaButlosAcordados, SUM(sdecantidadbultos) as sumaCantidadBultos,
-                                        //     SUM(sdemontoareconocer) as sumaMontoReconocer, SUM(sdecantidadbultosreal) as sumaCantidadBultosReal,
-                                        //     SUM(sdemontoareconocerreal) as sumaMontoReconocerReal'
-                                        // );
-
         $descargarSdes = sdesubsidiosdetalles::join('fecfechas as fec', 'fec.fecid', 'sdesubsidiosdetalles.fecid')
                                         ->where(function ($query) use($fechaInicio, $fechaFinal) {
                                             // if($fechaInicio != null){
@@ -1587,8 +1569,9 @@ class MetMostrarSubsidiosSiController extends Controller
                                             // "sdezona as clizona",
                                             // "sdeterritorio as sdeterritorio",
                                             // "sdecliente as clinombre",
-                                            // "fecanionumero",
-                                            // "fecmesabreviacion",
+                                            "fec.fecid",
+                                            "fecanionumero",
+                                            "fecmesabreviacion",
                                             DB::raw("SUM(sdebultosacordados) as sumaButlosAcordados"),
                                             DB::raw("SUM(sdecantidadbultos) as sumaCantidadBultos"),
                                             DB::raw("SUM(sdemontoareconocer) as sumaMontoReconocer"),
@@ -1598,6 +1581,9 @@ class MetMostrarSubsidiosSiController extends Controller
                                         ->groupBy('sdecodigodestinatario')
                                         ->groupBy('sdecodigounitario')
                                         ->groupBy('cliid')
+                                        ->groupBy('fecid')
+                                        ->groupBy('fecanionumero')
+                                        ->groupBy('fecmesabreviacion')
                                         ->get();
 
         $arrayCli = array();
@@ -2035,8 +2021,7 @@ class MetMostrarSubsidiosSiController extends Controller
 
             $arrayFilaExcel = array(
                 array(
-                    // "value" => $descargarSde->fecanionumero,
-                    "value" => "2021",
+                    "value" => $descargarSde->fecanionumero,
                     "style" => array(
                         "font" => array(
                             "sz" => "9",
@@ -2052,7 +2037,7 @@ class MetMostrarSubsidiosSiController extends Controller
                 ),
 
                 array(
-                    "value" => "SET",
+                    "value" => $descargarSde->fecmesabreviacion,
                     "style" => array(
                         "font" => array(
                             "sz" => "9",
@@ -2306,6 +2291,391 @@ class MetMostrarSubsidiosSiController extends Controller
             $nuevoArray[0]['data'][] = $arrayFilaExcel;
 
         }
+
+        // MOSTRAR LAS FACTURAS DE REGULARIZACION
+
+        $descargarSdes = sdesubsidiosdetalles::join('fecfechas as fec', 'fec.fecid', 'sdesubsidiosdetalles.fecidregularizado')
+                                        ->join('fecfechas as fecs', 'fecs.fecid', 'sdesubsidiosdetalles.fecid')
+                                        ->where(function ($query) use($fechaInicio, $fechaFinal) {
+                                            $query->whereBetween('fec.fecfecha', [$fechaInicio, $fechaFinal]);
+                                        })
+                                        ->select(
+                                            "sdecodigodestinatario",
+                                            "sdecodigounitario",
+                                            "cliid",
+                                            // "sdeterritorio",
+                                            // "sdezona as clizona",
+                                            // "sdeterritorio as sdeterritorio",
+                                            // "sdecliente as clinombre",
+                                            "fecs.fecid",
+                                            "fecs.fecanionumero",
+                                            "fecs.fecmesabreviacion",
+                                            DB::raw("SUM(sdebultosacordados) as sumaButlosAcordados"),
+                                            DB::raw("SUM(sdecantidadbultos) as sumaCantidadBultos"),
+                                            DB::raw("SUM(sdemontoareconocer) as sumaMontoReconocer"),
+                                            DB::raw("SUM(sdecantidadbultosreal) as sumaCantidadBultosReal"),
+                                            DB::raw("SUM(sdemontoareconocerreal) as sumaMontoReconocerReal"),
+                                        )
+                                        ->groupBy('sdecodigodestinatario')
+                                        ->groupBy('sdecodigounitario')
+                                        ->groupBy('cliid')
+                                        ->groupBy('fecs.fecid')
+                                        ->groupBy('fecs.fecanionumero')
+                                        ->groupBy('fecs.fecmesabreviacion')
+                                        ->get();
+
+            foreach($descargarSdes as $posicionSde => $descargarSde){
+
+                $clienteSeleccionado = array();
+
+                $encontroCli = false;
+
+                if(sizeof($arrayCli) > 0){
+                    
+                    foreach($arrayCli as $arcli){
+                        if($arcli['dest'] == $descargarSde->cliid){
+                            $encontroCli = true;
+                            $clienteSeleccionado = $arcli['cli'];
+                        }
+                    }
+                }
+
+                if($encontroCli == false){
+                    $cli = cliclientes::where('cliid', $descargarSde->cliid)->first();
+                    $arrayCli[] = array(
+                        "dest" => $descargarSde->cliid,
+                        "cli"  => $cli
+                    );
+                    $clienteSeleccionado = $cli;
+                }
+
+                $sfss = sfssubsidiosfacturassi::join('sdesubsidiosdetalles as sde', 'sde.sdeid', 'sfssubsidiosfacturassi.sdeid')
+                                        ->join('fecfechas as fec', 'fec.fecid', 'sde.fecidregularizado')
+                                        ->join('fsifacturassi as fsi', 'fsi.fsiid', 'sfssubsidiosfacturassi.fsiid')
+                                        ->join('fdsfacturassidetalles as fds', 'fds.fdsid', 'sfssubsidiosfacturassi.fdsid')
+                                        ->join('proproductos as pro', 'pro.proid', 'fds.proid')
+                                        ->where('sdecodigodestinatario', $descargarSde->sdecodigodestinatario)
+                                        ->where('sdecodigounitario', $descargarSde->sdecodigounitario)
+                                        ->where('sfsregularizado', true)
+                                        ->where(function ($query) use($fechaInicio, $fechaFinal) {
+                                            $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
+                                        })
+                                        ->groupBy('fsifactura')
+                                        ->groupBy('fdsmaterial')
+                                        ->groupBy('pronombre')
+                                        ->groupBy('sfsregularizado')
+                                        ->select(
+                                            "fsifactura",
+                                            DB::raw("SUM(sfsvalorizado) as sfsvalorizado"),
+                                            'fdsmaterial',
+                                            'pronombre',
+                                            'sfsregularizado'
+                                        )
+                                        ->get([
+                                            'fsi.fsifactura',
+                                            'sfsvalorizado',
+                                            'fdsmaterial',
+                                            'pronombre',
+                                            'sfsregularizado'
+                                        ]);
+
+                $sfssSuma = sfssubsidiosfacturassi::join('sdesubsidiosdetalles as sde', 'sde.sdeid', 'sfssubsidiosfacturassi.sdeid')
+                                        ->join('fecfechas as fec', 'fec.fecid', 'sde.fecidregularizado')
+                                        ->where('sdecodigodestinatario', $descargarSde->sdecodigodestinatario)
+                                        ->where('sdecodigounitario', $descargarSde->sdecodigounitario)
+                                        ->where('sfsregularizado', true)
+                                        ->where(function ($query) use($fechaInicio, $fechaFinal) {
+                                            $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
+                                        })
+                                        ->sum('sfsvalorizado');
+
+                $arrayFilaExcel = array(
+                    array(
+                        "value" => $descargarSde->fecanionumero,
+                        // "value" => "2021",
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => "FFF2F2F2"
+                                )
+                            )
+                        )
+                    ),
+
+                    array(
+                        "value" => $descargarSde->fecmesabreviacion,
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => "FFF2F2F2"
+                                )
+                            )
+                        )
+                    ),
+
+                    array(
+                        "value" => $clienteSeleccionado['clizona'],
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => "FFF2F2F2"
+                                )
+                            )
+                        )
+                    ),
+
+                    array(
+                        "value" => $clienteSeleccionado['clitv'], 
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => "FFF2F2F2"
+                                )
+                            )
+                        )
+                    ),
+
+                    array(
+                        "value" => $clienteSeleccionado['clinombre'], 
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => "FFF2F2F2"
+                                )
+                            )
+                        )
+                    ),
+
+                    array(
+                        "value" => $descargarSde->sdecodigodestinatario, 
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => "FFF2F2F2"
+                                )
+                            )
+                        )
+                    ),
+
+                    array(
+                        "value" => $descargarSde->sdecodigounitario, 
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => "FFF2F2F2"
+                                )
+                            )
+                        )
+                    ),
+
+                    // 
+                    array(
+                        "value" => floatval($descargarSde->sumaButlosAcordados),
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => "FFF2F2F2"
+                                )
+                            ),
+                            "numFmt" => "#,##0.00"
+                        )
+                    ),
+
+                    array(
+                        "value" => floatval($descargarSde->sumaCantidadBultosReal),
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => "FFF2F2F2"
+                                )
+                            ),
+                            "numFmt" => "#,##0.00"
+                        )
+                    ),
+
+                    array(
+                        "value" => floatval($descargarSde->sumaMontoReconocerReal),
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => "FFF2F2F2"
+                                )
+                            ),
+                            "numFmt" => "#,##0.00"
+                        )
+                    ),
+
+                    array(
+                        "value" => floatval($sfssSuma),
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => "FFF2F2F2"
+                                )
+                            ),
+                            "numFmt" => "#,##0.00"
+                        )
+                    ),
+
+                    array(
+                        "value" => floatval($descargarSde->sumaMontoReconocerReal - $sfssSuma),
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => "FFF2F2F2"
+                                )
+                            ),
+                            "numFmt" => "#,##0.00"
+                        )
+                    ),
+                    
+                );
+
+                foreach($sfss as $posicionSfs => $sfs){
+
+                    $colorFondo = "FFF2F2F2";
+
+                    if($sfs->sfsregularizado == true){
+                        $colorFondo = "FFFFFF00";
+                    }
+
+
+                    $arrayFilaExcel[] = array(
+                        "value" => $sfs->fsifactura,
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => $colorFondo
+                                )
+                            )
+                        )
+                    );
+    
+                    $arrayFilaExcel[] = array(
+                        "value" => $sfs->fdsmaterial,
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => $colorFondo
+                                )
+                            )
+                        )
+                    );
+    
+                    $arrayFilaExcel[] = array(
+                        "value" => $sfs->pronombre,
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => $colorFondo
+                                )
+                            )
+                        )
+                    );
+    
+                    $arrayFilaExcel[] = array(
+                        "value" => floatval($sfs->sfsvalorizado),
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => $colorFondo
+                                )
+                            ),
+                            "numFmt" => "#,##0.00"
+                        )
+                    );
+                }
+
+                $nuevoArray[0]['data'][] = $arrayFilaExcel;
+
+            }
+
+        // 
+
+
+
+
+
 
         $requestsalida = response()->json([
             "datos" => $nuevoArray,

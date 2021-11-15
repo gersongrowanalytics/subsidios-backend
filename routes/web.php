@@ -71,6 +71,8 @@ $router->post('/crear-ambiente', 'Configuracion\CrearAmbienteHomeController@Crea
         $router->group(['prefix' => 'subsidiosSo'], function () use ($router) {
             $router->get('/logica/{fecid}', 'Metodos\Modulos\CargaArchivos\SO\MetCargarSOController@Alinear');
             $router->post('/mostrar', 'Validaciones\Modulos\SubsidiosSo\Mostrar\MostrarSubsidiosSoController@ValMostrarSubsidiosSo');
+            $router->post('/mostrar-subsidios-descarga', 'Validaciones\Modulos\SubsidiosSo\Mostrar\MostrarSubsidiosSoController@ValDescargableSubsidiosSo');
+            $router->post('/editar-bultos', 'Validaciones\Modulos\SubsidiosSo\Editar\EditarSubsidiosSoController@ValEditarBultosSubsidiosSo');
 
             $router->post('/mostrar-filtros', 'Validaciones\Modulos\SubsidiosSo\Mostrar\MostrarFiltrosController@ValMostrarFiltros');
 
@@ -79,6 +81,8 @@ $router->post('/crear-ambiente', 'Configuracion\CrearAmbienteHomeController@Crea
 
         $router->group(['prefix' => 'SubsidiosSi'], function () use ($router) {
             $router->post('/logica', 'Validaciones\Modulos\SubsidiosSi\LogicaSubsidiosSiController@ValLogicaSubsidiosSi');
+            $router->post('/logica-solic', 'Validaciones\Modulos\SubsidiosSi\LogicaSubsidiosSiController@ValLogicaSubsidiosSiSolic');
+
             $router->post('/mostrar', 'Validaciones\Modulos\SubsidiosSi\Mostrar\MostrarSubsidiosSiController@ValMostrarSubsidiosSi');
             $router->post('/mostrar-subsidios-descarga', 'Validaciones\Modulos\SubsidiosSi\Mostrar\MostrarSubsidiosSiController@ValMostrarDescargaSubsidiosSi');
             $router->post('/mostrar-facturas-asignadas', 'Validaciones\Modulos\SubsidiosSi\Mostrar\MostrarSubsidiosSiController@ValMostrarFacturasAsignadas');
@@ -88,6 +92,7 @@ $router->post('/crear-ambiente', 'Configuracion\CrearAmbienteHomeController@Crea
 
         $router->group(['prefix' => 'regularizacion-so'], function () use ($router) {
             $router->post('/mostrar', 'Validaciones\Modulos\Regularizacion\ValMostrarRegularizacionesController@ValMostrarRegularizaciones');
+            $router->post('/asignar-facturas', 'Validaciones\Modulos\Regularizacion\ValMostrarRegularizacionesController@ValMetAsignarFacturas');
         });
 
         $router->group(['prefix' => 'SubsidiosPendientes'], function () use ($router) {
@@ -102,6 +107,13 @@ $router->post('/crear-ambiente', 'Configuracion\CrearAmbienteHomeController@Crea
         $router->group(['prefix' => 'facturas'], function () use ($router) {
             $router->post('/mostrar', 'Validaciones\Modulos\Facturas\MostrarFacturasController@ValMostrarFacturas');
             $router->post('/mostrar/reconocimiento', 'Validaciones\Modulos\Facturas\MostrarSubsidiosAsignadosController@ValMostrarSubsidiosAsignados');
+        });
+
+        $router->group(['prefix' => 'bigdata'], function () use ($router) {
+            $router->post('/mostrar-facturassi', 'Validaciones\Modulos\BigData\MostrarBigDataController@ValMostrarFacturasSi');
+            $router->post('/mostrar-facturasso', 'Validaciones\Modulos\BigData\MostrarBigDataController@ValMostrarFacturasSo');
+            $router->post('/mostrar-materiales', 'Validaciones\Modulos\BigData\MostrarBigDataController@ValMostrarMateriales');
+            $router->post('/mostrar-clientes', 'Validaciones\Modulos\BigData\MostrarBigDataController@ValMostrarClientes');
         });
 
         $router->group(['prefix' => 'home'], function () use ($router) {
@@ -127,5 +139,8 @@ $router->post('/crear-ambiente', 'Configuracion\CrearAmbienteHomeController@Crea
 
 // });
 
+$router->get('/asignar-bultos-acidos', 'SalvacionController@AsignarBultosAcidos');
 $router->get('/limpiar-sde', 'SalvacionController@LimpiarSde');
+$router->get('/asignar-detalle-factura-sfs', 'SalvacionController@AgregarDetalleFacturaSfs');
+$router->get('/asignar-ids-factura-sfs', 'SalvacionController@AsignarIdFdsFsiASfs');
 
