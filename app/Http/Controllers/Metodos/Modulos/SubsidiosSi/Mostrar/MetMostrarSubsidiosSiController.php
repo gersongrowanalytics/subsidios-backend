@@ -1645,17 +1645,20 @@ class MetMostrarSubsidiosSiController extends Controller
                                         ->groupBy('fsifactura')
                                         ->groupBy('fdsmaterial')
                                         ->groupBy('pronombre')
+                                        ->groupBy('sfslogicasolicitante')
                                         ->select(
                                             "fsifactura",
                                             DB::raw("SUM(sfsvalorizado) as sfsvalorizado"),
                                             'fdsmaterial',
                                             'pronombre',
+                                            'sfslogicasolicitante'
                                         )
                                         ->get([
                                             'fsi.fsifactura',
                                             'sfsvalorizado',
                                             'fdsmaterial',
-                                            'pronombre'
+                                            'pronombre',
+                                            'sfslogicasolicitante'
                                         ]);
             // $sfssSuma = 0;
             $sfssSuma = sfssubsidiosfacturassi::join('sdesubsidiosdetalles as sde', 'sde.sdeid', 'sfssubsidiosfacturassi.sdeid')
@@ -2221,7 +2224,13 @@ class MetMostrarSubsidiosSiController extends Controller
             );
 
             foreach($sfss as $posicionSfs => $sfs){
-                    
+                
+                $colorFondo = "FFF2F2F2";
+
+                if($sfs->sfslogicasolicitante == true){
+                    $colorFondo = "FF92CDDC";
+                }
+
                 $arrayFilaExcel[] = array(
                     "value" => $sfs->fsifactura,
                     "style" => array(
@@ -2232,7 +2241,7 @@ class MetMostrarSubsidiosSiController extends Controller
                         "fill" => array(
                             "patternType" => 'solid',
                             "fgColor" => array(
-                                "rgb" => "FFF2F2F2"
+                                "rgb" => $colorFondo
                             )
                         )
                     )
@@ -2248,7 +2257,7 @@ class MetMostrarSubsidiosSiController extends Controller
                         "fill" => array(
                             "patternType" => 'solid',
                             "fgColor" => array(
-                                "rgb" => "FFF2F2F2"
+                                "rgb" => $colorFondo
                             )
                         )
                     )
@@ -2264,7 +2273,7 @@ class MetMostrarSubsidiosSiController extends Controller
                         "fill" => array(
                             "patternType" => 'solid',
                             "fgColor" => array(
-                                "rgb" => "FFF2F2F2"
+                                "rgb" => $colorFondo
                             )
                         )
                     )
@@ -2280,7 +2289,7 @@ class MetMostrarSubsidiosSiController extends Controller
                         "fill" => array(
                             "patternType" => 'solid',
                             "fgColor" => array(
-                                "rgb" => "FFF2F2F2"
+                                "rgb" => $colorFondo
                             )
                         ),
                         "numFmt" => "#,##0.00"
