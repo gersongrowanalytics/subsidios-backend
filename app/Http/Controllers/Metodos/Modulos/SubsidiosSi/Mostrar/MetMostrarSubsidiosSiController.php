@@ -1636,7 +1636,7 @@ class MetMostrarSubsidiosSiController extends Controller
                                         ->join('proproductos as pro', 'pro.proid', 'fds.proid')
                                         ->where('sdecodigodestinatario', $descargarSde->sdecodigodestinatario)
                                         ->where('sdecodigounitario', $descargarSde->sdecodigounitario)
-                                        ->where('sfsvalorizado', '>', 0.1)
+                                        // ->where('sfsvalorizado', '>', 0.1)
                                         ->where(function ($query) use($fechaInicio, $fechaFinal) {
                                             // if($fechaInicio != null){
                                                 $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
@@ -2225,8 +2225,8 @@ class MetMostrarSubsidiosSiController extends Controller
             );
 
             foreach($sfss as $posicionSfs => $sfs){
-                
-                $colorFondo = "FFF2F2F2";
+                if(floatval($sfs->sfsvalorizado) > 0.1){
+                    $colorFondo = "FFF2F2F2";
 
                 if($sfs->sfslogicasolicitante == true){
                     $colorFondo = "FF92CDDC";
@@ -2296,6 +2296,7 @@ class MetMostrarSubsidiosSiController extends Controller
                         "numFmt" => "#,##0.00"
                     )
                 );
+                }
             }
 
             $nuevoArray[0]['data'][] = $arrayFilaExcel;
