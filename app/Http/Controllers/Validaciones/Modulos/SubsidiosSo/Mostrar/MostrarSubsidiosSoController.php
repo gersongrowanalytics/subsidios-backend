@@ -17,4 +17,13 @@ class MostrarSubsidiosSoController extends Controller
         $MetMostrarSubsidiosSo = new MetMostrarSubsidiosSoController;
         return $MetMostrarSubsidiosSo->MetMostrarSubsidiosSo($request);
     }
+
+    public function ValDescargableSubsidiosSo(Request $request)
+    {
+        $mensajes = new CustomMessagesController;
+        $customMessages  = $mensajes->CustomMensajes();
+
+        $MetMostrarSubsidiosSo = new MetMostrarSubsidiosSoController;
+        return $MetMostrarSubsidiosSo->ArmarExcelDescargaSubsidiosSo($request);
+    }
 }
