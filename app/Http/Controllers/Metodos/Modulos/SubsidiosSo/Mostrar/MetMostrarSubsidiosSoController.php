@@ -24,7 +24,7 @@ class MetMostrarSubsidiosSoController extends Controller
 
         }
 
-        $descargarSde = $this->ArmarExcelDescargaSubsidiosSo($fechaInicio, $fechaFinal);
+        // $descargarSde = $this->ArmarExcelDescargaSubsidiosSo($fechaInicio, $fechaFinal);
 
 
         $zons = sdesubsidiosdetalles::join('cliclientes as cli', 'cli.cliid', 'sdesubsidiosdetalles.cliid')
@@ -80,6 +80,7 @@ class MetMostrarSubsidiosSoController extends Controller
                                     ->orderBy('sdesector' , 'DESC')
                                     ->orderBy('sdecantidadbultos' , 'DESC')
                                     ->get([
+                                        'sdesubsidiosdetalles.sdeid',
                                         'cli.cliid',
                                         'clizona',
                                         'clisuchml',
@@ -101,7 +102,10 @@ class MetMostrarSubsidiosSoController extends Controller
                                         'sdesector',
                                         'sdeterritorio',
                                         'sdevalidado',
-                                        'clicodigoshipto'
+                                        'clicodigoshipto',
+                                        'sdebultosacido',
+                                        'sdedsctodos',
+                                        'sdemontoacido'
                                     ]);
 
             $zonas[$posicionZon]['data'] = $sdes;
@@ -109,7 +113,7 @@ class MetMostrarSubsidiosSoController extends Controller
 
         $requestsalida = response()->json([
             "datos" => $zonas,
-            "descargarSde" => $descargarSde,
+            // "descargarSde" => $descargarSde,
             // "sumSde" => $sumSde
         ]);
 
@@ -117,8 +121,17 @@ class MetMostrarSubsidiosSoController extends Controller
 
     }
 
-    private function ArmarExcelDescargaSubsidiosSo($fechaInicio, $fechaFinal)
+    public function ArmarExcelDescargaSubsidiosSo(Request $request)
     {
+
+        $fechaInicio = $request['fechaInicio'];
+        $fechaFinal  = $request['fechaFinal'];
+
+        if($fechaInicio != null){
+            $fechaInicio = date("Y-m-d", strtotime($fechaInicio));
+            $fechaFinal  = date("Y-m-d", strtotime($fechaFinal));
+        }
+
         $nuevoArray = array(
             array(
                 "columns" => [],
@@ -1479,6 +1492,9 @@ class MetMostrarSubsidiosSoController extends Controller
 
         }
 
-        return $nuevoArray;
+        return $requestsalida = response()->json([
+            "datos" => $nuevoArray
+        ]);
+
     }
 }
