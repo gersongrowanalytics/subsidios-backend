@@ -2271,7 +2271,7 @@ class MetMostrarSubsidiosSiController extends Controller
                 );
 
                 $arrayFilaExcel[] = array(
-                    "value" => floatval($sfs->sfsvalorizado),
+                    "value" => floatval(round($sfs->sfsvalorizado, 2)),
                     "style" => array(
                         "font" => array(
                             "sz" => "9",
@@ -2649,7 +2649,7 @@ class MetMostrarSubsidiosSiController extends Controller
                     );
     
                     $arrayFilaExcel[] = array(
-                        "value" => floatval($sfs->sfsvalorizado),
+                        "value" => floatval(round($sfs->sfsvalorizado, 2)),
                         "style" => array(
                             "font" => array(
                                 "sz" => "9",
