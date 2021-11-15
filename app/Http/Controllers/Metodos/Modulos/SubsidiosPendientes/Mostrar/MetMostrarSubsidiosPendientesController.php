@@ -117,7 +117,10 @@ class MetMostrarSubsidiosPendientesController extends Controller
                                         'sdeterritorio',
                                         'sdevalidado',
                                         'clicodigoshipto',
-                                        'sdedestrucsap'
+                                        'sdedestrucsap',
+                                        'sdebultosacido',
+                                        'sdedsctodos',
+                                        'sdemontoacido',
                                     ]);
 
             foreach($sdes as $posicionSde => $sde){
