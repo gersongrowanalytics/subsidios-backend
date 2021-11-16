@@ -19,4 +19,17 @@ class LogicaSubsidiosSiController extends Controller
         return $MetLogicaSubsidiosSi->MetLogicaSubsidiosSi($request);
 
     }
+
+    public function ValLogicaSubsidiosSiSolic(Request $request)
+    {
+
+        $mensajes = new CustomMessagesController;
+        $customMessages  = $mensajes->CustomMensajes();
+
+        $MetLogicaSubsidiosSiSolic = new MetLogicaSubsidiosSiController;
+        return $MetLogicaSubsidiosSiSolic->MetLogicaSubsidiosSiSolic($request);
+
+    }
+
+    
 }

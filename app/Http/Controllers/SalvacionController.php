@@ -173,7 +173,7 @@ class SalvacionController extends Controller
                                     ->where(function ($query) use($otro) {
                                         // if($fechaInicio != null){
                                             // $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
-                                            $query->where('sdesubsidiosdetalles.fecid', 1105);
+                                            $query->where('sdesubsidiosdetalles.fecid', 1106);
                                         // }
                                     })
                                     ->distinct('cli.clizona')
@@ -195,7 +195,7 @@ class SalvacionController extends Controller
                                     ->where(function ($query) use($otro) {
                                         // if($fechaInicio != null){
                                             // $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
-                                            $query->where('sdesubsidiosdetalles.fecid', 1105);
+                                            $query->where('sdesubsidiosdetalles.fecid', 1106);
                                         // }
                                     })
                                     // ->orderBy('sdestatus' , 'DESC')
@@ -313,5 +313,129 @@ class SalvacionController extends Controller
 
         dd($array);
     }
+
+    public function AgregarDetalleFacturaSfs()
+    {
+
+        $sfss = sfssubsidiosfacturassi::join('fdsfacturassidetalles as fds', 'sfssubsidiosfacturassi.fdsid', 'fds.fdsid')
+                                        ->join('fsifacturassi as fsi', 'fsi.fsiid', 'sfssubsidiosfacturassi.fsiid')
+                                        ->where('sfsfactura', null)
+                                        ->limit(500)
+                                        ->get([
+                                            'sfsid',
+                                            'fsi.fsiid',
+                                            'fsifactura',
+                                            'fsidestinatario',
+                                            'fds.fdsid',
+                                            'fdsmaterial'
+                                        ]);
+
+
+                                        // ->update([
+                                        //     "sfssubsidiosfacturassi.fsiid" => 0,
+                                        //     "sfssubsidiosfacturassi.fdsid" => 0
+                                        // ]);
+
+        foreach($sfss as $sfs){
+
+            $sfse = sfssubsidiosfacturassi::find($sfs->sfsid);
+            $sfse->sfsdestinatario = $sfs->fsidestinatario;
+            $sfse->sfsmaterial = $sfs->fdsmaterial;
+            $sfse->sfsfactura = $sfs->fsifactura;
+            $sfse->update();
+        }
+
+        echo sizeof($sfss);
+
+    }
+
+    public function AsignarIdFdsFsiASfs()
+    {
+        
+        $sfss = sfssubsidiosfacturassi::where('fdsid', 0)
+                                        ->get();
+
+        foreach($sfss as $sfs){
+
+            $fds = fdsfacturassidetalles::join('fsifacturassi as fsi', 'fsi.fsiid', 'fdsfacturassidetalles.fsiid')
+                                        ->where('fdsmaterial', $sfs->sfsmaterial)
+                                        ->where('fdsfactura', $sfs->sfsfactura)
+                                        ->where('fsidestinatario', $sfs->sfsdestinatario)
+                                        ->first([
+                                            'fdsfacturassidetalles.fdsid',
+                                            'fdsfacturassidetalles.fsiid'
+                                        ]);
+
+            if($fds){
+
+                $sfse = sfssubsidiosfacturassi::find($sfs->sfsid);
+                $sfse->fsiid = $fds->fsiid;
+                $sfse->fdsid = $fds->fdsid;
+                $sfse->update();
+
+            }else{
+                echo "SFSID :".$sfs->sfsid.'<br>';
+                echo "MATERIAL :".$sfs->sfsmaterial.'<br>';
+                echo "FACTURA :".$sfs->sfsfactura.'<br>';
+                echo "DEST :".$sfs->sfsdestinatario.'<br>';
+                echo '<br>';
+                echo '<br>';
+            }
+        }
+
+        echo $sfss;
+
+    }
+
+    public function CorregirFechasFacturas($fecid)
+    {
+
+        // $fdss = fdsfacturassidetalles::join('fsifacturassi as fsi', 'fsi.fsiid', 'fdsfacturassidetalles.fsiid')
+        //                                 ->join('fsi')
+        //                                 ->where('fsi.fecid', $fecid)
+        //                                 ->get([
+        //                                     'fdsfacturassidetalles.fdsid',
+        //                                     'fdsfacturassidetalles.fsiid',
+        //                                     'fsifecha'
+        //                                 ]);
+
+        $fsis = fsifacturassi::join('fecfechas as fec', 'fec.fecid', 'fsifacturassi.fecid')
+                                ->where('fsi.fecid', $fecid)
+                                ->limit()
+                                ->get([
+                                    'fsifacturassi.fsiid',
+                                    'fsifecha',
+                                    'fecanionumero',
+                                    'fecmesnumero'
+                                ]);
+
+
+        foreach($fsis as $fsi){
+
+            
+
+
+        }
+
+    }
+
+    public function AsignarBultosAcidos($fecid)
+    {
+
+        $sdes = sdesubsidiosdetalles::where($fecid)
+                                        ->where('sdeaprobado', true)
+                                        ->get();
+
+        foreach($sdes as $sde){
+
+            $sde = sdesubsidiosdetalles::find($sde->sdeid);
+            $sde->sdebultosnoreconocido = 0;
+            $sde->sdebultosacido = $sde->sdecantidadbultosreal;
+            $sde->sdemontoacido = $sde->sdemontoareconocerreal;
+            $sde->update();
+        }
+
+    }
+
 
 }

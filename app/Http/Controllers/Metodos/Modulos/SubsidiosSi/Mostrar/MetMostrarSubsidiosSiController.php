@@ -1636,6 +1636,7 @@ class MetMostrarSubsidiosSiController extends Controller
                                         ->join('proproductos as pro', 'pro.proid', 'fds.proid')
                                         ->where('sdecodigodestinatario', $descargarSde->sdecodigodestinatario)
                                         ->where('sdecodigounitario', $descargarSde->sdecodigounitario)
+                                        // ->where('sfsvalorizado', '>', 0.1)
                                         ->where(function ($query) use($fechaInicio, $fechaFinal) {
                                             // if($fechaInicio != null){
                                                 $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
@@ -1645,17 +1646,20 @@ class MetMostrarSubsidiosSiController extends Controller
                                         ->groupBy('fsifactura')
                                         ->groupBy('fdsmaterial')
                                         ->groupBy('pronombre')
+                                        ->groupBy('sfslogicasolicitante')
                                         ->select(
                                             "fsifactura",
                                             DB::raw("SUM(sfsvalorizado) as sfsvalorizado"),
                                             'fdsmaterial',
                                             'pronombre',
+                                            'sfslogicasolicitante'
                                         )
                                         ->get([
                                             'fsi.fsifactura',
                                             'sfsvalorizado',
                                             'fdsmaterial',
-                                            'pronombre'
+                                            'pronombre',
+                                            'sfslogicasolicitante'
                                         ]);
             // $sfssSuma = 0;
             $sfssSuma = sfssubsidiosfacturassi::join('sdesubsidiosdetalles as sde', 'sde.sdeid', 'sfssubsidiosfacturassi.sdeid')
@@ -2221,7 +2225,13 @@ class MetMostrarSubsidiosSiController extends Controller
             );
 
             foreach($sfss as $posicionSfs => $sfs){
-                    
+                if(floatval($sfs->sfsvalorizado) > 0.1){
+                    $colorFondo = "FFF2F2F2";
+
+                if($sfs->sfslogicasolicitante == true){
+                    $colorFondo = "FF92CDDC";
+                }
+
                 $arrayFilaExcel[] = array(
                     "value" => $sfs->fsifactura,
                     "style" => array(
@@ -2232,7 +2242,7 @@ class MetMostrarSubsidiosSiController extends Controller
                         "fill" => array(
                             "patternType" => 'solid',
                             "fgColor" => array(
-                                "rgb" => "FFF2F2F2"
+                                "rgb" => $colorFondo
                             )
                         )
                     )
@@ -2248,7 +2258,7 @@ class MetMostrarSubsidiosSiController extends Controller
                         "fill" => array(
                             "patternType" => 'solid',
                             "fgColor" => array(
-                                "rgb" => "FFF2F2F2"
+                                "rgb" => $colorFondo
                             )
                         )
                     )
@@ -2264,14 +2274,14 @@ class MetMostrarSubsidiosSiController extends Controller
                         "fill" => array(
                             "patternType" => 'solid',
                             "fgColor" => array(
-                                "rgb" => "FFF2F2F2"
+                                "rgb" => $colorFondo
                             )
                         )
                     )
                 );
 
                 $arrayFilaExcel[] = array(
-                    "value" => floatval($sfs->sfsvalorizado),
+                    "value" => floatval(round($sfs->sfsvalorizado, 2)),
                     "style" => array(
                         "font" => array(
                             "sz" => "9",
@@ -2280,12 +2290,13 @@ class MetMostrarSubsidiosSiController extends Controller
                         "fill" => array(
                             "patternType" => 'solid',
                             "fgColor" => array(
-                                "rgb" => "FFF2F2F2"
+                                "rgb" => $colorFondo
                             )
                         ),
                         "numFmt" => "#,##0.00"
                     )
                 );
+                }
             }
 
             $nuevoArray[0]['data'][] = $arrayFilaExcel;
@@ -2649,7 +2660,7 @@ class MetMostrarSubsidiosSiController extends Controller
                     );
     
                     $arrayFilaExcel[] = array(
-                        "value" => floatval($sfs->sfsvalorizado),
+                        "value" => floatval(round($sfs->sfsvalorizado, 2)),
                         "style" => array(
                             "font" => array(
                                 "sz" => "9",
