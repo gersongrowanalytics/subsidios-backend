@@ -1439,7 +1439,8 @@ class MetMostrarSubsidiosSoController extends Controller
 
 
                 array(
-                    "value" => floatval($descargarSde->sdecantidadbultos - $descargarSde->sdecantidadbultosreal), 
+                    // "value" => floatval($descargarSde->sdecantidadbultos - $descargarSde->sdecantidadbultosreal), 
+                    "value" => floatval($descargarSde->sdecantidadbultos - $descargarSde->sdebultosacido), 
                     "style" => array(
                         "font" => array(
                             "sz" => "9",
@@ -1456,7 +1457,8 @@ class MetMostrarSubsidiosSoController extends Controller
                 ),
 
                 array(
-                    "value" => floatval($descargarSde->sdemontoareconocer - $descargarSde->sdemontoareconocerreal),
+                    // "value" => floatval($descargarSde->sdemontoareconocer - $descargarSde->sdemontoareconocerreal),
+                    "value" => floatval($descargarSde->sdemontoareconocer - $descargarSde->sdemontoacido),
                     "style" => array(
                         "font" => array(
                             "sz" => "9",
