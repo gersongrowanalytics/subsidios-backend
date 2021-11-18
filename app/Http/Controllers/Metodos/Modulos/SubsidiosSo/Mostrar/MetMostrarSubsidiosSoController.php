@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\sdesubsidiosdetalles;
 use App\Models\zonzonas;
+use App\Models\sfosubsidiosfacturasso;
 
 class MetMostrarSubsidiosSoController extends Controller
 {
@@ -150,6 +151,7 @@ class MetMostrarSubsidiosSoController extends Controller
                                         })
                                         ->orderby('cli.cliid')
                                         ->get([
+                                            'sdeid',
                                             'fecanionumero',
                                             'fecmesabreviacion',
                                             'clizona',
@@ -1490,8 +1492,53 @@ class MetMostrarSubsidiosSoController extends Controller
                 // ),
             );
 
-            $nuevoArray[0]['data'][] = $arrayFilaExcel;
+            // 
+            $sfos = sfosubsidiosfacturasso::join('fsofacturasso as fso', 'fso.fsoid', 'sfosubsidiosfacturasso.fsoid')
+                                            ->where('sfosubsidiosfacturasso.sdeid', $descargarSde->sdeid)
+                                            ->get([
+                                                'sfosubsidiosfacturasso.sfoid',
+                                                'fsofactura',
+                                                'fsocantidadbulto'
+                                            ]);
+                                            
+            foreach($sfos as $sfo){
 
+                $arrayFilaExcel[] = array(
+                    "value" => $sfo->fsofactura,
+                    "style" => array(
+                        "font" => array(
+                            "sz" => "9",
+                            "bold" => true,
+                        ),
+                        "fill" => array(
+                            "patternType" => 'solid',
+                            "fgColor" => array(
+                                "rgb" => "FFF2F2F2"
+                            )
+                        )
+                    )
+                );
+
+                $arrayFilaExcel[] = array(
+                    "value" => floatval($sfo->fsocantidadbulto),
+                    "style" => array(
+                        "font" => array(
+                            "sz" => "9",
+                            "bold" => true,
+                        ),
+                        "fill" => array(
+                            "patternType" => 'solid',
+                            "fgColor" => array(
+                                "rgb" => "FFF2F2F2"
+                            )
+                        ),
+                        "numFmt" => "#,##0.00"
+                    )
+                );
+
+            }
+
+            $nuevoArray[0]['data'][] = $arrayFilaExcel;
         }
 
         return $requestsalida = response()->json([
