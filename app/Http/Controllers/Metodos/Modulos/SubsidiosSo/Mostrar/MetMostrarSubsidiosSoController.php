@@ -911,6 +911,50 @@ class MetMostrarSubsidiosSoController extends Controller
                     ),
 
                 );
+
+                for($i = 0; $i < 78; $i++){
+                    $pos = $i+1;
+                    $arrayFilaExcel[] = array(
+                        "value" => "FACTURA N°".$pos,
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                                "color" => array(
+                                    "rgb" => "FFFFFFFF"
+                                )
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => "FF004FB8"
+                                )
+                            )
+                            
+                        )
+                    );
+
+                    $arrayFilaExcel[] = array(
+                        "value" => "BULTOS N°".$pos,
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                                "color" => array(
+                                    "rgb" => "FFFFFFFF"
+                                )
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => "FF004FB8"
+                                )
+                            )
+                        )
+                    );
+
+                }
+
                 $nuevoArray[0]['data'][] = $arrayFilaExcel;
             }
 
