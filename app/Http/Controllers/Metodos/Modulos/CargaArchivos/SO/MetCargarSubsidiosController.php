@@ -320,14 +320,20 @@ class MetCargarSubsidiosController extends Controller
                                                 if(is_numeric($ex_cantidadbultosreal)){
                                                     $sdee->sdecantidadbultosreal  = $ex_cantidadbultosreal;
                                                     $sdee->sdemontoareconocerreal = $ex_cantidadbultosreal * $sdee->sdedsctodos;
+                                                    $sdee->sdebultosacido = $ex_cantidadbultosreal;
+                                                    $sdee->sdemontoacido  = $ex_cantidadbultosreal * $sdee->sdedsctodos;
                                                 }else{
                                                     $sdee->sdecantidadbultosreal  = 0;
                                                     $sdee->sdemontoareconocerreal = 0;
+                                                    $sdee->sdebultosacido = 0;
+                                                    $sdee->sdemontoacido = 0;
                                                 }
     
                                             }else{
                                                 $sdee->sdecantidadbultosreal  = 0;
                                                 $sdee->sdemontoareconocerreal = 0;
+                                                $sdee->sdebultosacido = 0;
+                                                $sdee->sdemontoacido = 0;
                                             }
     
                                             if($ex_cantidadbultos == $ex_cantidadbultosreal){
@@ -345,6 +351,8 @@ class MetCargarSubsidiosController extends Controller
     
                                             $sdee->sdecantidadbultosreal  = 0;
                                             $sdee->sdemontoareconocerreal = 0;
+                                            $sdee->sdebultosacido = 0;
+                                            $sdee->sdemontoacido = 0;
                                         }
 
                                         $sdee->sdebonificacion = $ex_bonificado;
