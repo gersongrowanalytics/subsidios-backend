@@ -1575,8 +1575,10 @@ class MetMostrarSubsidiosSiController extends Controller
                                             DB::raw("SUM(sdebultosacordados) as sumaButlosAcordados"),
                                             DB::raw("SUM(sdecantidadbultos) as sumaCantidadBultos"),
                                             DB::raw("SUM(sdemontoareconocer) as sumaMontoReconocer"),
-                                            DB::raw("SUM(sdecantidadbultosreal) as sumaCantidadBultosReal"),
-                                            DB::raw("SUM(sdemontoareconocerreal) as sumaMontoReconocerReal"),
+                                            // DB::raw("SUM(sdecantidadbultosreal) as sumaCantidadBultosReal"),
+                                            // DB::raw("SUM(sdemontoareconocerreal) as sumaMontoReconocerReal"),
+                                            DB::raw("SUM(sdebultosacido) as sumaMontoReconocerReal"),
+                                            DB::raw("SUM(sdemontoacido) as sumaMontoReconocerReal"),
                                         )
                                         ->groupBy('sdecodigodestinatario')
                                         ->groupBy('sdecodigounitario')
@@ -2228,74 +2230,74 @@ class MetMostrarSubsidiosSiController extends Controller
                 if(floatval($sfs->sfsvalorizado) > 0.1){
                     $colorFondo = "FFF2F2F2";
 
-                if($sfs->sfslogicasolicitante == true){
-                    $colorFondo = "FF92CDDC";
-                }
+                    if($sfs->sfslogicasolicitante == true){
+                        $colorFondo = "FF92CDDC";
+                    }
 
-                $arrayFilaExcel[] = array(
-                    "value" => $sfs->fsifactura,
-                    "style" => array(
-                        "font" => array(
-                            "sz" => "9",
-                            "bold" => true,
-                        ),
-                        "fill" => array(
-                            "patternType" => 'solid',
-                            "fgColor" => array(
-                                "rgb" => $colorFondo
+                    $arrayFilaExcel[] = array(
+                        "value" => $sfs->fsifactura,
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => $colorFondo
+                                )
                             )
                         )
-                    )
-                );
+                    );
 
-                $arrayFilaExcel[] = array(
-                    "value" => $sfs->fdsmaterial,
-                    "style" => array(
-                        "font" => array(
-                            "sz" => "9",
-                            "bold" => true,
-                        ),
-                        "fill" => array(
-                            "patternType" => 'solid',
-                            "fgColor" => array(
-                                "rgb" => $colorFondo
+                    $arrayFilaExcel[] = array(
+                        "value" => $sfs->fdsmaterial,
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => $colorFondo
+                                )
                             )
                         )
-                    )
-                );
+                    );
 
-                $arrayFilaExcel[] = array(
-                    "value" => $sfs->pronombre,
-                    "style" => array(
-                        "font" => array(
-                            "sz" => "9",
-                            "bold" => true,
-                        ),
-                        "fill" => array(
-                            "patternType" => 'solid',
-                            "fgColor" => array(
-                                "rgb" => $colorFondo
+                    $arrayFilaExcel[] = array(
+                        "value" => $sfs->pronombre,
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => $colorFondo
+                                )
                             )
                         )
-                    )
-                );
+                    );
 
-                $arrayFilaExcel[] = array(
-                    "value" => floatval(round($sfs->sfsvalorizado, 2)),
-                    "style" => array(
-                        "font" => array(
-                            "sz" => "9",
-                            "bold" => true,
-                        ),
-                        "fill" => array(
-                            "patternType" => 'solid',
-                            "fgColor" => array(
-                                "rgb" => $colorFondo
-                            )
-                        ),
-                        "numFmt" => "#,##0.00"
-                    )
-                );
+                    $arrayFilaExcel[] = array(
+                        "value" => floatval(round($sfs->sfsvalorizado, 2)),
+                        "style" => array(
+                            "font" => array(
+                                "sz" => "9",
+                                "bold" => true,
+                            ),
+                            "fill" => array(
+                                "patternType" => 'solid',
+                                "fgColor" => array(
+                                    "rgb" => $colorFondo
+                                )
+                            ),
+                            "numFmt" => "#,##0.00"
+                        )
+                    );
                 }
             }
 
