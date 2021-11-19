@@ -55,100 +55,102 @@ class MetLogicaSubsidiosSiController extends Controller
             $meses = [$mesAnteriorId, $dosMesesAnteriorId, $tresMesesAnteriorId];
 
             // REINICIAR
-            // $this->ActualizarReconocimientoSaldosFacturas($fecid);
+            $this->ActualizarReconocimientoSaldosFacturas($fecid);
 
-            $sdes = sdesubsidiosdetalles::join('proproductos as pro', 'pro.proid', 'sdesubsidiosdetalles.proid')
-                                        ->join('cliclientes as cli', 'cli.cliid', 'sdesubsidiosdetalles.cliid')
-                                        ->where('fecid', $fecid)
-                                        ->where('sdeaprobado', true)
-                                        ->where('sdemontoareconocerreal', '!=',0)
-                                        ->get([
-                                            'sdeid',
-                                            'pro.proid',
-                                            'pro.prosku',
-                                            'fecid',
-                                            'cli.cliid',
-                                            'cli.clicodigo',
-                                            'sdemontoareconocerreal',
-                                            'sdemontoacido'
-                                        ]);
+            // $sdes = sdesubsidiosdetalles::join('proproductos as pro', 'pro.proid', 'sdesubsidiosdetalles.proid')
+            //                             ->join('cliclientes as cli', 'cli.cliid', 'sdesubsidiosdetalles.cliid')
+            //                             ->where('fecid', $fecid)
+            //                             ->where('sdeaprobado', true)
+            //                             ->where('sdemontoareconocerreal', '!=',0)
+            //                             ->get([
+            //                                 'sdeid',
+            //                                 'pro.proid',
+            //                                 'pro.prosku',
+            //                                 'fecid',
+            //                                 'cli.cliid',
+            //                                 'cli.clicodigo',
+            //                                 'sdemontoareconocerreal',
+            //                                 'sdemontoacido'
+            //                             ]);
 
-            foreach($sdes as $sde){
+            // foreach($sdes as $sde){
 
-                $idFacturaEncontrada = [];
-                $facturasAfectadas = array();
+            //     $idFacturaEncontrada = [];
+            //     $facturasAfectadas = array();
 
-                $dataObtenida = array(
-                    "idFacturaEncontrada" => [],
-                    "esPendiente" => false
-                );
+            //     $dataObtenida = array(
+            //         "idFacturaEncontrada" => [],
+            //         "esPendiente" => false
+            //     );
 
-                $dataObtenida = $this->BuscarFacturas(
-                    $idFacturaEncontrada, 
-                    $sde->proid, 
-                    $fecid, 
-                    $sde->cliid, 
-                    $sde->sdemontoareconocerreal, 
-                    $meses, 
-                    $facturasAfectadas,
+            //     $dataObtenida = $this->BuscarFacturas(
+            //         $idFacturaEncontrada, 
+            //         $sde->proid, 
+            //         $fecid, 
+            //         $sde->cliid, 
+            //         // $sde->sdemontoareconocerreal,
+            //         $sde->sdemontoacido,
+            //         $meses, 
+            //         $facturasAfectadas,
 
-                );
+            //     );
 
-                $idFacturaEncontrada = $dataObtenida["idFacturaEncontrada"];
-                $facturasAfectadas   = $dataObtenida["facturasAfectadas"];
+            //     $idFacturaEncontrada = $dataObtenida["idFacturaEncontrada"];
+            //     $facturasAfectadas   = $dataObtenida["facturasAfectadas"];
 
-                if(sizeof($idFacturaEncontrada) > 0){
+            //     if(sizeof($idFacturaEncontrada) > 0){
 
-                    $montoReconocerReal = $sde->sdemontoareconocerreal;
+            //         // $montoReconocerReal = $sde->sdemontoareconocerreal;
+            //         $montoReconocerReal = $sde->sdemontoacido;
 
-                    foreach($facturasAfectadas as $facturaAfectada){
-                        $fds = fdsfacturassidetalles::find($facturaAfectada['id']);
+            //         foreach($facturasAfectadas as $facturaAfectada){
+            //             $fds = fdsfacturassidetalles::find($facturaAfectada['id']);
 
-                        $sfsn = new sfssubsidiosfacturassi;
-                        $sfsn->fecid = $fecid;
-                        $sfsn->sdeid = $sde->sdeid;
-                        $sfsn->fsiid = $fds->fsiid;
-                        $sfsn->fdsid = $facturaAfectada['id'];
-                        $sfsn->nsiid = null;
-                        $sfsn->ndsid = null;
-                        $sfsn->sfsvalorizado = $facturaAfectada['valorizado'];
+            //             $sfsn = new sfssubsidiosfacturassi;
+            //             $sfsn->fecid = $fecid;
+            //             $sfsn->sdeid = $sde->sdeid;
+            //             $sfsn->fsiid = $fds->fsiid;
+            //             $sfsn->fdsid = $facturaAfectada['id'];
+            //             $sfsn->nsiid = null;
+            //             $sfsn->ndsid = null;
+            //             $sfsn->sfsvalorizado = $facturaAfectada['valorizado'];
 
-                        $sfsn->sfssaldoanterior = $facturaAfectada['saldoAnterior'];
-                        $sfsn->sfssaldonuevo    = $facturaAfectada['saldoNuevo'];
+            //             $sfsn->sfssaldoanterior = $facturaAfectada['saldoAnterior'];
+            //             $sfsn->sfssaldonuevo    = $facturaAfectada['saldoNuevo'];
 
-                        $sfsn->sfsobjetivo = $facturaAfectada['objetivoActual'];
-                        $sfsn->sfsdiferenciaobjetivo = $facturaAfectada['nuevoObjetivo'];
+            //             $sfsn->sfsobjetivo = $facturaAfectada['objetivoActual'];
+            //             $sfsn->sfsdiferenciaobjetivo = $facturaAfectada['nuevoObjetivo'];
 
-                        $sfsn->save();
-                    }
+            //             $sfsn->save();
+            //         }
 
-                    if($dataObtenida["esPendiente"] == true){
-                        $logs["SUBSIDIOS_PENDIENTES"][] = "Subsidios pendientes al sde: ".$sde->sdeid;
-                    }else{
-                        $logs["SUBSIDIOS"][] = "Subsidios sde: ".$sde->sdeid;
-                    }
+            //         if($dataObtenida["esPendiente"] == true){
+            //             $logs["SUBSIDIOS_PENDIENTES"][] = "Subsidios pendientes al sde: ".$sde->sdeid;
+            //         }else{
+            //             $logs["SUBSIDIOS"][] = "Subsidios sde: ".$sde->sdeid;
+            //         }
 
-                    $sdee = sdesubsidiosdetalles::find($sde->sdeid);
-                    $sdee->sdeencontrofactura = true;
-                    $sdee->sdependiente = $dataObtenida["esPendiente"];
-                    $sdee->update();
+            //         $sdee = sdesubsidiosdetalles::find($sde->sdeid);
+            //         $sdee->sdeencontrofactura = true;
+            //         $sdee->sdependiente = $dataObtenida["esPendiente"];
+            //         $sdee->update();
 
-                }else{
+            //     }else{
 
-                    if($dataObtenida["esPendiente"] == true){
-                        $logs["SUBSIDIOS_PENDIENTES"][] = "Subsidios pendientes al sde: ".$sde->sdeid;
-                    }else{
-                        $logs["SUBSIDIOS"][] = "Subsidios sde: ".$sde->sdeid;
-                    }
+            //         if($dataObtenida["esPendiente"] == true){
+            //             $logs["SUBSIDIOS_PENDIENTES"][] = "Subsidios pendientes al sde: ".$sde->sdeid;
+            //         }else{
+            //             $logs["SUBSIDIOS"][] = "Subsidios sde: ".$sde->sdeid;
+            //         }
 
-                    $sdee = sdesubsidiosdetalles::find($sde->sdeid);
-                    $sdee->sdependiente = $dataObtenida["esPendiente"];
-                    $sdee->update();
+            //         $sdee = sdesubsidiosdetalles::find($sde->sdeid);
+            //         $sdee->sdependiente = $dataObtenida["esPendiente"];
+            //         $sdee->update();
 
-                    $logs["NO_SE_ENCONTRARON_FACTURAS"][] = "No se encontro facturas para asignar al sde: ".$sde->sdeid;
-                }
+            //         $logs["NO_SE_ENCONTRARON_FACTURAS"][] = "No se encontro facturas para asignar al sde: ".$sde->sdeid;
+            //     }
 
-            }
+            // }
 
         }else{
             return $fecid;
@@ -196,16 +198,33 @@ class MetLogicaSubsidiosSiController extends Controller
                                 "sdependiente" => 0,
                                 "sdeencontrofactura" => 0
                             ]);
+            
+        $sfss = sfssubsidiosfacturassi::where('fecid', $fecid)
+                                        ->distinct('fdsid')
+                                        ->get([
+                                            'sfsid',
+                                            'sdeid',
+                                            'fdsid'
+                                        ]);
 
-        $fdss = fdsfacturassidetalles::get(['fdsid']);
-
-        foreach($fdss as $fds){
+        foreach($sfss as $fds){
             $fdse = fdsfacturassidetalles::find($fds->fdsid);
             $fdse->fdsreconocer   = 0;
             $fdse->fdsnotacredito = 0;
             $fdse->fdssaldo     = $fdse->fdstreintaporciento;
             $fdse->update();
-        }
+        }                                
+
+
+        // $fdss = fdsfacturassidetalles::get(['fdsid']);
+
+        // foreach($fdss as $fds){
+        //     $fdse = fdsfacturassidetalles::find($fds->fdsid);
+        //     $fdse->fdsreconocer   = 0;
+        //     $fdse->fdsnotacredito = 0;
+        //     $fdse->fdssaldo     = $fdse->fdstreintaporciento;
+        //     $fdse->update();
+        // }
 
         //REINICIAMOS TODO EL FDS, EL FDSRECONOCER PODEMOS OBTENERLO SUMANDO SFS, EL FDSNOTACREDITO DE LAS NOTAS DE CREDITO DE LA DATA SUBIDA
 
@@ -638,7 +657,8 @@ class MetLogicaSubsidiosSiController extends Controller
                 $sumSfsvalorizado = sfssubsidiosfacturassi::where('sdeid', $sde->sdeid)
                                                         ->sum('sfsvalorizado');
 
-                $montoAReconocer = $sde->sdemontoareconocerreal - $sumSfsvalorizado;
+                // $montoAReconocer = $sde->sdemontoareconocerreal - $sumSfsvalorizado;
+                $montoAReconocer = $sde->sdemontoacido - $sumSfsvalorizado;
 
                 if($montoAReconocer > 0){
                     // $dataObtenida = $this->BuscarFacturas(
@@ -661,7 +681,8 @@ class MetLogicaSubsidiosSiController extends Controller
 
                     if(sizeof($idFacturaEncontrada) > 0){
 
-                        $montoReconocerReal = $sde->sdemontoareconocerreal;
+                        // $montoReconocerReal = $sde->sdemontoareconocerreal;
+                        $montoReconocerReal = $sde->sdemontoacido;
 
                         foreach($facturasAfectadas as $facturaAfectada){
                             $fds = fdsfacturassidetalles::find($facturaAfectada['id']);
