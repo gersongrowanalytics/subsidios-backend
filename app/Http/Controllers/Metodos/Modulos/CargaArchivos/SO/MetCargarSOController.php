@@ -302,15 +302,15 @@ class MetCargarSOController extends Controller
 
         // $fso = fsofacturasso::where('fecid', $fecid)->get();
 
-        sfosubsidiosfacturasso::where('fecid', $fecid)->delete();
-        sdesubsidiosdetalles::where('fecid', $fecid)
-                            ->where('sdesac', false)
-                            ->update([
-                                "sdecantidadbultosreal" => 0,
-                                "sdemontoareconocerreal" => 0,
-                                "sdebultosacido" => 0,
-                                "sdemontoacido" => 0
-                            ]);
+        // sfosubsidiosfacturasso::where('fecid', $fecid)->delete();
+        // sdesubsidiosdetalles::where('fecid', $fecid)
+        //                     ->where('sdesac', false)
+        //                     ->update([
+        //                         "sdecantidadbultosreal" => 0,
+        //                         "sdemontoareconocerreal" => 0,
+        //                         "sdebultosacido" => 0,
+        //                         "sdemontoacido" => 0
+        //                     ]);
 
         $sdes = sdesubsidiosdetalles::where('fecid', $fecid)
                                     ->where('sdesac', false)
