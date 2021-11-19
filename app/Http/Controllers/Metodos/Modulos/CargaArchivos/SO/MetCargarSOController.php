@@ -68,27 +68,27 @@ class MetCargarSOController extends Controller
 
         $ex_file_name = explode(".", $_FILES['file']['name']);
         
-        $carultimo = carcargasarchivos::orderby('carid', 'desc')->first();
-        $pkcar = $carultimo->carid + 1;
+        // $carultimo = carcargasarchivos::orderby('carid', 'desc')->first();
+        // $pkcar = $carultimo->carid + 1;
 
-        $carn = new carcargasarchivos;
-        $carn->carid        = $pkcar;
-        $carn->tcaid        = 3;
-        $carn->usuid        = $usu->usuid;
-        $carn->carnombre    = $_FILES['file']['name'];
-        $carn->carextension = $ex_file_name[1];
-        $carn->carurl       = env('APP_URL').$ubicacionArchivo;
-        $carn->carexito     = 0;
-        $carn->save();
-        $carid = $pkcar;
+        // $carn = new carcargasarchivos;
+        // $carn->carid        = $pkcar;
+        // $carn->tcaid        = 3;
+        // $carn->usuid        = $usu->usuid;
+        // $carn->carnombre    = $_FILES['file']['name'];
+        // $carn->carextension = $ex_file_name[1];
+        // $carn->carurl       = env('APP_URL').$ubicacionArchivo;
+        // $carn->carexito     = 0;
+        // $carn->save();
+        // $carid = $pkcar;
 
         if (move_uploaded_file($_FILES['file']['tmp_name'], $fichero_subido)) {
             
-            $data = [
-                'archivo' => $_FILES['file']['name'], "tipo" => "Facturas Sell Out", "usuario" => $usu->usuusuario,
-                "url_archivo" => env('APP_URL').$ubicacionArchivo
-            ];
-            Mail::to(env('USUARIO_ENVIAR_MAIL'))->send(new MailCargaArchivoOutlook($data));
+            // $data = [
+            //     'archivo' => $_FILES['file']['name'], "tipo" => "Facturas Sell Out", "usuario" => $usu->usuusuario,
+            //     "url_archivo" => env('APP_URL').$ubicacionArchivo
+            // ];
+            // Mail::to(env('USUARIO_ENVIAR_MAIL'))->send(new MailCargaArchivoOutlook($data));
 
             $objPHPExcel    = IOFactory::load($fichero_subido);
             $objPHPExcel->setActiveSheetIndex(0);
