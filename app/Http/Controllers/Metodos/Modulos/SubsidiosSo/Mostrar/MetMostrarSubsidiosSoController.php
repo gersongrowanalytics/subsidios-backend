@@ -1582,7 +1582,7 @@ class MetMostrarSubsidiosSoController extends Controller
 
             // }
 
-            // $nuevoArray[0]['data'][] = $arrayFilaExcel;
+            $nuevoArray[0]['data'][] = $arrayFilaExcel;
         }
 
         return $requestsalida = response()->json([
