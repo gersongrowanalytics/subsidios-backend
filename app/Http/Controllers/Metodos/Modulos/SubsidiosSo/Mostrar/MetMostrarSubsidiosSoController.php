@@ -912,48 +912,48 @@ class MetMostrarSubsidiosSoController extends Controller
 
                 );
 
-                for($i = 0; $i < 78; $i++){
-                    $pos = $i+1;
-                    $arrayFilaExcel[] = array(
-                        "value" => "FACTURA N°".$pos,
-                        "style" => array(
-                            "font" => array(
-                                "sz" => "9",
-                                "bold" => true,
-                                "color" => array(
-                                    "rgb" => "FFFFFFFF"
-                                )
-                            ),
-                            "fill" => array(
-                                "patternType" => 'solid',
-                                "fgColor" => array(
-                                    "rgb" => "FF004FB8"
-                                )
-                            )
+                // for($i = 0; $i < 78; $i++){
+                //     $pos = $i+1;
+                //     $arrayFilaExcel[] = array(
+                //         "value" => "FACTURA N°".$pos,
+                //         "style" => array(
+                //             "font" => array(
+                //                 "sz" => "9",
+                //                 "bold" => true,
+                //                 "color" => array(
+                //                     "rgb" => "FFFFFFFF"
+                //                 )
+                //             ),
+                //             "fill" => array(
+                //                 "patternType" => 'solid',
+                //                 "fgColor" => array(
+                //                     "rgb" => "FF004FB8"
+                //                 )
+                //             )
                             
-                        )
-                    );
+                //         )
+                //     );
 
-                    $arrayFilaExcel[] = array(
-                        "value" => "BULTOS N°".$pos,
-                        "style" => array(
-                            "font" => array(
-                                "sz" => "9",
-                                "bold" => true,
-                                "color" => array(
-                                    "rgb" => "FFFFFFFF"
-                                )
-                            ),
-                            "fill" => array(
-                                "patternType" => 'solid',
-                                "fgColor" => array(
-                                    "rgb" => "FF004FB8"
-                                )
-                            )
-                        )
-                    );
+                //     $arrayFilaExcel[] = array(
+                //         "value" => "BULTOS N°".$pos,
+                //         "style" => array(
+                //             "font" => array(
+                //                 "sz" => "9",
+                //                 "bold" => true,
+                //                 "color" => array(
+                //                     "rgb" => "FFFFFFFF"
+                //                 )
+                //             ),
+                //             "fill" => array(
+                //                 "patternType" => 'solid',
+                //                 "fgColor" => array(
+                //                     "rgb" => "FF004FB8"
+                //                 )
+                //             )
+                //         )
+                //     );
 
-                }
+                // }
 
                 $nuevoArray[0]['data'][] = $arrayFilaExcel;
             }
@@ -1537,52 +1537,52 @@ class MetMostrarSubsidiosSoController extends Controller
             );
 
             // 
-            $sfos = sfosubsidiosfacturasso::join('fsofacturasso as fso', 'fso.fsoid', 'sfosubsidiosfacturasso.fsoid')
-                                            ->where('sfosubsidiosfacturasso.sdeid', $descargarSde->sdeid)
-                                            ->get([
-                                                'sfosubsidiosfacturasso.sfoid',
-                                                'fsofactura',
-                                                'fsocantidadbulto'
-                                            ]);
+            // $sfos = sfosubsidiosfacturasso::join('fsofacturasso as fso', 'fso.fsoid', 'sfosubsidiosfacturasso.fsoid')
+            //                                 ->where('sfosubsidiosfacturasso.sdeid', $descargarSde->sdeid)
+            //                                 ->get([
+            //                                     'sfosubsidiosfacturasso.sfoid',
+            //                                     'fsofactura',
+            //                                     'fsocantidadbulto'
+            //                                 ]);
                                             
-            foreach($sfos as $sfo){
+            // foreach($sfos as $sfo){
 
-                $arrayFilaExcel[] = array(
-                    "value" => $sfo->fsofactura,
-                    "style" => array(
-                        "font" => array(
-                            "sz" => "9",
-                            "bold" => true,
-                        ),
-                        "fill" => array(
-                            "patternType" => 'solid',
-                            "fgColor" => array(
-                                "rgb" => "FFF2F2F2"
-                            )
-                        )
-                    )
-                );
+            //     $arrayFilaExcel[] = array(
+            //         "value" => $sfo->fsofactura,
+            //         "style" => array(
+            //             "font" => array(
+            //                 "sz" => "9",
+            //                 "bold" => true,
+            //             ),
+            //             "fill" => array(
+            //                 "patternType" => 'solid',
+            //                 "fgColor" => array(
+            //                     "rgb" => "FFF2F2F2"
+            //                 )
+            //             )
+            //         )
+            //     );
 
-                $arrayFilaExcel[] = array(
-                    "value" => floatval($sfo->fsocantidadbulto),
-                    "style" => array(
-                        "font" => array(
-                            "sz" => "9",
-                            "bold" => true,
-                        ),
-                        "fill" => array(
-                            "patternType" => 'solid',
-                            "fgColor" => array(
-                                "rgb" => "FFF2F2F2"
-                            )
-                        ),
-                        "numFmt" => "#,##0.00"
-                    )
-                );
+            //     $arrayFilaExcel[] = array(
+            //         "value" => floatval($sfo->fsocantidadbulto),
+            //         "style" => array(
+            //             "font" => array(
+            //                 "sz" => "9",
+            //                 "bold" => true,
+            //             ),
+            //             "fill" => array(
+            //                 "patternType" => 'solid',
+            //                 "fgColor" => array(
+            //                     "rgb" => "FFF2F2F2"
+            //                 )
+            //             ),
+            //             "numFmt" => "#,##0.00"
+            //         )
+            //     );
 
-            }
+            // }
 
-            $nuevoArray[0]['data'][] = $arrayFilaExcel;
+            // $nuevoArray[0]['data'][] = $arrayFilaExcel;
         }
 
         return $requestsalida = response()->json([
