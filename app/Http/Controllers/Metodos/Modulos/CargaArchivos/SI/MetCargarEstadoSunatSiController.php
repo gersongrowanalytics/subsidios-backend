@@ -11,6 +11,7 @@ use PhpOffice\PhpSpreadsheet\Shared\Date;
 use App\Models\fecfechas;
 use App\Models\usuusuarios;
 use App\Models\fsifacturassi;
+use App\Models\ndsnotascreditossidetalles;
 use App\Models\espestadospendientes;
 use App\Models\areareasestados;
 use App\Models\carcargasarchivos;
@@ -71,30 +72,30 @@ class MetCargarEstadoSunatSiController extends Controller
         $carid = $pkcar;
 
         if (move_uploaded_file($_FILES['file']['tmp_name'], $fichero_subido)) {
-            $data = [
-                'archivo' => $_FILES['file']['name'], "tipo" => "Estado Sunat", "usuario" => $usu->usuusuario,
-                "url_archivo" => env('APP_URL').$ubicacionArchivo
-            ];
-            Mail::to(env('USUARIO_ENVIAR_MAIL'))->send(new MailCargaArchivoOutlook($data));
-            // $objPHPExcel    = IOFactory::load($fichero_subido);
-            // $objPHPExcel->setActiveSheetIndex(0);
-            // $numRows        = $objPHPExcel->setActiveSheetIndex(0)->getHighestRow();
-            // $ultimaColumna  = $objPHPExcel->setActiveSheetIndex(0)->getHighestColumn();
+            // $data = [
+            //     'archivo' => $_FILES['file']['name'], "tipo" => "Estado Sunat", "usuario" => $usu->usuusuario,
+            //     "url_archivo" => env('APP_URL').$ubicacionArchivo
+            // ];
+            // Mail::to(env('USUARIO_ENVIAR_MAIL'))->send(new MailCargaArchivoOutlook($data));
+            $objPHPExcel    = IOFactory::load($fichero_subido);
+            $objPHPExcel->setActiveSheetIndex(0);
+            $numRows        = $objPHPExcel->setActiveSheetIndex(0)->getHighestRow();
+            $ultimaColumna  = $objPHPExcel->setActiveSheetIndex(0)->getHighestColumn();
 
-            // $logs['NUMERO_LINEAS_EXCEL'] = $numRows;
+            $logs['NUMERO_LINEAS_EXCEL'] = $numRows;
             
-            // $encontrofecha = false;
+            $encontrofecha = false;
 
-            // for ($i=2; $i <= $numRows; $i++) {
+            for ($i=2; $i <= $numRows; $i++) {
 
                 // $ex_anio  = $objPHPExcel->getActiveSheet()->getCell('A'.$i)->getCalculatedValue();
                 // $ex_mes   = $objPHPExcel->getActiveSheet()->getCell('B'.$i)->getCalculatedValue();
 
-                // $ex_tipodocumento  = $objPHPExcel->getActiveSheet()->getCell('A'.$i)->getCalculatedValue();
-                // $ex_documentocomprobante  = $objPHPExcel->getActiveSheet()->getCell('B'.$i)->getCalculatedValue();
-                // $ex_estadocomprobante     = $objPHPExcel->getActiveSheet()->getCell('F'.$i)->getCalculatedValue();
+                $ex_tipodocumento  = $objPHPExcel->getActiveSheet()->getCell('A'.$i)->getCalculatedValue();
+                $ex_documentocomprobante  = $objPHPExcel->getActiveSheet()->getCell('B'.$i)->getCalculatedValue();
+                $ex_estadocomprobante     = $objPHPExcel->getActiveSheet()->getCell('F'.$i)->getCalculatedValue();
 
-                // $fecid = 0;
+                $fecid = 0;
 
                 // if($i == 2){
                 //     $fec = fecfechas::where('fecmesabreviacion', $ex_mes)
@@ -115,32 +116,32 @@ class MetCargarEstadoSunatSiController extends Controller
                 //     }
                 // }
 
-                // if($encontrofecha == true){
+                $estadosunataprobado = 0;
 
-                    
+                if($ex_estadocomprobante == "NO ACEPTADO" || $ex_estadocomprobante == "INCIDENCIAS" || $ex_estadocomprobante == "Incidencia" || $ex_estadocomprobante == "Rechazado"){
+                    $estadosunataprobado = 0;
+                }
 
-                // }else{
-                //     $respuesta = false;
-                //     $mensaje  = "No se encontro la fecha seleccionada";
-                //     $logs["NO_SE_ENCONTRO_FECHA"][] = "Fecha Mes: ".$ex_mes.", EN EL AÑO: ".$ex_anio." EN LA LINEA: ".$i;
-                //     break;
-                // }
+                $fsi = fsifacturassi::where('fsifactura', 'like', $ex_documentocomprobante)->first();
 
-                // $estadosunataprobado = 0;
+                if($fsi){
+                    $fsi->fsisunataprobado = $estadosunataprobado;
+                    $fsi->update();
+                }else{
+                    $logs["NO_SE_ENCONTRO_DOCUMENTO"][] = "NO SE ENCONTRO EL DOCUMENTO: ".$ex_documentocomprobante." EN LA LINEA: ".$i;
+                }
 
-                // if($ex_estadocomprobante == "NO ACEPTADO" || $ex_estadocomprobante == "INCIDENCIAS" || $ex_estadocomprobante == "Incidencia" || $ex_estadocomprobante == "Rechazado"){
-                //     $estadosunataprobado = 0;
-                // }
+                $nds = ndsnotascreditossidetalles::where('ndsnotacredito', 'like', $ex_documentocomprobante)->first();
 
-                // $fsi = fsifacturassi::where('fsifactura', 'like', "%".$ex_documentocomprobante."%")->first();
+                if($nds){
 
-                // if($fsi){
-                //     $fsi->fsisunataprobado = $estadosunataprobado;
-                //     $fsi->update();
-                // }else{
-                //     $logs["NO_SE_ENCONTRO_DOCUMENTO"][] = "NO SE ENCONTRO EL DOCUMENTO: ".$ex_documentocomprobante." EN LA LINEA: ".$i;
-                // }
-            // }
+                    $nds->ndssunataprobado = $estadosunataprobado;
+                    $nds->update();
+
+                }else{
+                    $logs["NO_SE_ENCONTRO_DOCUMENTO"][] = "NO SE ENCONTRO EL DOCUMENTO: ".$ex_documentocomprobante." EN LA LINEA: ".$i;
+                }
+            }
 
             // 
 
@@ -149,55 +150,55 @@ class MetCargarEstadoSunatSiController extends Controller
             $fec = fecfechas::where('fecmesabierto', true)->first(['fecid']);
             $fecid = $fec->fecid;
 
-            $espe = espestadospendientes::where('fecid', $fecid)
-                                        ->where('espbasedato', "Operaciones Sunat")
-                                        ->first();
+            // $espe = espestadospendientes::where('fecid', $fecid)
+            //                             ->where('espbasedato', "Operaciones Sunat")
+            //                             ->first();
 
-            if($espe){
-                if($usu->perid == 1 || $usu->perid == 3 || $usu->perid == 7 || $usu->perid == 10){
+            // if($espe){
+            //     if($usu->perid == 1 || $usu->perid == 3 || $usu->perid == 7 || $usu->perid == 10){
                     
-                }else{
-                    $espe->perid = $usu->perid;
-                }
-                $espe->espfechactualizacion = $fechaActual;
+            //     }else{
+            //         $espe->perid = $usu->perid;
+            //     }
+            //     $espe->espfechactualizacion = $fechaActual;
 
-                $date1 = new DateTime($fechaActual);
-                $fecha_carga_real = date("Y-m-d", strtotime($espe->espfechaprogramado));
-                $date2 = new DateTime($fecha_carga_real);
+            //     $date1 = new DateTime($fechaActual);
+            //     $fecha_carga_real = date("Y-m-d", strtotime($espe->espfechaprogramado));
+            //     $date2 = new DateTime($fecha_carga_real);
 
-                $diff = $date1->diff($date2);
+            //     $diff = $date1->diff($date2);
                 
-                if($date1 > $date2){
-                    if($diff->days > 0){
-                        $espe->espdiaretraso = $diff->days;
-                    }else{
-                        $espe->espdiaretraso = "0";
-                    }
-                }else{
-                    $espe->espdiaretraso = "0";
-                }
+            //     if($date1 > $date2){
+            //         if($diff->days > 0){
+            //             $espe->espdiaretraso = $diff->days;
+            //         }else{
+            //             $espe->espdiaretraso = "0";
+            //         }
+            //     }else{
+            //         $espe->espdiaretraso = "0";
+            //     }
 
-                $espe->update();
+            //     $espe->update();
 
 
-                $aree = areareasestados::where('areid', $espe->areid)->first();
+            //     $aree = areareasestados::where('areid', $espe->areid)->first();
 
-                if($aree){
+            //     if($aree){
 
-                    $espcount = espestadospendientes::where('fecid', $fecid)
-                                        ->where('espbasedato', "Sell In (Factura Efectiva)")
-                                        ->where('espfechactualizacion', '!=', null)
-                                        ->first();
+            //         $espcount = espestadospendientes::where('fecid', $fecid)
+            //                             ->where('espbasedato', "Sell In (Factura Efectiva)")
+            //                             ->where('espfechactualizacion', '!=', null)
+            //                             ->first();
 
-                    if($espcount){
-                        $aree->areporcentaje = "100";
-                    }else{
-                        $aree->areporcentaje = "50";
-                    }
+            //         if($espcount){
+            //             $aree->areporcentaje = "100";
+            //         }else{
+            //             $aree->areporcentaje = "50";
+            //         }
 
-                    $aree->update();
-                }
-            }
+            //         $aree->update();
+            //     }
+            // }
 
             
 
