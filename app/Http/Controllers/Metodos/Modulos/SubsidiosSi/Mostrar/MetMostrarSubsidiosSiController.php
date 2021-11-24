@@ -1577,7 +1577,7 @@ class MetMostrarSubsidiosSiController extends Controller
                                             DB::raw("SUM(sdemontoareconocer) as sumaMontoReconocer"),
                                             // DB::raw("SUM(sdecantidadbultosreal) as sumaCantidadBultosReal"),
                                             // DB::raw("SUM(sdemontoareconocerreal) as sumaMontoReconocerReal"),
-                                            DB::raw("SUM(sdebultosacido) as sumaMontoReconocerReal"),
+                                            DB::raw("SUM(sdebultosacido) as sumaCantidadBultosReal"),
                                             DB::raw("SUM(sdemontoacido) as sumaMontoReconocerReal"),
                                         )
                                         ->groupBy('sdecodigodestinatario')
@@ -2158,7 +2158,7 @@ class MetMostrarSubsidiosSiController extends Controller
 
                 array(
                     // "value" => floatval($descargarSde->sumaCantidadBultosReal),
-                    "value" => floatval($descargarSde->sumaMontoReconocerReal),
+                    "value" => floatval($descargarSde->sumaCantidadBultosReal),
                     "style" => array(
                         "font" => array(
                             "sz" => "9",
