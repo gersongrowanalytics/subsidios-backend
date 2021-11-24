@@ -2157,7 +2157,8 @@ class MetMostrarSubsidiosSiController extends Controller
                 ),
 
                 array(
-                    "value" => floatval($descargarSde->sumaCantidadBultosReal),
+                    // "value" => floatval($descargarSde->sumaCantidadBultosReal),
+                    "value" => floatval($descargarSde->sumaMontoReconocerReal),
                     "style" => array(
                         "font" => array(
                             "sz" => "9",
