@@ -2327,8 +2327,10 @@ class MetMostrarSubsidiosSiController extends Controller
                                             DB::raw("SUM(sdebultosacordados) as sumaButlosAcordados"),
                                             DB::raw("SUM(sdecantidadbultos) as sumaCantidadBultos"),
                                             DB::raw("SUM(sdemontoareconocer) as sumaMontoReconocer"),
-                                            DB::raw("SUM(sdecantidadbultosreal) as sumaCantidadBultosReal"),
-                                            DB::raw("SUM(sdemontoareconocerreal) as sumaMontoReconocerReal"),
+                                            // DB::raw("SUM(sdecantidadbultosreal) as sumaCantidadBultosReal"),
+                                            // DB::raw("SUM(sdemontoareconocerreal) as sumaMontoReconocerReal"),
+                                            DB::raw("SUM(sdebultosacido) as sumaCantidadBultosReal"),
+                                            DB::raw("SUM(sdemontoacido) as sumaMontoReconocerReal"),
                                         )
                                         ->groupBy('sdecodigodestinatario')
                                         ->groupBy('sdecodigounitario')
