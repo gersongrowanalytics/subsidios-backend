@@ -437,5 +437,106 @@ class SalvacionController extends Controller
 
     }
 
+    public function TreintaPorCientoSfs($fecid)
+    {
+
+        $sfss = sfssubsidiosfacturassi::join('fdsfacturassidetalles as fds', 'fds.fdsid', 'sfssubsidiosfacturassi.fdsid')
+                                        ->where('sfssubsidiosfacturassi.fecid', $fecid)
+                                        ->where('sfsvalorizado', '>', 1)
+                                        ->select(
+                                            DB::raw("SUM(sfsvalorizado) as valorizado"),
+                                            'fdstreintaporciento',
+                                            'sfssubsidiosfacturassi.fdsid'
+                                        )
+                                        ->groupBy('sfssubsidiosfacturassi.fdsid')
+                                        ->groupBy('fdstreintaporciento')
+                                        ->get();
+        
+        $treintaPorciento = array();
+
+        $mayorDiferencia = 0;
+
+        foreach ($sfss as $key => $sfs) {
+
+            if($sfs->fdstreintaporciento >= $sfs->valorizado){
+
+            }else{
+                $nuevaDiferencia = $sfs->valorizado - $sfs->fdstreintaporciento;
+
+                if($nuevaDiferencia > $mayorDiferencia){
+                    $mayorDiferencia = $nuevaDiferencia;
+                }
+
+                $treintaPorciento[] = array(
+                    "fdsid"      => $sfs->fdsid,
+                    "treinta"    => $sfs->fdstreintaporciento,
+                    "valorizado" => $sfs->valorizado,
+                    "diferencia" => $sfs->valorizado - $sfs->fdstreintaporciento,
+                    "mayor" => $mayorDiferencia,
+                );
+                
+            }
+
+            // $valSfsResta = $sfs->valorizado - 1;
+            // $valSfsSuma  = $sfs->valorizado + 1;
+
+            // if($sfs->fdstreintaporciento >= $valSfsResta && $sfs->fdstreintaporciento <= $valSfsSuma){
+
+            //     $stringTreinta = strval($sfs->fdstreintaporciento);
+            //     $stringValoriz = strval($sfs->valorizado);
+
+            //     $porcionesTreinta = explode(".", $stringTreinta);
+            //     $porcionesValoriz = explode(".", $stringValoriz);
+
+            //     if(isset($porcionesTreinta[1])){
+            //         $decimalesTreinta = $porcionesTreinta[1];
+            //     }else{
+            //         $decimalesTreinta = "0";
+            //     }
+
+            //     if(isset($porcionesValoriz[1])){
+            //         $decimalesValoriz = $porcionesValoriz[1];
+            //     }else{
+            //         $decimalesValoriz = "0";
+            //     }
+
+            //     if(strlen($decimalesTreinta) >= 2){
+            //         $treintaData = $porcionesTreinta[0].".".$decimalesTreinta[0].$decimalesTreinta[1];
+            //     }else{
+            //         $treintaData = $porcionesTreinta[0].".".$decimalesTreinta[0];
+            //     }
+                
+            //     if(strlen($decimalesValoriz) >= 2){
+            //         $valorizData = $porcionesValoriz[0].".".$decimalesValoriz[0].$decimalesValoriz[1];
+            //     }else{
+            //         $valorizData = $porcionesValoriz[0].".".$decimalesValoriz[0];
+            //     }
+
+            //     $treintaData = floatval($treintaData);
+            //     $valorizData = floatval($valorizData);
+
+            //     if($treintaData == $valorizData){
+
+            //     }else{
+
+            //         if($treintaData >= $valorizData){
+
+            //         }else{
+            //             $treintaPorciento[] = array(
+            //                 "fdsid"      => $sfs->fdsid,
+            //                 "treinta"    => $sfs->fdstreintaporciento,
+            //                 "valorizado" => $sfs->valorizado
+            //             );
+            //         }
+
+            //     }
+
+            // }
+
+        }
+
+        return $treintaPorciento;
+
+    }
 
 }

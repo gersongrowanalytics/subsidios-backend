@@ -143,4 +143,5 @@ $router->get('/asignar-bultos-acidos', 'SalvacionController@AsignarBultosAcidos'
 $router->get('/limpiar-sde', 'SalvacionController@LimpiarSde');
 $router->get('/asignar-detalle-factura-sfs', 'SalvacionController@AgregarDetalleFacturaSfs');
 $router->get('/asignar-ids-factura-sfs', 'SalvacionController@AsignarIdFdsFsiASfs');
+$router->get('/treinta-por-ciento-sfs/{fecid}', 'SalvacionController@TreintaPorCientoSfs');
 
