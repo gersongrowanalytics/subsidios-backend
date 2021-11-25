@@ -133,6 +133,7 @@ class MetMostrarFacturasSubsidiosPendientesController extends Controller
                                 // ->where('fdssaldo', '>', 0)
                                 ->where('fsiclase', '!=', 'ZPF9')
                                 ->where('fdsanulada', false)
+                                ->where('fsisunataprobado', true)
                                 ->orderBy('fdssaldo', 'desc')
                                 // ->limit(50)
                                 ->get([
