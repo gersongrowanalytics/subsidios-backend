@@ -77,6 +77,8 @@ $router->post('/crear-ambiente', 'Configuracion\CrearAmbienteHomeController@Crea
             $router->post('/mostrar-filtros', 'Validaciones\Modulos\SubsidiosSo\Mostrar\MostrarFiltrosController@ValMostrarFiltros');
 
             $router->post('/cargar/excepciones', 'Validaciones\Modulos\SubsidiosSo\Cargar\CargarExcepcionesController@ValCargarExcepciones');
+
+            $router->post('/volver-armar-excel', 'Validaciones\Modulos\SubsidiosSo\Mostrar\MostrarSubsidiosSoController@ValVolverArmarExcel');
         });
 
         $router->group(['prefix' => 'SubsidiosSi'], function () use ($router) {
