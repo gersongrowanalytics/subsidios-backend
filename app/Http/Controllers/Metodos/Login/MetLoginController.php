@@ -78,6 +78,7 @@ class MetLoginController extends Controller
 
                 $sdes = sdesubsidiosdetalles::join('fecfechas as fec', 'fec.fecid', 'sdesubsidiosdetalles.fecid')
                                             ->where('sdependiente', true)
+                                            ->where('fec.fecid', '!=', 1104)
                                             ->distinct('sdesubsidiosdetalles.fecid')
                                             ->get([
                                                 'sdesubsidiosdetalles.fecid',
