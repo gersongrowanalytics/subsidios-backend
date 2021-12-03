@@ -303,6 +303,7 @@ class MetCargarSOController extends Controller
         // $fso = fsofacturasso::where('fecid', $fecid)->get();
 
         sfosubsidiosfacturasso::where('fecid', $fecid)->delete();
+
         sdesubsidiosdetalles::where('fecid', $fecid)
                             ->where('sdesac', false)
                             ->update([
@@ -359,6 +360,9 @@ class MetCargarSOController extends Controller
                     $montoAReconocerReal = floatval($sde->sdecantidadbultos);
 
                 }else{
+
+                    // MOSTRAR EN 0 SI LA CANTIDAD REAL ES NEGATIVA
+
                     if(is_numeric($sde->sdecantidadbultos)){
                         if($sde->sdecantidadbultos == 0){
     

@@ -177,174 +177,177 @@ class MetCargarSubsidiosPlantillaController extends Controller
                     $ex_status              = $objPHPExcel->getActiveSheet()->getCell('AC'.$i)->getCalculatedValue();
                     $ex_diferenciaahorrocliente = $objPHPExcel->getActiveSheet()->getCell('AD'.$i)->getCalculatedValue();
     
-                    
-                    
-                    // $pro = proproductos::where('prosku', $ex_codigouni)->first(['proid']);
-                    $eliminarDup = $this->EliminarDuplicidadPks($pksproductos, $ex_codigouni, $i, "productos");
-                    $pksproductos = $eliminarDup["array"];
-                    $pro = $eliminarDup["dato"];
+                    if(isset($ex_codigouni)){
 
-                    if($pro){
-                        // $cli = cliclientes::where('clicodigoshipto', $ex_codigodestinatario)->first(['cliid', 'cliclientesac']);
-                        $eliminarDup = $this->EliminarDuplicidadPks($pksclientes, $ex_codigodestinatario, $i, "clientes");
-                        $pksclientes = $eliminarDup["array"];
-                        $cli = $eliminarDup["dato"];
-    
-                        if($cli){
-                            
-                            // $sdee = sdesubsidiosdetalles::where('fecid', $fec->fecid)
-                            //                         ->where('sdedestrucsap', $ex_destrucsap)
-                            //                         ->first();
-                            $sdee = false;
-                            if($sdee){
+                        $eliminarDup = $this->EliminarDuplicidadPks($pksproductos, $ex_codigouni, $i, "productos");
+                        $pksproductos = $eliminarDup["array"];
+                        $pro = $eliminarDup["dato"];
 
-                                $sdee->fecid = $fec->fecid;
-                                $sdee->proid = $pro->proid;
-                                $sdee->cliid = $cli->cliid;
-
-                                $sdee->sdezona = $ex_zona;
-                                $sdee->sdeterritorio = $ex_territorio;
-                                $sdee->sdecliente = $ex_cliente;
-
-                                $sdee->sdecodigosolicitante     = $ex_codigosolicitante;
-                                $sdee->sdecodigodestinatario    = $ex_codigodestinatario;
-
-                                $sdee->sdesectoruno             = $ex_sectoruno;
-
-                                $sdee->sdesegmentoscliente      = $ex_segmentocliente;
-                                $sdee->sdesubsegmentoscliente   = $ex_subsegmentocliente;
-                                $sdee->sderucsubcliente         = $ex_rucsubcliente;
-                                $sdee->sdesubcliente            = $ex_subcliente;
-                                $sdee->sdenombrecomercial       = $ex_nombrecomercial;
-                                $sdee->sdesector                = $ex_sector;
-                                $sdee->sdecodigounitario        = $ex_codigouni;
-                                $sdee->sdedescripcion           = $ex_descripcion;
-                                $sdee->sdepcsapfinal            = $ex_pcsapfinal;
-                                $sdee->sdedscto                 = $ex_dsctouno;
-                                $sdee->sdepcsubsidiado          = $ex_pcsubsidiado;
-                                $sdee->sdemup                   = $ex_mup;
-                                $sdee->sdepvpigv                = $ex_pvpigv;
-                                $sdee->sdedsctodos              = $ex_dsctodos;
-                                $sdee->sdedestrucsap            = $ex_destrucsap;
-                                $sdee->sdeinicio                = $ex_inicio;
-                                $sdee->sdebultosacordados       = $ex_bultosacordados;
+                        if($pro){
+                            // $cli = cliclientes::where('clicodigoshipto', $ex_codigodestinatario)->first(['cliid', 'cliclientesac']);
+                            $eliminarDup = $this->EliminarDuplicidadPks($pksclientes, $ex_codigodestinatario, $i, "clientes");
+                            $pksclientes = $eliminarDup["array"];
+                            $cli = $eliminarDup["dato"];
+        
+                            if($cli){
                                 
-                                if($cli->cliclientesac == 1){
-                                    $sdee->sdesac = true;
+                                // $sdee = sdesubsidiosdetalles::where('fecid', $fec->fecid)
+                                //                         ->where('sdedestrucsap', $ex_destrucsap)
+                                //                         ->first();
+                                $sdee = false;
+                                if($sdee){
+
+                                    $sdee->fecid = $fec->fecid;
+                                    $sdee->proid = $pro->proid;
+                                    $sdee->cliid = $cli->cliid;
+
+                                    $sdee->sdezona = $ex_zona;
+                                    $sdee->sdeterritorio = $ex_territorio;
+                                    $sdee->sdecliente = $ex_cliente;
+
+                                    $sdee->sdecodigosolicitante     = $ex_codigosolicitante;
+                                    $sdee->sdecodigodestinatario    = $ex_codigodestinatario;
+
+                                    $sdee->sdesectoruno             = $ex_sectoruno;
+
+                                    $sdee->sdesegmentoscliente      = $ex_segmentocliente;
+                                    $sdee->sdesubsegmentoscliente   = $ex_subsegmentocliente;
+                                    $sdee->sderucsubcliente         = $ex_rucsubcliente;
+                                    $sdee->sdesubcliente            = $ex_subcliente;
+                                    $sdee->sdenombrecomercial       = $ex_nombrecomercial;
+                                    $sdee->sdesector                = $ex_sector;
+                                    $sdee->sdecodigounitario        = $ex_codigouni;
+                                    $sdee->sdedescripcion           = $ex_descripcion;
+                                    $sdee->sdepcsapfinal            = $ex_pcsapfinal;
+                                    $sdee->sdedscto                 = $ex_dsctouno;
+                                    $sdee->sdepcsubsidiado          = $ex_pcsubsidiado;
+                                    $sdee->sdemup                   = $ex_mup;
+                                    $sdee->sdepvpigv                = $ex_pvpigv;
+                                    $sdee->sdedsctodos              = $ex_dsctodos;
+                                    $sdee->sdedestrucsap            = $ex_destrucsap;
+                                    $sdee->sdeinicio                = $ex_inicio;
+                                    $sdee->sdebultosacordados       = $ex_bultosacordados;
+                                    
+                                    if($cli->cliclientesac == 1){
+                                        $sdee->sdesac = true;
+
+                                    }else{
+                                        $sdee->sdesac = false;
+                                    }
+
+                                    $sdee->sdeeditado = 1;
+                                    $sdee->update();
 
                                 }else{
-                                    $sdee->sdesac = false;
+
+
+
+                                    $sden = new sdesubsidiosdetalles;
+                                    $sden->sdeid = $pksde;
+                                    $sden->fecid = $fec->fecid;
+                                    $sden->proid = $pro->proid;
+                                    $sden->cliid = $cli->cliid;
+
+                                    $sden->sdezona = $ex_zona;
+                                    $sden->sdeterritorio = $ex_territorio;
+                                    $sden->sdecliente = $ex_cliente;
+
+                                    $sden->sdecodigosolicitante     = $ex_codigosolicitante;
+                                    $sden->sdecodigodestinatario    = $ex_codigodestinatario;
+
+                                    $sden->sdesectoruno             = $ex_sectoruno;
+
+                                    $sden->sdesegmentoscliente      = $ex_segmentocliente;
+                                    $sden->sdesubsegmentoscliente   = $ex_subsegmentocliente;
+                                    $sden->sderucsubcliente         = $ex_rucsubcliente;
+                                    $sden->sdesubcliente            = $ex_subcliente;
+                                    $sden->sdenombrecomercial       = $ex_nombrecomercial;
+                                    $sden->sdesector                = $ex_sector;
+                                    $sden->sdecodigounitario        = $ex_codigouni;
+                                    $sden->sdedescripcion           = $ex_descripcion;
+                                    $sden->sdepcsapfinal            = $ex_pcsapfinal;
+                                    $sden->sdedscto                 = $ex_dsctouno;
+                                    $sden->sdepcsubsidiado          = $ex_pcsubsidiado;
+                                    $sden->sdemup                   = $ex_mup;
+                                    $sden->sdepvpigv                = $ex_pvpigv;
+                                    $sden->sdedsctodos              = $ex_dsctodos;
+                                    $sden->sdedestrucsap            = $ex_destrucsap;
+                                    $sden->sdeinicio                = $ex_inicio;
+                                    $sden->sdebultosacordados       = $ex_bultosacordados;
+                                    
+                                    if($cli->cliclientesac == 1){
+                                        $sden->sdesac = true;
+
+                                    }else{
+                                        $sden->sdesac = false;
+                                    }
+
+
+
+                                    // PARAMETROS UTILIZADOS PARA CARGAR DATA HISTORICA
+
+                                    // if($ex_cantidadbultos){
+
+                                    //     if(is_numeric($ex_cantidadbultos)){
+                                    //         $sden->sdecantidadbultos  = $ex_cantidadbultos;
+                                    //         $sden->sdemontoareconocer = $ex_cantidadbultos * $sden->sdedsctodos;
+                                    //     }else{
+                                    //         $sden->sdecantidadbultos  = 0;
+                                    //         $sden->sdemontoareconocer = 0;    
+                                    //     }
+
+                                    // }else{
+                                    //     $sden->sdecantidadbultos  = 0;
+                                    //     $sden->sdemontoareconocer = 0;
+                                    // }
+
+                                    // $sden->sdeaprobado = true;
+
+                                    // if($ex_cantidadbultosreal){
+
+                                    //     if(is_numeric($ex_cantidadbultosreal)){
+                                    //         $sden->sdecantidadbultosreal  = $ex_cantidadbultosreal;
+                                    //         $sden->sdemontoareconocerreal = $ex_cantidadbultosreal * $sden->sdedsctodos;
+                                    //     }else{
+                                    //         $sden->sdecantidadbultosreal  = 0;
+                                    //         $sden->sdemontoareconocerreal = 0;
+                                    //     }
+
+                                    // }else{
+                                    //     $sden->sdecantidadbultosreal  = 0;
+                                    //     $sden->sdemontoareconocerreal = 0;
+                                    // }
+
+                                    // if($ex_cantidadbultos == $ex_cantidadbultosreal){
+                                    //     $sden->sdestatus = "OK";
+                                    // }else{
+                                    //     $sden->sdestatus = "ERROR CANTIDADES";
+                                    // }
+
+                                    // $sden->sdediferenciaahorro = $ex_diferenciaahorrocliente;
+
+                                    //FINAL PARAMETROS UTILIZADOS PARA CARGAR DATA HISTORICA
+
+
+
+                                    $sden->save();
                                 }
-
-                                $sdee->sdeeditado = 1;
-                                $sdee->update();
-
+        
                             }else{
-
-
-
-                                $sden = new sdesubsidiosdetalles;
-                                $sden->sdeid = $pksde;
-                                $sden->fecid = $fec->fecid;
-                                $sden->proid = $pro->proid;
-                                $sden->cliid = $cli->cliid;
-
-                                $sden->sdezona = $ex_zona;
-                                $sden->sdeterritorio = $ex_territorio;
-                                $sden->sdecliente = $ex_cliente;
-
-                                $sden->sdecodigosolicitante     = $ex_codigosolicitante;
-                                $sden->sdecodigodestinatario    = $ex_codigodestinatario;
-
-                                $sden->sdesectoruno             = $ex_sectoruno;
-
-                                $sden->sdesegmentoscliente      = $ex_segmentocliente;
-                                $sden->sdesubsegmentoscliente   = $ex_subsegmentocliente;
-                                $sden->sderucsubcliente         = $ex_rucsubcliente;
-                                $sden->sdesubcliente            = $ex_subcliente;
-                                $sden->sdenombrecomercial       = $ex_nombrecomercial;
-                                $sden->sdesector                = $ex_sector;
-                                $sden->sdecodigounitario        = $ex_codigouni;
-                                $sden->sdedescripcion           = $ex_descripcion;
-                                $sden->sdepcsapfinal            = $ex_pcsapfinal;
-                                $sden->sdedscto                 = $ex_dsctouno;
-                                $sden->sdepcsubsidiado          = $ex_pcsubsidiado;
-                                $sden->sdemup                   = $ex_mup;
-                                $sden->sdepvpigv                = $ex_pvpigv;
-                                $sden->sdedsctodos              = $ex_dsctodos;
-                                $sden->sdedestrucsap            = $ex_destrucsap;
-                                $sden->sdeinicio                = $ex_inicio;
-                                $sden->sdebultosacordados       = $ex_bultosacordados;
-                                
-                                if($cli->cliclientesac == 1){
-                                    $sden->sdesac = true;
-
-                                }else{
-                                    $sden->sdesac = false;
-                                }
-
-
-
-                                // PARAMETROS UTILIZADOS PARA CARGAR DATA HISTORICA
-
-                                // if($ex_cantidadbultos){
-
-                                //     if(is_numeric($ex_cantidadbultos)){
-                                //         $sden->sdecantidadbultos  = $ex_cantidadbultos;
-                                //         $sden->sdemontoareconocer = $ex_cantidadbultos * $sden->sdedsctodos;
-                                //     }else{
-                                //         $sden->sdecantidadbultos  = 0;
-                                //         $sden->sdemontoareconocer = 0;    
-                                //     }
-
-                                // }else{
-                                //     $sden->sdecantidadbultos  = 0;
-                                //     $sden->sdemontoareconocer = 0;
-                                // }
-
-                                // $sden->sdeaprobado = true;
-
-                                // if($ex_cantidadbultosreal){
-
-                                //     if(is_numeric($ex_cantidadbultosreal)){
-                                //         $sden->sdecantidadbultosreal  = $ex_cantidadbultosreal;
-                                //         $sden->sdemontoareconocerreal = $ex_cantidadbultosreal * $sden->sdedsctodos;
-                                //     }else{
-                                //         $sden->sdecantidadbultosreal  = 0;
-                                //         $sden->sdemontoareconocerreal = 0;
-                                //     }
-
-                                // }else{
-                                //     $sden->sdecantidadbultosreal  = 0;
-                                //     $sden->sdemontoareconocerreal = 0;
-                                // }
-
-                                // if($ex_cantidadbultos == $ex_cantidadbultosreal){
-                                //     $sden->sdestatus = "OK";
-                                // }else{
-                                //     $sden->sdestatus = "ERROR CANTIDADES";
-                                // }
-
-                                // $sden->sdediferenciaahorro = $ex_diferenciaahorrocliente;
-
-                                //FINAL PARAMETROS UTILIZADOS PARA CARGAR DATA HISTORICA
-
-
-
-                                $sden->save();
+                                $respuesta = false;
+                                $mensaje = "Lo sentimos, hubieron algunos codigos de solicitante que no se encontraron registrados, recomendamos actualizar la maestra de clientes e intentar nuevamente gracias.";
+                                // $logs["CLIENTES_NO_ENCONTRADOS"][] = array("codigocliente" => $ex_codigodestinatario, "linea" => $i);
+                                $logs["CLIENTES_NO_ENCONTRADOS"] = $this->EliminarDuplicidad( $logs["CLIENTES_NO_ENCONTRADOS"], $ex_codigodestinatario, $i);
                             }
-    
+        
                         }else{
                             $respuesta = false;
-                            $mensaje = "Lo sentimos, hubieron algunos codigos de solicitante que no se encontraron registrados, recomendamos actualizar la maestra de clientes e intentar nuevamente gracias.";
-                            // $logs["CLIENTES_NO_ENCONTRADOS"][] = array("codigocliente" => $ex_codigodestinatario, "linea" => $i);
-                            $logs["CLIENTES_NO_ENCONTRADOS"] = $this->EliminarDuplicidad( $logs["CLIENTES_NO_ENCONTRADOS"], $ex_codigodestinatario, $i);
+                            $mensaje = "Lo sentimos, hubieron algunos skus que no se encontraron registrados, recomendamos actualizar la maestra de productos e intentar nuevamente gracias.";
+                            $logs["PRODUCTOS_NO_ENCONTRADOS"] = $this->EliminarDuplicidad( $logs["PRODUCTOS_NO_ENCONTRADOS"], $ex_codigouni, $i);
                         }
-    
+
                     }else{
-                        $respuesta = false;
-                        $mensaje = "Lo sentimos, hubieron algunos skus que no se encontraron registrados, recomendamos actualizar la maestra de productos e intentar nuevamente gracias.";
-                        $logs["PRODUCTOS_NO_ENCONTRADOS"] = $this->EliminarDuplicidad( $logs["PRODUCTOS_NO_ENCONTRADOS"], $ex_codigouni, $i);
+
                     }
     
                 }

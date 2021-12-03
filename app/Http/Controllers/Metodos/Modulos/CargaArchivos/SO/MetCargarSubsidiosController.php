@@ -151,13 +151,13 @@ class MetCargarSubsidiosController extends Controller
                     $ex_diferenciaahorrocliente = $objPHPExcel->getActiveSheet()->getCell('AD'.$i)->getCalculatedValue();
                     $ex_bonificado = $objPHPExcel->getActiveSheet()->getCell('AE'.$i)->getCalculatedValue();
 
-                    $subirData = false;
+                    $subirData = true;
 
-                    if(isset($ex_cantidadbultos) && $ex_cantidadbultos > 0 ){
-                        $subirData = true;
-                    }else if(isset($ex_cantidadbultosreal) && $ex_cantidadbultosreal > 0){
-                        $subirData = true;
-                    }
+                    // if(isset($ex_cantidadbultos) && $ex_cantidadbultos > 0 ){
+                    //     $subirData = true;
+                    // }else if(isset($ex_cantidadbultosreal) && $ex_cantidadbultosreal > 0){
+                    //     $subirData = true;
+                    // }
 
                     if($subirData == true){
                         if(isset($ex_codigouni)){
