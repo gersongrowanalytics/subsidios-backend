@@ -200,7 +200,6 @@ class MetLogicaSubsidiosSiController extends Controller
                             ]);
             
         $sfss = sfssubsidiosfacturassi::where('fecid', $fecid)
-                                        ->distinct('fdsid')
                                         ->get([
                                             'sfsid',
                                             'sdeid',
