@@ -86,7 +86,7 @@ class MetCargarSubsidiosController extends Controller
                 'archivo' => $_FILES['file']['name'], "tipo" => "Subsidios Reconocidos", "usuario" => $usu->usuusuario,
                 "url_archivo" => env('APP_URL').$ubicacionArchivo
             ];
-            Mail::to("gerson.vilca@grow-analytics.com.pe")->send(new MailCargaArchivoOutlook($data));
+            Mail::to("jazmin.laguna@grow-analytics.com.pe")->send(new MailCargaArchivoOutlook($data));
 
             $objPHPExcel    = IOFactory::load($fichero_subido);
             $objPHPExcel->setActiveSheetIndex(0);
