@@ -155,7 +155,7 @@ class MetCargarSubsidiosController extends Controller
 
                     $ex_status              = $objPHPExcel->getActiveSheet()->getCell('AC'.$i)->getCalculatedValue();
                     $ex_diferenciaahorrocliente = $objPHPExcel->getActiveSheet()->getCell('AD'.$i)->getCalculatedValue();
-                    $ex_bonificado = $objPHPExcel->getActiveSheet()->getCell('AE'.$i)->getCalculatedValue();
+                    // $ex_bonificado = $objPHPExcel->getActiveSheet()->getCell('AE'.$i)->getCalculatedValue();
 
                     $subirData = true;
 
@@ -361,7 +361,7 @@ class MetCargarSubsidiosController extends Controller
                                             $sdee->sdemontoacido = 0;
                                         }
 
-                                        $sdee->sdebonificacion = $ex_bonificado;
+                                        // $sdee->sdebonificacion = $ex_bonificado;
     
                                         $sdee->update();
                                         
