@@ -83,100 +83,108 @@ class MetCargarSOController extends Controller
         $carid = $pkcar;
 
         if (move_uploaded_file($_FILES['file']['tmp_name'], $fichero_subido)) {
-            
-            $data = [
-                'archivo' => $_FILES['file']['name'], "tipo" => "Facturas Sell Out", "usuario" => $usu->usuusuario,
-                "url_archivo" => env('APP_URL').$ubicacionArchivo
-            ];
-            Mail::to(env('USUARIO_ENVIAR_MAIL'))->send(new MailCargaArchivoOutlook($data));
+            if($usu->usuid != 1){
+                $data = [
+                    'archivo' => $_FILES['file']['name'], "tipo" => "Facturas Sell Out", "usuario" => $usu->usuusuario,
+                    "url_archivo" => env('APP_URL').$ubicacionArchivo
+                ];
+                Mail::to(env('USUARIO_ENVIAR_MAIL'))->send(new MailCargaArchivoOutlook($data));
 
-            // $objPHPExcel    = IOFactory::load($fichero_subido);
-            // $objPHPExcel->setActiveSheetIndex(0);
-            // $numRows        = $objPHPExcel->setActiveSheetIndex(0)->getHighestRow();
-            // $ultimaColumna  = $objPHPExcel->setActiveSheetIndex(0)->getHighestColumn();
+                $data = [
+                    'archivo' => $_FILES['file']['name'], "tipo" => "Facturas Sell Out", "usuario" => $usu->usuusuario,
+                    "url_archivo" => env('APP_URL').$ubicacionArchivo
+                ];
+                Mail::to('jazmin.laguna@grow-analytics.com.pe')->send(new MailCargaArchivoOutlook($data));
+            }
 
-            // $logs['NUMERO_LINEAS_EXCEL'] = $numRows;
+            if($usu->usuid == 1){
+                $objPHPExcel    = IOFactory::load($fichero_subido);
+                $objPHPExcel->setActiveSheetIndex(0);
+                $numRows        = $objPHPExcel->setActiveSheetIndex(0)->getHighestRow();
+                $ultimaColumna  = $objPHPExcel->setActiveSheetIndex(0)->getHighestColumn();
 
-            // // // fsofacturasso::where('fsoid', '>', '0')->delete();
-            // $fsoultimo = fsofacturasso::orderby('fsoid', 'desc')->first();
-            // $pkid = $fsoultimo->fsoid + 1;
+                $logs['NUMERO_LINEAS_EXCEL'] = $numRows;
 
-            // $fec = fecfechas::where('fecmesabierto', true)->first(['fecid']);
+                // // fsofacturasso::where('fsoid', '>', '0')->delete();
+                $fsoultimo = fsofacturasso::orderby('fsoid', 'desc')->first();
+                $pkid = $fsoultimo->fsoid + 1;
 
-            // for ($i=2; $i <= $numRows ; $i++) {
-            //     $ex_codigo              = $objPHPExcel->getActiveSheet()->getCell('A'.$i)->getCalculatedValue();
-            //     // $ex_codigodistribuidor  = $objPHPExcel->getActiveSheet()->getCell('B'.$i)->getCalculatedValue();
-            //     $ex_codigofecha     = $objPHPExcel->getActiveSheet()->getCell('B'.$i)->getCalculatedValue();
-            //     $ex_codigocliente   = $objPHPExcel->getActiveSheet()->getCell('C'.$i)->getCalculatedValue();
-            //     $ex_codigoproducto  = $objPHPExcel->getActiveSheet()->getCell('D'.$i)->getCalculatedValue();
-            //     $ex_ruc             = $objPHPExcel->getActiveSheet()->getCell('E'.$i)->getCalculatedValue();
-            //     $ex_cantidadbultos  = $objPHPExcel->getActiveSheet()->getCell('F'.$i)->getCalculatedValue();
-            //     $ex_ventasinigv     = $objPHPExcel->getActiveSheet()->getCell('G'.$i)->getCalculatedValue();
-            //     $ex_factura         = $objPHPExcel->getActiveSheet()->getCell('H'.$i)->getCalculatedValue();
+                $fec = fecfechas::where('fecmesabierto', true)->first(['fecid']);
 
-            //     $ex_codigofecha = Date::excelToDateTimeObject($ex_codigofecha);
-            //     $ex_codigofecha = json_encode($ex_codigofecha);
-            //     $ex_codigofecha = json_decode($ex_codigofecha);
-            //     $ex_fecha = date("Y-m-d", strtotime($ex_codigofecha->date));
-            //     $ex_codigofecha = date("Y-m", strtotime($ex_codigofecha->date));
+                for ($i=2; $i <= $numRows ; $i++) {
+                    $ex_codigo              = $objPHPExcel->getActiveSheet()->getCell('A'.$i)->getCalculatedValue();
+                    // $ex_codigodistribuidor  = $objPHPExcel->getActiveSheet()->getCell('B'.$i)->getCalculatedValue();
+                    $ex_codigofecha     = $objPHPExcel->getActiveSheet()->getCell('B'.$i)->getCalculatedValue();
+                    $ex_codigocliente   = $objPHPExcel->getActiveSheet()->getCell('C'.$i)->getCalculatedValue();
+                    $ex_codigoproducto  = $objPHPExcel->getActiveSheet()->getCell('D'.$i)->getCalculatedValue();
+                    $ex_ruc             = $objPHPExcel->getActiveSheet()->getCell('E'.$i)->getCalculatedValue();
+                    $ex_cantidadbultos  = $objPHPExcel->getActiveSheet()->getCell('F'.$i)->getCalculatedValue();
+                    $ex_ventasinigv     = $objPHPExcel->getActiveSheet()->getCell('G'.$i)->getCalculatedValue();
+                    $ex_factura         = $objPHPExcel->getActiveSheet()->getCell('H'.$i)->getCalculatedValue();
 
-                
-            //     // $fec = fecfechas::where('fecfecha', 'LIKE', "%".$ex_codigofecha."%")
-            //     //             ->first(['fecid']);
-                
-                
-            //     if($fec){
+                    $ex_codigofecha = Date::excelToDateTimeObject($ex_codigofecha);
+                    $ex_codigofecha = json_encode($ex_codigofecha);
+                    $ex_codigofecha = json_decode($ex_codigofecha);
+                    $ex_fecha = date("Y-m-d", strtotime($ex_codigofecha->date));
+                    $ex_codigofecha = date("Y-m", strtotime($ex_codigofecha->date));
 
-            //         if($i == 2){
-            //             // fsofacturasso::where('fecid', $fec->fecid)->delete();
-            //             $fecid = $fec->fecid;
-            //         }
+                    
+                    // $fec = fecfechas::where('fecfecha', 'LIKE', "%".$ex_codigofecha."%")
+                    //             ->first(['fecid']);
+                    
+                    
+                    if($fec){
 
-            //         $pro = proproductos::where('prosku', $ex_codigoproducto)->first(['proid']);
+                        if($i == 2){
+                            // fsofacturasso::where('fecid', $fec->fecid)->delete();
+                            $fecid = $fec->fecid;
+                        }
 
-            //         if($pro){
+                        $pro = proproductos::where('prosku', $ex_codigoproducto)->first(['proid']);
 
-            //             $cli = cliclientes::where('clicodigoshipto', $ex_codigo)->first(['cliid']);
+                        if($pro){
 
-            //             if($cli){
+                            $cli = cliclientes::where('clicodigoshipto', $ex_codigo)->first(['cliid']);
 
-            //                 $fson = new fsofacturasso;
-            //                 // $fson->fsoid            = $pkid;
-            //                 $fson->fecid            = $fec->fecid;
-            //                 $fson->cliid            = $cli->cliid;
-            //                 $fson->proid            = $pro->proid;
-            //                 $fson->fsoruc           = $ex_ruc;
-            //                 $fson->fsocantidadbulto = $ex_cantidadbultos;
-            //                 $fson->fsofecha = $ex_fecha;
-            //                 $fson->fsofactura = $ex_factura;
-            //                 if($ex_ventasinigv){
-            //                     $fson->fsoventasinigv   = $ex_ventasinigv;
-            //                 }else{
-            //                     $fson->fsoventasinigv   = 0;
-            //                 }
-            //                 $fson->save();
-            //                 // $pkid = $pkid + 1;
+                            if($cli){
 
-            //             }else{
-            //                 $respuesta = false;
-            //                 $mensaje = "Lo sentimos, hubieron algunos codigos de solicitante que no se encontraron registrados, recomendamos actualizar la maestra de clientes e intentar nuevamente gracias.";
-            //                 $logs["CLIENTES_NO_ENCONTRADOS"] = $this->EliminarDuplicidad( $logs["CLIENTES_NO_ENCONTRADOS"], $ex_codigo, $i);
-            //             }
+                                $fson = new fsofacturasso;
+                                // $fson->fsoid            = $pkid;
+                                $fson->fecid            = $fec->fecid;
+                                $fson->cliid            = $cli->cliid;
+                                $fson->proid            = $pro->proid;
+                                $fson->fsoruc           = $ex_ruc;
+                                $fson->fsocantidadbulto = $ex_cantidadbultos;
+                                $fson->fsofecha = $ex_fecha;
+                                $fson->fsofactura = $ex_factura;
+                                if($ex_ventasinigv){
+                                    $fson->fsoventasinigv   = $ex_ventasinigv;
+                                }else{
+                                    $fson->fsoventasinigv   = 0;
+                                }
+                                $fson->save();
+                                // $pkid = $pkid + 1;
 
-            //         }else{
-            //             $respuesta = false;
-            //             $mensaje = "Lo sentimos, hubieron algunos skus que no se encontraron registrados, recomendamos actualizar la maestra de productos e intentar nuevamente gracias.";
-            //             $logs["PRODUCTOS_NO_ENCONTRADOS"] = $this->EliminarDuplicidad( $logs["PRODUCTOS_NO_ENCONTRADOS"], $ex_codigoproducto, $i);
-            //         } 
+                            }else{
+                                $respuesta = false;
+                                $mensaje = "Lo sentimos, hubieron algunos codigos de solicitante que no se encontraron registrados, recomendamos actualizar la maestra de clientes e intentar nuevamente gracias.";
+                                $logs["CLIENTES_NO_ENCONTRADOS"] = $this->EliminarDuplicidad( $logs["CLIENTES_NO_ENCONTRADOS"], $ex_codigo, $i);
+                            }
 
-            //     }else{
-            //         $respuesta = false;
-            //         $mensaje = "Lo sentimos, el mes o año asignado no se encuentra en los registros, recomendamos actualizar la maestra de fechas e intentar nuevamente gracias";
-            //         $logs["FECHA_NO_REGISTRADA"] = "FECHA: ".$ex_codigofecha;
-            //         break;
-            //     }
-            // }
+                        }else{
+                            $respuesta = false;
+                            $mensaje = "Lo sentimos, hubieron algunos skus que no se encontraron registrados, recomendamos actualizar la maestra de productos e intentar nuevamente gracias.";
+                            $logs["PRODUCTOS_NO_ENCONTRADOS"] = $this->EliminarDuplicidad( $logs["PRODUCTOS_NO_ENCONTRADOS"], $ex_codigoproducto, $i);
+                        } 
 
+                    }else{
+                        $respuesta = false;
+                        $mensaje = "Lo sentimos, el mes o año asignado no se encuentra en los registros, recomendamos actualizar la maestra de fechas e intentar nuevamente gracias";
+                        $logs["FECHA_NO_REGISTRADA"] = "FECHA: ".$ex_codigofecha;
+                        break;
+                    }
+                }
+            }
 
             // 
 
@@ -194,46 +202,46 @@ class MetCargarSOController extends Controller
                     
                 }else{
                     $espe->perid = $usu->perid;
-                }
-                
-                $espe->espfechactualizacion = $fechaActual;
+                    $espe->espfechactualizacion = $fechaActual;
 
-                $date1 = new DateTime($fechaActual);
-                $fecha_carga_real = date("Y-m-d", strtotime($espe->espfechaprogramado));
-                $date2 = new DateTime($fecha_carga_real);
+                    $date1 = new DateTime($fechaActual);
+                    $fecha_carga_real = date("Y-m-d", strtotime($espe->espfechaprogramado));
+                    $date2 = new DateTime($fecha_carga_real);
 
-                $diff = $date1->diff($date2);
+                    $diff = $date1->diff($date2);
 
-                if($date1 > $date2){
-                    if($diff->days > 0){
-                        $espe->espdiaretraso = $diff->days;
+                    if($date1 > $date2){
+                        if($diff->days > 0){
+                            $espe->espdiaretraso = $diff->days;
+                        }else{
+                            $espe->espdiaretraso = "0";
+                        }
                     }else{
                         $espe->espdiaretraso = "0";
                     }
-                }else{
-                    $espe->espdiaretraso = "0";
+
+                    $espe->update();
+
+
+                    $aree = areareasestados::where('areid', $espe->areid)->first();
+
+                    if($aree){
+
+                        $espcount = espestadospendientes::where('fecid', $fecid)
+                                            ->where('espbasedato', "Subsidio Aprobado (Plantilla)")
+                                            ->where('espfechactualizacion', '!=', null)
+                                            ->first();
+
+                        if($espcount){
+                            $aree->areporcentaje = "100";
+                        }else{
+                            $aree->areporcentaje = "50";
+                        }
+
+                        $aree->update();
+                    } 
                 }
 
-                $espe->update();
-
-
-                $aree = areareasestados::where('areid', $espe->areid)->first();
-
-                if($aree){
-
-                    $espcount = espestadospendientes::where('fecid', $fecid)
-                                        ->where('espbasedato', "Subsidio Aprobado (Plantilla)")
-                                        ->where('espfechactualizacion', '!=', null)
-                                        ->first();
-
-                    if($espcount){
-                        $aree->areporcentaje = "100";
-                    }else{
-                        $aree->areporcentaje = "50";
-                    }
-
-                    $aree->update();
-                } 
             }
 
             $care = carcargasarchivos::find($carid);
