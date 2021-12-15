@@ -661,6 +661,15 @@ class MetLogicaSubsidiosSiController extends Controller
 
                 if($montoAReconocer > 0){
                     // $dataObtenida = $this->BuscarFacturas(
+                    
+                    $cli = cliclientes::where('clicodigoshipto', $sde->sdecodigosolicitante)->first();
+                    
+                    if($cli->clibloqueado == true){
+                        $codigoCliente = "0";
+                    }else{
+                        $codigoCliente = $sde->sdecodigosolicitante;
+                    }
+
                     $dataObtenida = $this->BuscarFacturasSolic(
                         $idFacturaEncontrada, 
                         $sde->proid, 
@@ -671,7 +680,7 @@ class MetLogicaSubsidiosSiController extends Controller
                         $meses, 
                         $facturasAfectadas,
 
-                        $sde->sdecodigosolicitante // SOLO INCLUIR EN "BUSCARFACTURASOLIC"
+                        $codigoCliente // SOLO INCLUIR EN "BUSCARFACTURASOLIC"
 
                     );
 
