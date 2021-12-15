@@ -52,6 +52,7 @@ $router->post('/crear-ambiente', 'Configuracion\CrearAmbienteHomeController@Crea
             $router->post('/facturas', 'Validaciones\Modulos\CargaArchivos\CargarFacturasController@CargarFacturas');
             $router->post('/productos', 'Validaciones\Modulos\CargaArchivos\CargarMaestraProductosController@CargarMaestraProductos');
             $router->post('/clientes', 'Validaciones\Modulos\CargaArchivos\CargarMaestraClientesController@CargarMaestraClientes');
+            $router->post('/clientes-bloqueados', 'Validaciones\Modulos\CargaArchivos\CargarMaestraClientesController@CargarMaestraClientes');
             $router->post('/clientes/sac', 'Validaciones\Modulos\CargaArchivos\CargarClienteSacController@ValCargarClienteSac');
             $router->post('/fechas', 'Validaciones\Modulos\CargaArchivos\CargarMaestraFechasController@CargarMaestraFechas');
             $router->post('/asdasd', 'Validaciones\Modulos\CargaArchivos\CargarMaestraFechasController@CargarMaestraFechas');
@@ -84,6 +85,7 @@ $router->post('/crear-ambiente', 'Configuracion\CrearAmbienteHomeController@Crea
         $router->group(['prefix' => 'SubsidiosSi'], function () use ($router) {
             $router->post('/logica', 'Validaciones\Modulos\SubsidiosSi\LogicaSubsidiosSiController@ValLogicaSubsidiosSi');
             $router->post('/logica-solic', 'Validaciones\Modulos\SubsidiosSi\LogicaSubsidiosSiController@ValLogicaSubsidiosSiSolic');
+            $router->post('/logica-pendientes', 'Validaciones\Modulos\SubsidiosSi\LogicaSubsidiosSiController@ValLogicaSubsidiosSiPendientes');
 
             $router->post('/mostrar', 'Validaciones\Modulos\SubsidiosSi\Mostrar\MostrarSubsidiosSiController@ValMostrarSubsidiosSi');
             $router->post('/mostrar-subsidios-descarga', 'Validaciones\Modulos\SubsidiosSi\Mostrar\MostrarSubsidiosSiController@ValMostrarDescargaSubsidiosSi');
@@ -146,4 +148,7 @@ $router->get('/limpiar-sde', 'SalvacionController@LimpiarSde');
 $router->get('/asignar-detalle-factura-sfs', 'SalvacionController@AgregarDetalleFacturaSfs');
 $router->get('/asignar-ids-factura-sfs', 'SalvacionController@AsignarIdFdsFsiASfs');
 $router->get('/treinta-por-ciento-sfs/{fecid}', 'SalvacionController@TreintaPorCientoSfs');
-
+$router->get('/alerta-facturas-asiganadas-clientes/{fecid}', 'SalvacionController@AlertaAsignacionFacturas');
+$router->get('/alerta-validar-notas-creidtos-asignadas/{fecid}', 'SalvacionController@ValidarNcAsignadas');
+$router->get('/alerta-estados-facturas-asignadas/{fecid}', 'SalvacionController@AlertaEstadoFacturasAsignadas');
+$router->get('/contar-numero-sunat', 'SalvacionController@MostrarSunatXMes');

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Validaciones\CustomMessagesController;
 use App\Http\Controllers\Metodos\Modulos\CargaArchivos\MetCargarMaestraClientesController;
+use App\Http\Controllers\Metodos\Modulos\CargaArchivos\MetCargarClientesBloqueadosController;
 
 class CargarMaestraClientesController extends Controller
 {
@@ -17,6 +18,17 @@ class CargarMaestraClientesController extends Controller
 
         $cargarMaestraClientes = new MetCargarMaestraClientesController;
         return $cargarMaestraClientes->CargarMaestraClientes($request);
+
+    }
+
+    public function CargarMaestraClientesBloqueados(Request $request)
+    {
+
+        $mensajes = new CustomMessagesController;
+        $customMessages  = $mensajes->CustomMensajes();
+
+        $MetCargarClientesBloqueados = new MetCargarClientesBloqueadosController;
+        return $MetCargarClientesBloqueados->MetCargarClientesBloqueados($request);
 
     }
 }
