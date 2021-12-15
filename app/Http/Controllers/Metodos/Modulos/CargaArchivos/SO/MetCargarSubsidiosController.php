@@ -76,17 +76,20 @@ class MetCargarSubsidiosController extends Controller
 
         if (move_uploaded_file($_FILES['file']['tmp_name'], $fichero_subido)) {
 
-            $data = [
-                'archivo' => $_FILES['file']['name'], "tipo" => "Subsidios Reconocidos", "usuario" => $usu->usuusuario,
-                "url_archivo" => env('APP_URL').$ubicacionArchivo
-            ];
-            Mail::to(env('USUARIO_ENVIAR_MAIL'))->send(new MailCargaArchivoOutlook($data));
 
-            $data = [
-                'archivo' => $_FILES['file']['name'], "tipo" => "Subsidios Reconocidos", "usuario" => $usu->usuusuario,
-                "url_archivo" => env('APP_URL').$ubicacionArchivo
-            ];
-            Mail::to("jazmin.laguna@grow-analytics.com.pe")->send(new MailCargaArchivoOutlook($data));
+            if($usu->usuid != 1){
+                $data = [
+                    'archivo' => $_FILES['file']['name'], "tipo" => "Subsidios Reconocidos", "usuario" => $usu->usuusuario,
+                    "url_archivo" => env('APP_URL').$ubicacionArchivo
+                ];
+                Mail::to(env('USUARIO_ENVIAR_MAIL'))->send(new MailCargaArchivoOutlook($data));
+    
+                $data = [
+                    'archivo' => $_FILES['file']['name'], "tipo" => "Subsidios Reconocidos", "usuario" => $usu->usuusuario,
+                    "url_archivo" => env('APP_URL').$ubicacionArchivo
+                ];
+                Mail::to("jazmin.laguna@grow-analytics.com.pe")->send(new MailCargaArchivoOutlook($data));
+            }
 
             $objPHPExcel    = IOFactory::load($fichero_subido);
             $objPHPExcel->setActiveSheetIndex(0);
@@ -399,26 +402,26 @@ class MetCargarSubsidiosController extends Controller
                     
                         }else{
                             $espe->perid = $usu->perid;
-                        }
-                        $espe->espfechactualizacion = $fechaActual;
+                            $espe->espfechactualizacion = $fechaActual;
 
-                        $date1 = new DateTime($fechaActual);
-                        $fecha_carga_real = date("Y-m-d", strtotime($espe->espfechaprogramado));
-                        $date2 = new DateTime($fecha_carga_real);
-                        
-                        if($date1 > $date2){
-                            $diff = $date1->diff($date2);
+                            $date1 = new DateTime($fechaActual);
+                            $fecha_carga_real = date("Y-m-d", strtotime($espe->espfechaprogramado));
+                            $date2 = new DateTime($fecha_carga_real);
+                            
+                            if($date1 > $date2){
+                                $diff = $date1->diff($date2);
 
-                            if($diff->days > 0){
-                                $espe->espdiaretraso = $diff->days;
+                                if($diff->days > 0){
+                                    $espe->espdiaretraso = $diff->days;
+                                }else{
+                                    $espe->espdiaretraso = "0";
+                                }
                             }else{
                                 $espe->espdiaretraso = "0";
                             }
-                        }else{
-                            $espe->espdiaretraso = "0";
-                        }
 
-                        $espe->update();
+                            $espe->update();
+                        }
                     }
                 }
 
@@ -432,26 +435,26 @@ class MetCargarSubsidiosController extends Controller
                     
                         }else{
                             $espe->perid = $usu->perid;
-                        }
-                        $espe->espfechactualizacion = $fechaActual;
+                            $espe->espfechactualizacion = $fechaActual;
 
-                        $date1 = new DateTime($fechaActual);
-                        $fecha_carga_real = date("Y-m-d", strtotime($espe->espfechaprogramado));
-                        $date2 = new DateTime($fecha_carga_real);
-                        
-                        if($date1 > $date2){
-                            $diff = $date1->diff($date2);
+                            $date1 = new DateTime($fechaActual);
+                            $fecha_carga_real = date("Y-m-d", strtotime($espe->espfechaprogramado));
+                            $date2 = new DateTime($fecha_carga_real);
+                            
+                            if($date1 > $date2){
+                                $diff = $date1->diff($date2);
 
-                            if($diff->days > 0){
-                                $espe->espdiaretraso = $diff->days;
+                                if($diff->days > 0){
+                                    $espe->espdiaretraso = $diff->days;
+                                }else{
+                                    $espe->espdiaretraso = "0";
+                                }
                             }else{
                                 $espe->espdiaretraso = "0";
                             }
-                        }else{
-                            $espe->espdiaretraso = "0";
-                        }
 
-                        $espe->update();
+                            $espe->update();
+                        }
                     }
                 }
 
