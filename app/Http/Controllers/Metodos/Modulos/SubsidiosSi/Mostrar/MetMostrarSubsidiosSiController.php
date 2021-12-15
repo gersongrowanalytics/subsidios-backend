@@ -2025,6 +2025,12 @@ class MetMostrarSubsidiosSiController extends Controller
                 $nuevoArray[0]['data'][] = $arrayFilaExcel;
             }
 
+            $liquidacionPendiente = $descargarSde->sumaMontoReconocerReal - $sfssSuma;
+            $liquidacionPendiente =floatval($liquidacionPendiente);
+            if($liquidacionPendiente < 0.09){
+                $liquidacionPendiente = 0;
+            }
+
             $arrayFilaExcel = array(
                 array(
                     "value" => $descargarSde->fecanionumero,
@@ -2209,7 +2215,7 @@ class MetMostrarSubsidiosSiController extends Controller
                 ),
 
                 array(
-                    "value" => floatval($descargarSde->sumaMontoReconocerReal - $sfssSuma),
+                    "value" => floatval($liquidacionPendiente),
                     "style" => array(
                         "font" => array(
                             "sz" => "9",
