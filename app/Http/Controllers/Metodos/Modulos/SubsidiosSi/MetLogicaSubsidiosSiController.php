@@ -208,10 +208,12 @@ class MetLogicaSubsidiosSiController extends Controller
 
         foreach($sfss as $fds){
             $fdse = fdsfacturassidetalles::find($fds->fdsid);
-            $fdse->fdsreconocer   = 0;
-            $fdse->fdsnotacredito = 0;
-            $fdse->fdssaldo     = $fdse->fdstreintaporciento;
-            $fdse->update();
+            if($fdse){
+                $fdse->fdsreconocer   = 0;
+                $fdse->fdsnotacredito = 0;
+                $fdse->fdssaldo     = $fdse->fdstreintaporciento;
+                $fdse->update();
+            }
         }                                
 
 
