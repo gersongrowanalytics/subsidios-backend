@@ -84,7 +84,7 @@ class MetCargarClientesBloqueadosController extends Controller
 
                 if($usu->usuid == 1){
 
-                    cliclientes::update(['clibloqueado' => 0]);
+                    cliclientes::where('cliid', '>', 0)->update(['clibloqueado' => 0]);
 
                     $objPHPExcel    = IOFactory::load($fichero_subido);
                     $objPHPExcel->setActiveSheetIndex(0);
