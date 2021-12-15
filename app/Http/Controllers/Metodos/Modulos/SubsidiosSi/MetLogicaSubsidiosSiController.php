@@ -200,32 +200,31 @@ class MetLogicaSubsidiosSiController extends Controller
                                 "sdeencontrofactura" => 0
                             ]);
             
-        // $sfss = sfssubsidiosfacturassi::where('fecid', $fecid)
-        //                                 ->get([
-        //                                     'sfsid',
-        //                                     'sdeid',
-        //                                     'fdsid'
-        //                                 ]);
+        $sfss = sfssubsidiosfacturassi::get([
+                                            'sfsid',
+                                            'sdeid',
+                                            'fdsid'
+                                        ]);
 
-        // foreach($sfss as $fds){
-        //     $fdse = fdsfacturassidetalles::find($fds->fdsid);
-        //     $fdse->fdsreconocer   = 0;
-        //     $fdse->fdsnotacredito = 0;
-        //     $fdse->fdssaldo     = $fdse->fdstreintaporciento;
-        //     $fdse->update();
-        // }                                
-
-
-        // $fdss = fdsfacturassidetalles::get(['fdsid']);
-        $fdss = fdsfacturassidetalles::get();
-
-        foreach($fdss as $fds){
+        foreach($sfss as $fds){
             $fdse = fdsfacturassidetalles::find($fds->fdsid);
             $fdse->fdsreconocer   = 0;
             $fdse->fdsnotacredito = 0;
             $fdse->fdssaldo     = $fdse->fdstreintaporciento;
             $fdse->update();
-        }
+        }                                
+
+
+        // $fdss = fdsfacturassidetalles::get(['fdsid']);
+        // $fdss = fdsfacturassidetalles::get();
+
+        // foreach($fdss as $fds){
+        //     $fdse = fdsfacturassidetalles::find($fds->fdsid);
+        //     $fdse->fdsreconocer   = 0;
+        //     $fdse->fdsnotacredito = 0;
+        //     $fdse->fdssaldo     = $fdse->fdstreintaporciento;
+        //     $fdse->update();
+        // }
 
         //REINICIAMOS TODO EL FDS, EL FDSRECONOCER PODEMOS OBTENERLO SUMANDO SFS, EL FDSNOTACREDITO DE LAS NOTAS DE CREDITO DE LA DATA SUBIDA
 
