@@ -52,7 +52,7 @@ $router->post('/crear-ambiente', 'Configuracion\CrearAmbienteHomeController@Crea
             $router->post('/facturas', 'Validaciones\Modulos\CargaArchivos\CargarFacturasController@CargarFacturas');
             $router->post('/productos', 'Validaciones\Modulos\CargaArchivos\CargarMaestraProductosController@CargarMaestraProductos');
             $router->post('/clientes', 'Validaciones\Modulos\CargaArchivos\CargarMaestraClientesController@CargarMaestraClientes');
-            $router->post('/clientes-bloqueados', 'Validaciones\Modulos\CargaArchivos\CargarMaestraClientesController@CargarMaestraClientes');
+            $router->post('/clientes-bloqueados', 'Validaciones\Modulos\CargaArchivos\CargarMaestraClientesController@CargarMaestraClientesBloqueados');
             $router->post('/clientes/sac', 'Validaciones\Modulos\CargaArchivos\CargarClienteSacController@ValCargarClienteSac');
             $router->post('/fechas', 'Validaciones\Modulos\CargaArchivos\CargarMaestraFechasController@CargarMaestraFechas');
             $router->post('/asdasd', 'Validaciones\Modulos\CargaArchivos\CargarMaestraFechasController@CargarMaestraFechas');
