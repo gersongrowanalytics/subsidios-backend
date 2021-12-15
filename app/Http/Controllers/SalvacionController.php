@@ -11,6 +11,7 @@ use App\Models\fsifacturassi;
 use App\Models\perpersonas;
 use App\Models\usuusuarios;
 use App\Models\sfssubsidiosfacturassi;
+use App\Models\ndsnotascreditossidetalles;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\MailCargaArchivoOutlook;
 use Illuminate\Support\Facades\Hash;
@@ -173,7 +174,7 @@ class SalvacionController extends Controller
                                     ->where(function ($query) use($otro) {
                                         // if($fechaInicio != null){
                                             // $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
-                                            $query->where('sdesubsidiosdetalles.fecid', 1106);
+                                            $query->where('sdesubsidiosdetalles.fecid', 1107);
                                         // }
                                     })
                                     ->distinct('cli.clizona')
@@ -195,7 +196,7 @@ class SalvacionController extends Controller
                                     ->where(function ($query) use($otro) {
                                         // if($fechaInicio != null){
                                             // $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
-                                            $query->where('sdesubsidiosdetalles.fecid', 1106);
+                                            $query->where('sdesubsidiosdetalles.fecid', 1107);
                                         // }
                                     })
                                     // ->orderBy('sdestatus' , 'DESC')
@@ -461,11 +462,26 @@ class SalvacionController extends Controller
             if($sfs->fdstreintaporciento >= $sfs->valorizado){
 
             }else{
-                $nuevaDiferencia = $sfs->valorizado - $sfs->fdstreintaporciento;
+
+                // $valorizado = number_format($sfs->valorizado, 10);
+                // $treinta    = number_format($sfs->fdstreintaporciento, 10);
+
+                $valorizado = doubleval($sfs->valorizado);
+                $treinta = doubleval($sfs->fdstreintaporciento);
+
+                $nuevaDiferencia = $valorizado - $treinta;
 
                 if($nuevaDiferencia > $mayorDiferencia){
                     $mayorDiferencia = $nuevaDiferencia;
                 }
+
+                // $sfsa = sfssubsidiosfacturassi::where('fdsid', $sfs->fdsid)->first();
+                // $sfsa->sfsvalorizado = $sfsa->sfsvalorizado - $nuevaDiferencia;
+                // $sfsa->update();
+
+                // $sdee = sdesubsidiosdetalles::where('sdeid', $sfsa->sdeid)->first();
+                // $sdee->sdependiente = true;
+                // $sdee->update();
 
                 $treintaPorciento[] = array(
                     "fdsid"      => $sfs->fdsid,
@@ -512,8 +528,8 @@ class SalvacionController extends Controller
             //         $valorizData = $porcionesValoriz[0].".".$decimalesValoriz[0];
             //     }
 
-            //     $treintaData = floatval($treintaData);
-            //     $valorizData = floatval($valorizData);
+            //     $treintaData = doubleval($treintaData);
+            //     $valorizData = doubleval($valorizData);
 
             //     if($treintaData == $valorizData){
 
@@ -522,10 +538,28 @@ class SalvacionController extends Controller
             //         if($treintaData >= $valorizData){
 
             //         }else{
+
+            //             // $nuevaDiferencia = $treintaData - $valorizData;
+            //             $nuevaDiferencia = $valorizData - $treintaData;
+
+            //             // $sfsa = sfssubsidiosfacturassi::where('fdsid', $sfs->fdsid)->first();
+            //             // $sfsa->sfsvalorizado = $sfsa->sfsvalorizado - $nuevaDiferencia;
+            //             // $sfsa->update();
+
+            //             // $sdee = sdesubsidiosdetalles::where('sdeid', $sfsa->sdeid)->first();
+            //             // $sdee->sdependiente = true;
+            //             // $sdee->update();
+
+            //             if($nuevaDiferencia > $mayorDiferencia){
+            //                 $mayorDiferencia = $nuevaDiferencia;
+            //             }
+
             //             $treintaPorciento[] = array(
             //                 "fdsid"      => $sfs->fdsid,
             //                 "treinta"    => $sfs->fdstreintaporciento,
-            //                 "valorizado" => $sfs->valorizado
+            //                 "valorizado" => $sfs->valorizado,
+            //                 "diferencia" => $sfs->valorizado - $sfs->fdstreintaporciento,
+            //                 "mayor" => $mayorDiferencia,
             //             );
             //         }
 
@@ -535,7 +569,301 @@ class SalvacionController extends Controller
 
         }
 
+
+
+        
+
+
         return $treintaPorciento;
+
+    }
+
+    public function AlertaEstadoFacturasAsignadas($fecid)
+    {
+        
+        $logs = array(
+            "SUNAT" => [],
+            "ANULADO" => []
+        );
+
+        $sfss = sfssubsidiosfacturassi::join('fdsfacturassidetalles as fds', 'fds.fdsid', 'sfssubsidiosfacturassi.fdsid')
+                                        ->join('fsifacturassi as fsi', 'fsi.fsiid', 'fds.fsiid')
+                                        ->where('sfssubsidiosfacturassi.fecid', $fecid)
+                                        ->get([
+                                            'sfssubsidiosfacturassi.sfsid',
+                                            'fsi.fsiid',
+                                            'fds.fdsid',
+                                            'fsisunataprobado',
+                                            'fdsanulada',
+                                            'fsifactura'
+                                        ]);
+
+        foreach ($sfss as $key => $sfs) {
+            
+            if($sfs->fsisunataprobado == 0){
+                $logs["SUNAT"][] = "La factura: ".$sfs->fsifactura." con FSIID: ".$sfs->fsiid;
+            }
+            
+            if($sfs->fdsanulada == 1){
+                $logs["ANULADO"][] = "La factura: ".$sfs->fsifactura." con FDSID: ".$sfs->fdsid;
+            }
+        }
+
+
+        $sdes = sdesubsidiosdetalles::where('fecidregularizado', $fecid)
+                                        ->get(['sdeid']);
+
+        foreach ($sdes as $key => $sde) {
+            
+            $sfss = sfssubsidiosfacturassi::join('fdsfacturassidetalles as fds', 'fds.fdsid', 'sfssubsidiosfacturassi.fdsid')
+                                        ->join('fsifacturassi as fsi', 'fsi.fsiid', 'fds.fsiid')
+                                        ->where('sfssubsidiosfacturassi.sdeid', $sde->sdeid)
+                                        ->get([
+                                            'sfssubsidiosfacturassi.sfsid',
+                                            'fsi.fsiid',
+                                            'fds.fdsid',
+                                            'fsisunataprobado',
+                                            'fdsanulada',
+                                            'fsifactura'
+                                        ]);
+
+            foreach ($sfss as $key => $sfs) {
+            
+                if($sfs->fsisunataprobado == 0){
+                    $logs["SUNAT"][] = "La factura: ".$sfs->fsifactura." con FSIID: ".$sfs->fsiid;
+                }
+                
+                if($sfs->fdsanulada == 1){
+                    $logs["ANULADO"][] = "La factura: ".$sfs->fsifactura." con FDSID: ".$sfs->fdsid;
+                }
+            }
+
+        }
+
+        dd($logs);
+        
+    }
+
+    public function AlertaAsignacionFacturas($fecid)
+    {
+
+        $logs = array(
+            array(
+                "sfsid" => "0",
+                "cliFDS" => 0,
+                "cliSDE" => 0
+            )
+        );
+
+        $sfss = sfssubsidiosfacturassi::join('fdsfacturassidetalles as fds', 'fds.fdsid', 'sfssubsidiosfacturassi.fdsid')
+                                        ->join('sdesubsidiosdetalles as sde', 'sde.sdeid', 'sfssubsidiosfacturassi.sdeid')
+                                        ->where('sfssubsidiosfacturassi.fecid', $fecid)
+                                        ->get([
+                                            'sfsid',
+                                            'fds.cliid as cliFDS',
+                                            'sde.cliid as cliSDE'
+                                        ]);
+
+        foreach ($sfss as $key => $sfs) {
+            
+            if($sfs->cliFDS == $sfs->cliSDE){
+
+            }else{
+                
+                
+                $cliSelecFDS = cliclientes::where('cliid', $sfs->cliFDS)->first();
+                $cliSelecSDE = cliclientes::where('cliid', $sfs->cliSDE)->first();
+
+                if($cliSelecFDS->clinombre == $cliSelecSDE->clinombre){
+
+                }else{
+                    $logs[] = array(
+                        "sfsid"  => $sfs->sfsid,
+                        "cliFDS" => $sfs->cliFDS,
+                        "cliNombFDS" => $cliSelecFDS->clinombre,
+                        "cliSDE" => $sfs->cliSDE,
+                        "cliNombSDE" => $cliSelecSDE->clinombre
+                    );
+                }
+
+            }
+
+        }
+
+        return dd($logs);
+
+    }
+
+    public function ValidarNcAsignadas($fecid)
+    {
+
+        $sfss = sfssubsidiosfacturassi::join('fdsfacturassidetalles as fds', 'fds.fdsid', 'sfssubsidiosfacturassi.fdsid')
+                                    ->join('sdesubsidiosdetalles as sde', 'sde.sdeid', 'sfssubsidiosfacturassi.sdeid')
+                                    ->join('cliclientes as cli', 'cli.cliid', 'sde.cliid')
+                                    ->where('sfssubsidiosfacturassi.fecid', $fecid)
+                                    ->distinct('sfssubsidiosfacturassi.fdsid')
+                                    ->get([
+                                        'sfssubsidiosfacturassi.sfsid',
+                                        'sfssubsidiosfacturassi.fdsid',
+                                        'fdspedidooriginal',
+                                        'sfsvalorizado',
+                                        'fdstreintaporciento',
+                                        'cli.cliid',
+                                        'clizona',
+                                        'fdsmaterial'
+                                    ]);
+        $logs = array(
+            array()
+        );
+
+        $logsZonas = array(
+            "DIRECTOS" => 0,
+            "E COMMERCE" => 0,
+            "ESTADO" => 0,
+            "HUNTING" => 0,
+            "LIMA" => array(
+                "total" => 0,
+                "cantidad" => 0,
+                "clientes" => [],
+                "numeroclientes" => 0
+            ),
+            "MASIVO" => 0,
+            "No Aplica" => 0,
+            "OTROS" => 0,
+            "PROVINCIA" => array(
+                "total" => 0,
+                "cantidad" => 0,
+                "clientes" => [],
+                "numeroclientes" => 0
+            ),
+            "RETAIL" => 0,
+            "VENTA INTERNA" => 0
+        );
+
+        $impacto = 0;
+
+        foreach ($sfss as $key => $sfs) {
+            
+            $sumaNds = ndsnotascreditossidetalles::where('ndspedidooriginal', $sfs->fdspedidooriginal)
+                                                ->where('ndsmaterial', $sfs->fdsmaterial)
+                                                ->sum('ndsvalorneto');
+            if($sumaNds > 0){
+                $sumaNds = 0;
+            }else{
+                $sumaNds = abs($sumaNds);
+            }
+
+            $nuevoSaldo = $sfs->fdstreintaporciento - $sumaNds;
+
+            if($nuevoSaldo < $sfs->sfsvalorizado){
+                if($nuevoSaldo == $sfs->sfsvalorizado){
+
+                }else{
+                    if($sfs->sfsvalorizado > 1){
+                    
+                        $logs[] = array(
+                            "treinta"    => $sfs->fdstreintaporciento,
+                            "nds"        => $sumaNds,
+                            "asignado"   => $sfs->sfsvalorizado,
+                            "nuevoSaldo" => $nuevoSaldo
+                        );
+    
+                        $ssaldo = abs($nuevoSaldo);
+    
+                        // $impacto = $ssaldo - $sfs->sfsvalorizado; 
+        
+                        if($nuevoSaldo < 0){
+    
+                        }
+    
+    
+                        if($sfs->clizona == "LIMA"){
+                            $logsZonas["LIMA"]['cantidad'] = $logsZonas["LIMA"]['cantidad'] + 1;
+                            if($nuevoSaldo < 0){
+                                $logsZonas["LIMA"]['total'] = $logsZonas["LIMA"]['total'] + $sfs->sfsvalorizado;
+                            }
+    
+                            $encontroCliente = false;
+    
+                            foreach ($logsZonas["LIMA"]['clientes'] as $key => $value) {
+                                
+                                if( $value == $sfs->cliid){
+                                    $encontroCliente = true;
+                                }
+    
+                            }
+    
+                            if($encontroCliente == false){
+                                $logsZonas["LIMA"]['clientes'][] = $sfs->cliid;
+                                $logsZonas["LIMA"]['numeroclientes'] = $logsZonas["LIMA"]['numeroclientes'] + 1;
+                            }
+    
+                        }else if($sfs->clizona == "PROVINCIA"){
+                            $logsZonas["PROVINCIA"]['cantidad'] = $logsZonas["PROVINCIA"]['cantidad'] + 1;
+                            if($nuevoSaldo < 0){
+                                $logsZonas["PROVINCIA"]['total'] = $logsZonas["PROVINCIA"]['total'] + $sfs->sfsvalorizado;
+                            }
+    
+                            $encontroCliente = false;
+    
+                            foreach ($logsZonas["PROVINCIA"]['clientes'] as $key => $value) {
+                                
+                                if( $value == $sfs->cliid){
+                                    $encontroCliente = true;
+                                }
+    
+                            }
+    
+                            if($encontroCliente == false){
+                                $logsZonas["PROVINCIA"]['clientes'][] = $sfs->cliid;
+                                $logsZonas["PROVINCIA"]['numeroclientes'] = $logsZonas["PROVINCIA"]['numeroclientes'] + 1;
+                            }
+                        }
+    
+                        
+                    }
+                }
+            }
+
+        }
+
+        // dd($logsZonas);
+        dd($logs);
+        // echo $impacto;
+        
+
+    }
+
+    public function MostrarSunatXMes()
+    {
+
+        $fecs = fsifacturassi::join('fecfechas as fec', 'fec.fecid', 'fsifacturassi.fecid')
+                            ->distinct('fecid')
+                            ->get([
+                                'fec.fecid',
+                                'fecanionumero',
+                                'fecmesabreviacion'
+                            ]);
+
+        $logs = array();
+
+        foreach ($fecs as $key => $fec) {
+            
+            $countfsis = fsifacturassi::where('fecid', $fec->fecid)
+                                    ->where('fsisunataprobado', false)
+                                    ->count();
+
+            $logs[] = array(
+                "fecid" => $fec->fecid,
+                "mes"=> $fec->fecanionumero,
+                "anio"=> $fec->fecmesabreviacion,
+                "numero" => $countfsis
+            );
+
+        }
+
+        dd($logs);
+
 
     }
 
