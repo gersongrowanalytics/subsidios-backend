@@ -105,7 +105,7 @@ class MetCargarClientesBloqueadosController extends Controller
                             $bloqueado = true;
                         }
                         
-                        $cli = cliclientes::where('clicodigoshipto', $codigo)->first();
+                        $cli = cliclientes::where('clicodigoshipto', $ex_codigo)->first();
 
                         if($cli){
                             $cli->clibloqueado = $bloqueado;
