@@ -11,6 +11,7 @@ use App\Models\fecfechas;
 use App\Models\sdesubsidiosdetalles;
 use App\Models\fdsfacturassidetalles;
 use App\Models\ndsnotascreditossidetalles;
+use App\Models\cliclientes;
 
 
 class MetLogicaSubsidiosSiController extends Controller
