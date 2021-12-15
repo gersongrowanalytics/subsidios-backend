@@ -216,7 +216,8 @@ class MetLogicaSubsidiosSiController extends Controller
         // }                                
 
 
-        $fdss = fdsfacturassidetalles::get(['fdsid']);
+        // $fdss = fdsfacturassidetalles::get(['fdsid']);
+        $fdss = fdsfacturassidetalles::get();
 
         foreach($fdss as $fds){
             $fdse = fdsfacturassidetalles::find($fds->fdsid);
