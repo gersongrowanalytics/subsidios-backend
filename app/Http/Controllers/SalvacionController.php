@@ -174,7 +174,7 @@ class SalvacionController extends Controller
                                     ->where(function ($query) use($otro) {
                                         // if($fechaInicio != null){
                                             // $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
-                                            $query->where('sdesubsidiosdetalles.fecid', $fecid);
+                                            $query->where('sdesubsidiosdetalles.fecid', 1106);
                                         // }
                                     })
                                     ->distinct('cli.clizona')
@@ -196,7 +196,7 @@ class SalvacionController extends Controller
                                     ->where(function ($query) use($otro) {
                                         // if($fechaInicio != null){
                                             // $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
-                                            $query->where('sdesubsidiosdetalles.fecid', $fecid);
+                                            $query->where('sdesubsidiosdetalles.fecid', 1106);
                                         // }
                                     })
                                     // ->orderBy('sdestatus' , 'DESC')
