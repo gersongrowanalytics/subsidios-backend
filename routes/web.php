@@ -144,11 +144,12 @@ $router->post('/crear-ambiente', 'Configuracion\CrearAmbienteHomeController@Crea
 // });
 
 $router->get('/asignar-bultos-acidos', 'SalvacionController@AsignarBultosAcidos');
-$router->get('/limpiar-sde', 'SalvacionController@LimpiarSde');
+$router->get('/limpiar-sde/{fecid}', 'SalvacionController@LimpiarSde');
 $router->get('/asignar-detalle-factura-sfs', 'SalvacionController@AgregarDetalleFacturaSfs');
 $router->get('/asignar-ids-factura-sfs', 'SalvacionController@AsignarIdFdsFsiASfs');
 $router->get('/treinta-por-ciento-sfs/{fecid}', 'SalvacionController@TreintaPorCientoSfs');
 $router->get('/alerta-facturas-asiganadas-clientes/{fecid}', 'SalvacionController@AlertaAsignacionFacturas');
 $router->get('/alerta-validar-notas-creidtos-asignadas/{fecid}', 'SalvacionController@ValidarNcAsignadas');
 $router->get('/alerta-estados-facturas-asignadas/{fecid}', 'SalvacionController@AlertaEstadoFacturasAsignadas');
+$router->get('/alerta-clientes-bloqueados-facturas-asignadas/{fecid}', 'SalvacionController@AlertaClientesBloqueados');
 $router->get('/contar-numero-sunat', 'SalvacionController@MostrarSunatXMes');

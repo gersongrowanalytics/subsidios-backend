@@ -135,7 +135,7 @@ class SalvacionController extends Controller
 
     }
 
-    public function LimpiarSde()
+    public function LimpiarSde($fecid)
     {
 
         // $sdes = sdesubsidiosdetalles::where('fecid', 1104)->get();
@@ -174,7 +174,7 @@ class SalvacionController extends Controller
                                     ->where(function ($query) use($otro) {
                                         // if($fechaInicio != null){
                                             // $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
-                                            $query->where('sdesubsidiosdetalles.fecid', 1107);
+                                            $query->where('sdesubsidiosdetalles.fecid', $fecid);
                                         // }
                                     })
                                     ->distinct('cli.clizona')
@@ -196,7 +196,7 @@ class SalvacionController extends Controller
                                     ->where(function ($query) use($otro) {
                                         // if($fechaInicio != null){
                                             // $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
-                                            $query->where('sdesubsidiosdetalles.fecid', 1107);
+                                            $query->where('sdesubsidiosdetalles.fecid', $fecid);
                                         // }
                                     })
                                     // ->orderBy('sdestatus' , 'DESC')
@@ -569,11 +569,51 @@ class SalvacionController extends Controller
 
         }
 
+        // QUITAR DE PENDIENTES A LOS SUBSIDIOS QUE TENGAN UN PENDIENTE DE 0
+
+        // $logsPendientes = array();
+
+        // $sdes = sdesubsidiosdetalles::where('sdependiente', true)
+        //                             ->where('fecid', $fecid)
+        //                             ->get([
+        //                                 'sdeid',
+        //                                 'sdemontoacido'
+        //                             ]);
+
+        // foreach ($sdes as $key => $sde) {
+            
+        //     $sumSfs = sfssubsidiosfacturassi::where('sdeid', $sde->sdeid)
+        //                                     ->sum('sfsvalorizado');
+
+        //     $estado = "NO ES";
+        //     $diferencia = $sde->sdemontoacido - $sumSfs;
+            
+        //     if($diferencia < 1){
+                
+        //         if($diferencia <= 0.09){
+        //             $estado = "SI ES";
+        //             // $sdee = sdesubsidiosdetalles::find($sde->sdeid);
+        //             // $sdee->sdependiente = false;
+        //             // $sdee->update();
+        //         }
+
+        //         $logsPendientes[] = array(
+        //             "SDEID" => $sde->sdeid,
+        //             "SUMA_SFS" => $sumSfs,
+        //             "MONTO_ACIDO" => $sde->sdemontoacido,
+        //             "DIFERENCIA" => $diferencia,
+        //             "ESTADO" => $estado
+        //         );
+        //     }
+
+        // }
+
 
 
         
 
 
+        // return $logsPendientes;
         return $treintaPorciento;
 
     }
@@ -865,6 +905,79 @@ class SalvacionController extends Controller
         dd($logs);
 
 
+    }
+
+    public function AlertaClientesBloqueados($fecid)
+    {
+        
+        $sfss = sfssubsidiosfacturassi::join('fdsfacturassidetalles as fds', 'fds.fdsid', 'sfssubsidiosfacturassi.fdsid')
+                                    ->join('fsifacturassi as fsi', 'fsi.fsiid', 'fds.fsiid')
+                                    ->where('sfssubsidiosfacturassi.fecid', $fecid)
+                                    ->get([
+                                        'sfssubsidiosfacturassi.sfsid',
+                                        'fds.fdsid',
+                                        'fsi.fsiid',
+                                        'fsisolicitante'
+                                    ]);
+        
+        $logs = array();
+
+        foreach ($sfss as $key => $sfs) {
+            
+            $cli = cliclientes::where('clicodigoshipto', $sfs->fsisolicitante)->first();
+
+            if($cli){
+                if($cli->clibloqueado == true){
+                    $logs[] = array(
+                        "fdsid" => $sfs->fdsid,
+                        "sfsid" => $sfs->sfsid,
+                        'fsisolicitante' => $sfs->fsisolicitante
+                    );
+                }else{
+
+                }
+            }
+
+
+        }
+
+        $sdes = sdesubsidiosdetalles::where('fecidregularizado', $fecid)
+                                        ->get(['sdeid']);
+
+        foreach ($sdes as $key => $sde) {
+            
+            $sfss = sfssubsidiosfacturassi::join('fdsfacturassidetalles as fds', 'fds.fdsid', 'sfssubsidiosfacturassi.fdsid')
+                                    ->join('fsifacturassi as fsi', 'fsi.fsiid', 'fds.fsiid')
+                                    ->where('sfssubsidiosfacturassi.sdeid', $sde->sdeid)
+                                    ->get([
+                                        'sfssubsidiosfacturassi.sfsid',
+                                        'fds.fdsid',
+                                        'fsi.fsiid',
+                                        'fsisolicitante'
+                                    ]);
+
+            foreach ($sfss as $key => $sfs) {
+            
+                $cli = cliclientes::where('clicodigoshipto', $sfs->fsisolicitante)->first();
+
+                if($cli){
+                    if($cli->clibloqueado == true){
+                        $logs[] = array(
+                            "fdsid" => $sfs->fdsid,
+                            "sfsid" => $sfs->sfsid,
+                            'fsisolicitante' => $sfs->fsisolicitante
+                        );
+                    }else{
+
+                    }
+                }
+
+
+            }
+
+        }
+
+        dd($logs);
     }
 
 }
