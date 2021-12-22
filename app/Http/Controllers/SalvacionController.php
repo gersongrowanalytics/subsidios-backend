@@ -1039,7 +1039,7 @@ class SalvacionController extends Controller
 
             $nuevaDiferencia = number_format($log['diferencia'], 2);
 
-            if($nuevaDiferencia != 0.00){
+            if($nuevaDiferencia != 0.00 && $log['cliente'] != "DERO SERV. GENERALES S.R.L."){
                 $nuevoLogs[] = array(
                     "sdeid"      => $log['sdeid'],
                     "clizona"    => $log['clizona'],
@@ -1053,7 +1053,7 @@ class SalvacionController extends Controller
 
 
 
-        return $nuevoLogs;
+        return dd($nuevoLogs);
 
     }
 
