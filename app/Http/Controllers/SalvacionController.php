@@ -999,15 +999,29 @@ class SalvacionController extends Controller
 
             $diferencia = $sde->sdemontoacido - $sumaSfs;
 
-            if($diferencia > 0.001){
-                $logs[] = array(
-                    "sdeid" => $sde->sdeid,
-                    "clizona" => $sde->clizona,
-                    "cliente" => $sde->clinombre,
-                    "montoacido" => $sde->sdemontoacido,
-                    "valorizado" => $sumaSfs,
-                    "diferencia" => $diferencia
-                );
+            if($diferencia > 0.005){
+
+                $encontroCliente = false;
+
+                foreach ($logs as $key => $log) {
+                    if($log['cliente'] == $sde->clinombre){
+                        $logs[$key]['diferencia'] = $log['diferencia'] + $diferencia;
+                        $encontroCliente = true;
+                    }
+
+                }
+
+                if($encontroCliente == false){
+                    $logs[] = array(
+                        "sdeid" => $sde->sdeid,
+                        "clizona" => $sde->clizona,
+                        "cliente" => $sde->clinombre,
+                        "montoacido" => $sde->sdemontoacido,
+                        "valorizado" => $sumaSfs,
+                        "diferencia" => $diferencia
+                    );
+                }
+                
             }else if($diferencia < -0.009){
                 $logsNegativos[] = array(
                     "sdeid" => $sde->sdeid,
