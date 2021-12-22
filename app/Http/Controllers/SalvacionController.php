@@ -1000,13 +1000,16 @@ class SalvacionController extends Controller
             $sumaSfs = sfssubsidiosfacturassi::where('sdeid', $sde->sdeid)
                                                 ->sum('sfsvalorizado');
 
-            $logs[] = array(
-                "sdeid" => $sde->sdeid,
-                "montoacido" => $sde->sdemontoacido,
-                "valorizado" => $sumaSfs,
-                "diferencia" => $sde->sdemontoacido - $sumaSfs
-            );
+            $diferencia = $sde->sdemontoacido - $sumaSfs;
 
+            if($diferencia != 0){
+                $logs[] = array(
+                    "sdeid" => $sde->sdeid,
+                    "montoacido" => $sde->sdemontoacido,
+                    "valorizado" => $sumaSfs,
+                    "diferencia" => $diferencia
+                );
+            }
         }
 
         return $logs;
