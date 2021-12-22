@@ -990,7 +990,7 @@ class SalvacionController extends Controller
 
         $sdes = sdesubsidiosdetalles::join('cliclientes as cli', 'cli.cliid', 'sdesubsidiosdetalles.cliid')
                                     ->where('fecid', $fecid)
-                                    ->get(['sdeid', 'sdemontoacido', 'clinombre']);
+                                    ->get(['sdeid', 'sdemontoacido', 'clinombre', 'clizona']);
 
         foreach ($sdes as $key => $sde) {
             
@@ -1002,6 +1002,7 @@ class SalvacionController extends Controller
             if($diferencia > 0.009){
                 $logs[] = array(
                     "sdeid" => $sde->sdeid,
+                    "clizona" => $sde->clizona,
                     "cliente" => $sde->clinombre,
                     "montoacido" => $sde->sdemontoacido,
                     "valorizado" => $sumaSfs,
@@ -1010,6 +1011,7 @@ class SalvacionController extends Controller
             }else if($diferencia < -0.009){
                 $logsNegativos[] = array(
                     "sdeid" => $sde->sdeid,
+                    "clizona" => $sde->clizona,
                     "cliente" => $sde->clinombre,
                     "montoacido" => $sde->sdemontoacido,
                     "valorizado" => $sumaSfs,
