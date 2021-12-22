@@ -984,13 +984,9 @@ class SalvacionController extends Controller
     {
 
         $logs = array(
-            array(
-                "sdeid" => "",
-                "montoacido" => "",
-                "valorizado" => "",
-                "diferencia"
-            )
         );
+
+        $logsNegativos = array();
 
         $sdes = sdesubsidiosdetalles::where('fecid', $fecid)
                                     ->get(['sdeid', 'sdemontoacido']);
@@ -1004,6 +1000,13 @@ class SalvacionController extends Controller
 
             if($diferencia > 0.009){
                 $logs[] = array(
+                    "sdeid" => $sde->sdeid,
+                    "montoacido" => $sde->sdemontoacido,
+                    "valorizado" => $sumaSfs,
+                    "diferencia" => $diferencia
+                );
+            }else if($diferencia < -0.009){
+                $logsNegativos[] = array(
                     "sdeid" => $sde->sdeid,
                     "montoacido" => $sde->sdemontoacido,
                     "valorizado" => $sumaSfs,
