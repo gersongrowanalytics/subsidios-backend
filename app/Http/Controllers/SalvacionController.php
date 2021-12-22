@@ -1006,6 +1006,8 @@ class SalvacionController extends Controller
 
                 foreach ($logs as $key => $log) {
                     if($log['cliente'] == $sde->clinombre){
+                        $logs[$key]['montoacido'] = $log['montoacido'] + $sde->sdemontoacido;
+                        $logs[$key]['valorizado'] = $log['valorizado'] + $sumaSfs;
                         $logs[$key]['diferencia'] = $log['diferencia'] + $diferencia;
                         $encontroCliente = true;
                     }
@@ -1038,7 +1040,7 @@ class SalvacionController extends Controller
         foreach ($logs as $key => $log) {
 
             $nuevaDiferencia = number_format($log['diferencia'], 2);
-            
+
             if($log['cliente'] == "MENDOZA SANDOVAL ROSA OTILIA"){
                 $nuevoLogs[] = array(
                     "sdeid"      => $log['sdeid'],
@@ -1046,7 +1048,7 @@ class SalvacionController extends Controller
                     "cliente"    => $log['cliente'],
                     "montoacido" => $log['montoacido'],
                     "valorizado" => $log['valorizado'],
-                    "diferencia" => $nuevaDiferencia
+                    "diferencia" => number_format($log['diferencia'], 4)
                 );
             }else if($nuevaDiferencia != 0.00 && $log['cliente'] != "DERO SERV. GENERALES S.R.L."){
                 $nuevoLogs[] = array(
