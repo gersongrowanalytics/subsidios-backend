@@ -1035,6 +1035,14 @@ class SalvacionController extends Controller
             }
         }
 
+        foreach ($logs as $key => $log) {
+
+            $logs[$key]['diferencia'] = number_format($log['diferencia']);
+
+        }
+
+
+
         return $logs;
 
     }
