@@ -980,4 +980,37 @@ class SalvacionController extends Controller
         dd($logs);
     }
 
+    public function AlertaRestarMontoSubsidiarXMontoSubsidiado($fecid)
+    {
+
+        $logs = array(
+            array(
+                "sdeid" => "",
+                "montoacido" => "",
+                "valorizado" => "",
+                "diferencia"
+            )
+        );
+
+        $sdes = sdesubsidiosdetalles::where('fecid', $fecid)
+                                    ->get(['sdeid', 'sdemontoacido']);
+
+        foreach ($sdes as $key => $sde) {
+            
+            $sumaSfs = sfssubsidiosfacturassi::where('sdeid', $sde->sdeid)
+                                                ->sum('sfsvalorizado');
+
+            $logs[] = array(
+                "sdeid" => $sde->sdeid,
+                "montoacido" => $sde->sdemontoacido,
+                "valorizado" => $sumaSfs,
+                "diferencia" => $sde->sdemontoacido - $sumaSfs
+            );
+
+        }
+
+        return $logs;
+
+    }
+
 }
