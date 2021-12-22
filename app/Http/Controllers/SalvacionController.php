@@ -999,7 +999,7 @@ class SalvacionController extends Controller
 
             $diferencia = $sde->sdemontoacido - $sumaSfs;
 
-            if($diferencia > 0.009){
+            if($diferencia > 0.001){
                 $logs[] = array(
                     "sdeid" => $sde->sdeid,
                     "clizona" => $sde->clizona,
