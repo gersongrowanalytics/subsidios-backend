@@ -983,6 +983,27 @@ class SalvacionController extends Controller
     public function AlertaRestarMontoSubsidiarXMontoSubsidiado($fecid)
     {
 
+        perpersonas::create([
+            "perid"                       => 13,
+            "pernumerodocumentoidentidad" => "0000000",
+            "pernombrecompleto"           => "Elisa Flores",
+            "pernombre"                   => "Elisa",
+            "perapellidopaterno"          => "Flores",
+            "perapellidomaterno"          => "",
+        ]);
+
+        usuusuarios::create([
+            "usuid"           => 12,
+            "tpuid"           => 1,
+            "perid"           => 13,
+            "estid"           => 1,
+            "usucodigo"       => "SacElisa-09",
+            "usuusuario"      => "elisa.flores@softys.com",
+            "usucorreo"       => "elisa.flores@softys.com",
+            "usucontrasenia"  => Hash::make('Elisa$$Flores$$012394'),
+            "usutoken"        => "ElisaIDMWZZwOPOR439asd11addqALSDQ2dkka2ldrwke989230CFlores",
+        ]);
+
         $logs = array(
         );
 
