@@ -1053,7 +1053,7 @@ class SalvacionController extends Controller
 
 
 
-        return $nuevaDiferencia;
+        return $nuevoLogs;
 
     }
 
