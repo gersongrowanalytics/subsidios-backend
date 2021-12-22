@@ -1002,7 +1002,7 @@ class SalvacionController extends Controller
 
             $diferencia = $sde->sdemontoacido - $sumaSfs;
 
-            if($diferencia != 0){
+            if($diferencia > 0.009){
                 $logs[] = array(
                     "sdeid" => $sde->sdeid,
                     "montoacido" => $sde->sdemontoacido,
@@ -1017,3 +1017,39 @@ class SalvacionController extends Controller
     }
 
 }
+
+
+// {
+//     "sdeid": 103598,
+//     "montoacido": 474.33,
+//     "valorizado": 474.24,
+//     "diferencia": 0.08999999999997499
+//     },
+
+// {
+// "sdeid": 104240,
+// "montoacido": 6.31238627584,
+// "valorizado": 6.255,
+// "diferencia": 0.05738627583999989
+// },
+
+// {
+//     "sdeid": 104257,
+//     "montoacido": 275.312,
+//     "valorizado": 275.252,
+//     "diferencia": 0.060000000000002274
+//     },
+
+// {
+// "sdeid": 104280,
+// "montoacido": 443.55530323864,
+// "valorizado": 443.50530323864,
+// "diferencia": 0.05000000000001137
+// },
+
+// {
+//     "sdeid": 104356,
+//     "montoacido": 180.448,
+//     "valorizado": 180.37,
+//     "diferencia": 0.07800000000000296
+//     },
