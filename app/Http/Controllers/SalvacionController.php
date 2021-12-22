@@ -1038,8 +1038,17 @@ class SalvacionController extends Controller
         foreach ($logs as $key => $log) {
 
             $nuevaDiferencia = number_format($log['diferencia'], 2);
-
-            if($nuevaDiferencia != 0.00 && $log['cliente'] != "DERO SERV. GENERALES S.R.L."){
+            
+            if($log['cliente'] == "MENDOZA SANDOVAL ROSA OTILIA"){
+                $nuevoLogs[] = array(
+                    "sdeid"      => $log['sdeid'],
+                    "clizona"    => $log['clizona'],
+                    "cliente"    => $log['cliente'],
+                    "montoacido" => $log['montoacido'],
+                    "valorizado" => $log['valorizado'],
+                    "diferencia" => $nuevaDiferencia
+                );
+            }else if($nuevaDiferencia != 0.00 && $log['cliente'] != "DERO SERV. GENERALES S.R.L."){
                 $nuevoLogs[] = array(
                     "sdeid"      => $log['sdeid'],
                     "clizona"    => $log['clizona'],
