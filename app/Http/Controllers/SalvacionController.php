@@ -917,7 +917,8 @@ class SalvacionController extends Controller
                                         'sfssubsidiosfacturassi.sfsid',
                                         'fds.fdsid',
                                         'fsi.fsiid',
-                                        'fsisolicitante'
+                                        'fsisolicitante',
+                                        'fsidestinatario'
                                     ]);
         
         $logs = array();
@@ -936,6 +937,19 @@ class SalvacionController extends Controller
                 }else{
 
                 }
+            }else{
+                $cli = cliclientes::where('clicodigoshipto', $sfs->fsidestinatario)->first();
+                if($cli){
+                    if($cli->clibloqueado == true){
+                        $logs[] = array(
+                            "fdsid" => $sfs->fdsid,
+                            "sfsid" => $sfs->sfsid,
+                            'fsisolicitante' => $sfs->fsidestinatario
+                        );
+                    }else{
+    
+                    }
+                }
             }
 
 
@@ -953,7 +967,8 @@ class SalvacionController extends Controller
                                         'sfssubsidiosfacturassi.sfsid',
                                         'fds.fdsid',
                                         'fsi.fsiid',
-                                        'fsisolicitante'
+                                        'fsisolicitante',
+                                        'fsidestinatario'
                                     ]);
 
             foreach ($sfss as $key => $sfs) {
@@ -969,6 +984,19 @@ class SalvacionController extends Controller
                         );
                     }else{
 
+                    }
+                }else{
+                    $cli = cliclientes::where('clicodigoshipto', $sfs->fsidestinatario)->first();
+                    if($cli){
+                        if($cli->clibloqueado == true){
+                            $logs[] = array(
+                                "fdsid" => $sfs->fdsid,
+                                "sfsid" => $sfs->sfsid,
+                                'fsisolicitante' => $sfs->fsidestinatario
+                            );
+                        }else{
+        
+                        }
                     }
                 }
 
