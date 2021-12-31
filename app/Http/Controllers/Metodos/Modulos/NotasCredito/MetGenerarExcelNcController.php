@@ -331,7 +331,9 @@ class MetGenerarExcelNcController extends Controller
 
         if($cantidadExcelsGenerar > 1){
             
-            unlink("Subsidios/".$re_anio."-".$re_mes."-comprimido.zip");//Destruye el archivo temporal
+            if(unlink("Subsidios/".$re_anio."-".$re_mes."-comprimido.zip")){ //Destruye el archivo temporal
+                
+            }
 
             $fileName="comprimido.rar";
             // Creamos un instancia de la clase ZipArchive
