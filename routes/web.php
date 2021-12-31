@@ -126,6 +126,12 @@ $router->post('/crear-ambiente', 'Configuracion\CrearAmbienteHomeController@Crea
 
         });
 
+        $router->group(['prefix' => 'nota-credito'], function () use ($router) {
+            $router->post('/generar/excel-nota-credito', 'Validaciones\Modulos\NotasCredito\GenerarExcelNcController@ValGenerarExcelNc');
+            $router->post('/mostrar/data-distribuidores', 'Validaciones\Modulos\NotasCredito\MostrarDataController@ValMostrarDataDistribuidoresNc');
+            // $router->get('/generar/excel-nota-credito', 'Validaciones\Modulos\NotasCredito\GenerarExcelNcController@ValGenerarExcelNc');
+        });
+
         $router->group(['prefix' => 'control-panel'], function () use ($router) {
             $router->post('/mostrar', 'Validaciones\Modulos\ControlPanel\Mostrar\MostrarControlPanelController@ValMostrarControlPanel');
         });
