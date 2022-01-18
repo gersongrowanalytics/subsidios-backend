@@ -106,9 +106,9 @@ class MetMostrarFacturasSubsidiosPendientesController extends Controller
                                 ->where('cli.clicodigo', $cli->clicodigo)
                                 ->where('cli.clibloqueado', false)
                                 ->where(function ($query) use($cli) {
-                                    if(isset($cli->cliclientegrupo)){
+                                    // if(isset($cli->cliclientegrupo)){
                                         $query->where('cliclientegrupo', $cli->cliclientegrupo);
-                                    }
+                                    // }
                                 })
                                 // ->where(function ($query) use(
                                 //     $tieneDestinatarios,
