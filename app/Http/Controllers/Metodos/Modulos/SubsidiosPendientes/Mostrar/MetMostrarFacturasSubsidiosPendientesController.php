@@ -242,7 +242,8 @@ class MetMostrarFacturasSubsidiosPendientesController extends Controller
 
 
         $requestsalida = response()->json([
-            "datos" => $nuevoFsis
+            "datos" => $nuevoFsis,
+            "mensaje" => "DATOS"
         ]);
 
         return $requestsalida;
