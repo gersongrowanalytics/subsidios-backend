@@ -171,10 +171,10 @@ class SalvacionController extends Controller
 
         $zonas = sdesubsidiosdetalles::join('cliclientes as cli', 'cli.cliid', 'sdesubsidiosdetalles.cliid')
                                     ->join('fecfechas as fec', 'fec.fecid', 'sdesubsidiosdetalles.fecid')
-                                    ->where(function ($query) use($otro) {
+                                    ->where(function ($query) use($otro, $fecid) {
                                         // if($fechaInicio != null){
                                             // $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
-                                            $query->where('sdesubsidiosdetalles.fecid', 1106);
+                                            $query->where('sdesubsidiosdetalles.fecid', $fecid);
                                         // }
                                     })
                                     ->distinct('cli.clizona')
@@ -193,10 +193,10 @@ class SalvacionController extends Controller
                                     ->join('catcategorias as cat', 'cat.catid', 'pro.catid')
                                     ->join('fecfechas as fec', 'fec.fecid', 'sdesubsidiosdetalles.fecid')
                                     ->where('clizona', $zon['clizona'])
-                                    ->where(function ($query) use($otro) {
+                                    ->where(function ($query) use($otro, $fecid) {
                                         // if($fechaInicio != null){
                                             // $query->whereBetween('fecfecha', [$fechaInicio, $fechaFinal]);
-                                            $query->where('sdesubsidiosdetalles.fecid', 1106);
+                                            $query->where('sdesubsidiosdetalles.fecid', $fecid);
                                         // }
                                     })
                                     // ->orderBy('sdestatus' , 'DESC')

@@ -71,7 +71,8 @@ class MetLogicaSubsidiosSiController extends Controller
                                             'cli.cliid',
                                             'cli.clicodigo',
                                             'sdemontoareconocerreal',
-                                            'sdemontoacido'
+                                            'sdemontoacido',
+                                            'clibloqueado'
                                         ]);
 
             foreach($sdes as $sde){
@@ -84,11 +85,18 @@ class MetLogicaSubsidiosSiController extends Controller
                     "esPendiente" => false
                 );
 
+                $cliidbuscar = $sde->cliid;
+                    
+                if($sde->clibloqueado == true){
+                    $cliidbuscar = "0";
+                }
+
                 $dataObtenida = $this->BuscarFacturas(
                     $idFacturaEncontrada, 
                     $sde->proid, 
                     $fecid, 
-                    $sde->cliid, 
+                    // $sde->cliid, 
+                    $cliidbuscar, 
                     // $sde->sdemontoareconocerreal,
                     $sde->sdemontoacido,
                     $meses, 
@@ -200,25 +208,26 @@ class MetLogicaSubsidiosSiController extends Controller
                                 "sdeencontrofactura" => 0
                             ]);
             
-        $sfss = sfssubsidiosfacturassi::get([
-                                            'sfsid',
-                                            'sdeid',
-                                            'fdsid'
-                                        ]);
+        // $sfss = sfssubsidiosfacturassi::get([
+        //                                     'sfsid',
+        //                                     'sdeid',
+        //                                     'fdsid'
+        //                                 ]);
 
-        foreach($sfss as $fds){
-            $fdse = fdsfacturassidetalles::find($fds->fdsid);
-            if($fdse){
-                $fdse->fdsreconocer   = 0;
-                $fdse->fdsnotacredito = 0;
-                $fdse->fdssaldo     = $fdse->fdstreintaporciento;
-                $fdse->update();
-            }
-        }                                
+        // foreach($sfss as $fds){
+        //     $fdse = fdsfacturassidetalles::find($fds->fdsid);
+        //     if($fdse){
+        //         $fdse->fdsreconocer   = 0;
+        //         $fdse->fdsnotacredito = 0;
+        //         $fdse->fdssaldo     = $fdse->fdstreintaporciento;
+        //         $fdse->update();
+        //     }
+        // }                                
 
 
         // $fdss = fdsfacturassidetalles::get(['fdsid']);
-        // $fdss = fdsfacturassidetalles::get();
+        // $fdss = fdsfacturassidetalles::where('fecid', '>', '1096')
+        //                                 ->get();
 
         // foreach($fdss as $fds){
         //     $fdse = fdsfacturassidetalles::find($fds->fdsid);
@@ -253,6 +262,7 @@ class MetLogicaSubsidiosSiController extends Controller
                                     ->where('fdssaldo', '!=', '0')
                                     ->where('fdssaldo', '!=', 0)
                                     ->where('fsiclase', '!=', "ZPF9")
+                                    ->where('fsisunataprobado', 1)
                                     ->first([
                                         'fdsfacturassidetalles.fdsid',
                                         'fdsnotacredito',
@@ -358,6 +368,7 @@ class MetLogicaSubsidiosSiController extends Controller
                                     ->where('fdssaldo', '!=', '0')
                                     ->where('fdssaldo', '!=', 0)
                                     ->where('fsiclase', '!=', "ZPF9")
+                                    ->where('fsisunataprobado', 1)
                                     ->first([
                                         'fdsfacturassidetalles.fdsid',
                                         'fdsnotacredito',
@@ -474,6 +485,7 @@ class MetLogicaSubsidiosSiController extends Controller
                                     ->where('fdssaldo', '!=', '0')
                                     ->where('fdssaldo', '!=', 0)
                                     ->where('fsiclase', '!=', "ZPF9")
+                                    ->where('fsisunataprobado', 1)
                                     ->first([
                                         'fdsfacturassidetalles.fdsid',
                                         'fdsnotacredito',
@@ -643,7 +655,8 @@ class MetLogicaSubsidiosSiController extends Controller
                                             'cli.clicodigo',
                                             'sdemontoareconocerreal',
                                             'sdemontoacido',
-                                            'sdecodigosolicitante'
+                                            'sdecodigosolicitante',
+                                            'cliclientegrupo'
                                         ]);
 
             foreach($sdes as $sde){
@@ -683,8 +696,8 @@ class MetLogicaSubsidiosSiController extends Controller
                         $meses, 
                         $facturasAfectadas,
 
-                        $codigoCliente // SOLO INCLUIR EN "BUSCARFACTURASOLIC"
-
+                        $codigoCliente, // SOLO INCLUIR EN "BUSCARFACTURASOLIC"
+                        $sde->cliclientegrupo
                     );
 
                     $idFacturaEncontrada = $dataObtenida["idFacturaEncontrada"];
@@ -782,13 +795,14 @@ class MetLogicaSubsidiosSiController extends Controller
 
     }
 
-    public function BuscarFacturasSolic($idFacturaEncontrada, $proid, $fecid, $cliid, $sdemontoareconocerreal, $meses, $facturasAfectadas, $sdecodigosolicitante)
+    public function BuscarFacturasSolic($idFacturaEncontrada, $proid, $fecid, $cliid, $sdemontoareconocerreal, $meses, $facturasAfectadas, $sdecodigosolicitante, $cliclientegrupo)
     {
 
 
         $espendiente = true;
 
         $fds = fdsfacturassidetalles::join('fsifacturassi as fsi', 'fsi.fsiid', 'fdsfacturassidetalles.fsiid')
+                                    ->join('cliclientes as cli', 'cli.cliid', 'fdsfacturassidetalles.cliid')
                                     ->where('fdsfacturassidetalles.proid', $proid)
                                     ->where('fdsfacturassidetalles.fecid', $fecid)
                                     // ->where('fdsfacturassidetalles.cliid', $cliid)
@@ -798,11 +812,17 @@ class MetLogicaSubsidiosSiController extends Controller
                                             $query->where('fdsid', '!=', $id);
                                         }
                                     })
+                                    ->where(function ($query) use($cliclientegrupo) {
+                                        if(isset($cliclientegrupo)){
+                                            $query->where('cliclientegrupo', $cliclientegrupo);
+                                        }
+                                    })
                                     ->where('fdsanulada', 0)
                                     ->where('fdssaldo', '>', 0.10)
                                     ->where('fdssaldo', '!=', '0')
                                     ->where('fdssaldo', '!=', 0)
                                     ->where('fsiclase', '!=', "ZPF9")
+                                    ->where('fsisunataprobado', 1)
                                     ->first([
                                         'fdsfacturassidetalles.fdsid',
                                         'fdsnotacredito',
@@ -890,7 +910,7 @@ class MetLogicaSubsidiosSiController extends Controller
                 $fds->fdssaldo = 0;
                 $fds->update();
                 // $idFacturaEncontrada = $this->BuscarFacturas($idFacturaEncontrada, $proid, $fecid, $cliid, $sdemontoareconocerreal, $meses);
-                $dat = $this->BuscarFacturasSolic($idFacturaEncontrada, $proid, $fecid, $cliid, $sdemontoareconocerreal, $meses, $facturasAfectadas, $sdecodigosolicitante);
+                $dat = $this->BuscarFacturasSolic($idFacturaEncontrada, $proid, $fecid, $cliid, $sdemontoareconocerreal, $meses, $facturasAfectadas, $sdecodigosolicitante, $cliclientegrupo);
                 $idFacturaEncontrada = $dat["idFacturaEncontrada"];
                 $espendiente = $dat["esPendiente"];
                 $facturasAfectadas = $dat["facturasAfectadas"];
@@ -903,6 +923,7 @@ class MetLogicaSubsidiosSiController extends Controller
             foreach($meses as $mes){
 
                 $fds = fdsfacturassidetalles::join('fsifacturassi as fsi', 'fsi.fsiid', 'fdsfacturassidetalles.fsiid')
+                                    ->join('cliclientes as cli', 'cli.cliid', 'fdsfacturassidetalles.cliid')
                                     ->where('fdsfacturassidetalles.proid', $proid)
                                     ->where('fdsfacturassidetalles.fecid', $mes)
                                     // ->where('fdsfacturassidetalles.cliid', $cliid)
@@ -912,11 +933,17 @@ class MetLogicaSubsidiosSiController extends Controller
                                             $query->where('fdsid', '!=', $id);
                                         }
                                     })
+                                    ->where(function ($query) use($cliclientegrupo) {
+                                        if(isset($cliclientegrupo)){
+                                            $query->where('cliclientegrupo', $cliclientegrupo);
+                                        }
+                                    })
                                     ->where('fdsanulada', 0)
                                     ->where('fdssaldo', '>', 0.10)
                                     ->where('fdssaldo', '!=', '0')
                                     ->where('fdssaldo', '!=', 0)
                                     ->where('fsiclase', '!=', "ZPF9")
+                                    ->where('fsisunataprobado', 1)
                                     ->first([
                                         'fdsfacturassidetalles.fdsid',
                                         'fdsnotacredito',
@@ -1001,7 +1028,7 @@ class MetLogicaSubsidiosSiController extends Controller
                         $fds->fdssaldo = 0;
                         $fds->update();
                         // $idFacturaEncontrada = $this->BuscarFacturas($idFacturaEncontrada, $proid, $fecid, $cliid, $sdemontoareconocerreal, $meses);
-                        $dat = $this->BuscarFacturasSolic($idFacturaEncontrada, $proid, $fecid, $cliid, $sdemontoareconocerreal, $meses, $facturasAfectadas, $sdecodigosolicitante);
+                        $dat = $this->BuscarFacturasSolic($idFacturaEncontrada, $proid, $fecid, $cliid, $sdemontoareconocerreal, $meses, $facturasAfectadas, $sdecodigosolicitante, $cliclientegrupo);
                         $idFacturaEncontrada = $dat["idFacturaEncontrada"];
                         $espendiente = $dat["esPendiente"];
                         $facturasAfectadas = $dat["facturasAfectadas"];
@@ -1026,6 +1053,7 @@ class MetLogicaSubsidiosSiController extends Controller
                 // $espendiente = true;
 
                 $fds = fdsfacturassidetalles::join('fsifacturassi as fsi', 'fsi.fsiid', 'fdsfacturassidetalles.fsiid')
+                                    ->join('cliclientes as cli', 'cli.cliid', 'fdsfacturassidetalles.cliid')
                                     ->where('fdsfacturassidetalles.proid', $proid)
                                     // ->where('fecid', $mes)
                                     // ->where('fdsfacturassidetalles.cliid', $cliid)
@@ -1035,11 +1063,17 @@ class MetLogicaSubsidiosSiController extends Controller
                                             $query->where('fdsid', '!=', $id);
                                         }
                                     })
+                                    ->where(function ($query) use($cliclientegrupo) {
+                                        if(isset($cliclientegrupo)){
+                                            $query->where('cliclientegrupo', $cliclientegrupo);
+                                        }
+                                    })
                                     ->where('fdsanulada', 0)
                                     ->where('fdssaldo', '>', 0.10)
                                     ->where('fdssaldo', '!=', '0')
                                     ->where('fdssaldo', '!=', 0)
                                     ->where('fsiclase', '!=', "ZPF9")
+                                    ->where('fsisunataprobado', 1)
                                     ->first([
                                         'fdsfacturassidetalles.fdsid',
                                         'fdsnotacredito',
@@ -1124,7 +1158,7 @@ class MetLogicaSubsidiosSiController extends Controller
                         $fds->fdssaldo = 0;
                         $fds->update();
                         // $idFacturaEncontrada = $this->BuscarFacturas($idFacturaEncontrada, $proid, $fecid, $cliid, $sdemontoareconocerreal, $meses);
-                        $dat = $this->BuscarFacturasSolic($idFacturaEncontrada, $proid, $fecid, $cliid, $sdemontoareconocerreal, $meses, $facturasAfectadas, $sdecodigosolicitante);
+                        $dat = $this->BuscarFacturasSolic($idFacturaEncontrada, $proid, $fecid, $cliid, $sdemontoareconocerreal, $meses, $facturasAfectadas, $sdecodigosolicitante, $cliclientegrupo);
                         $idFacturaEncontrada = $dat["idFacturaEncontrada"];
                         $espendiente = $dat["esPendiente"];
                         $facturasAfectadas = $dat["facturasAfectadas"];
