@@ -105,12 +105,12 @@ class MetMostrarFacturasSubsidiosPendientesController extends Controller
                                 ->join('proproductos as pro', 'pro.proid', 'fdsfacturassidetalles.proid')
                                 ->where('cli.clicodigo', $cli->clicodigo)
                                 ->where('cli.clibloqueado', false)
-                                ->where('cli.cliclientegrupo', $cli->cliclientegrupo)
-                                // ->where(function ($query) use($cli) {
-                                //     // if(isset($cli->cliclientegrupo)){
-                                //         $query->where('cliclientegrupo', $cli->cliclientegrupo);
-                                //     // }
-                                // })
+                                // ->where('cli.cliclientegrupo', $cli->cliclientegrupo)
+                                ->where(function ($query) use($cli) {
+                                    if(isset($cli->cliclientegrupo)){
+                                        $query->where('cliclientegrupo', $cli->cliclientegrupo);
+                                    }
+                                })
                                 // ->where(function ($query) use(
                                 //     $tieneDestinatarios,
                                 //     $coddestinatario,
