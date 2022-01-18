@@ -475,7 +475,10 @@ class SalvacionController extends Controller
                     $mayorDiferencia = $nuevaDiferencia;
                 }
 
-                // $sfsa = sfssubsidiosfacturassi::where('fdsid', $sfs->fdsid)->first();
+                $sfsa = sfssubsidiosfacturassi::where('fdsid', $sfs->fdsid)
+                                                ->orderby('sfsid', 'DESC')
+                                                ->first();
+
                 // $sfsa->sfsvalorizado = $sfsa->sfsvalorizado - $nuevaDiferencia;
                 // $sfsa->update();
 
@@ -945,15 +948,15 @@ class SalvacionController extends Controller
                     $logs[] = array(
                         "fdsid" => $sfs->fdsid,
                         "sfsid" => $sfs->sfsid,
-                        'fsisolicitante' => $sfs->fsidestinatario
+                        'fsidestinatario' => $sfs->fsidestinatario
                     );
                 }else{
 
                 }
             }
-
-
         }
+
+
 
         $sdes = sdesubsidiosdetalles::where('fecidregularizado', $fecid)
                                         ->get(['sdeid']);
