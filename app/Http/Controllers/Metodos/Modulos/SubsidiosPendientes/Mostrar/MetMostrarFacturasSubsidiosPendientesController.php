@@ -243,7 +243,8 @@ class MetMostrarFacturasSubsidiosPendientesController extends Controller
 
         $requestsalida = response()->json([
             "datos" => $nuevoFsis,
-            "mensaje" => "DATOS"
+            "mensaje" => "DATOS",
+            "CLIENTEGRUOP" => $cli->cliclientegrupo
         ]);
 
         return $requestsalida;
