@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\fdsfacturassidetalles;
 use App\Models\ndsnotascreditossidetalles;
+use App\Models\cliclientes;
 
 class MetMostrarFacturasSubsidiosPendientesController extends Controller
 {
@@ -51,12 +52,12 @@ class MetMostrarFacturasSubsidiosPendientesController extends Controller
             $coddestinatariodos = "143398";
             $coddestinatariotres = "143398";
             $tieneDestinatarios = true;
-        }else if($coddestinatario == "160864"){
+        }else if($coddestinatario == "160864"){ //
             $coddestinatario = "148921";
             $coddestinatariodos = "148921";
             $coddestinatariotres = "148921";
             $tieneDestinatarios = true;
-        }else if($coddestinatario == "166945"){
+        }else if($coddestinatario == "166945"){ //
             $coddestinatario = "146628";
             $coddestinatariodos = "151379";
             $coddestinatariotres = "151379";
@@ -96,41 +97,50 @@ class MetMostrarFacturasSubsidiosPendientesController extends Controller
             $tieneDestinatarios = true;
         }
 
+        $cli = cliclientes::where('clicodigoshipto', $coddestinatario)->first();
+
         $fsis = fdsfacturassidetalles::join('fsifacturassi as fsi', 'fsi.fsiid', 'fdsfacturassidetalles.fsiid')
+                                ->join('cliclientes as cli', 'cli.cliid', 'fdsfacturassidetalles.cliid')
                                 ->join('fecfechas as fec', 'fec.fecid', 'fsi.fecid')
                                 ->join('proproductos as pro', 'pro.proid', 'fdsfacturassidetalles.proid')
-                                // ->where('fsi.fsidestinatario', $coddestinatario)
-                                ->where(function ($query) use(
-                                    $tieneDestinatarios,
-                                    $coddestinatario,
-                                    $coddestinatariodos,
-                                    $coddestinatariotres,
-                                    $coddestinatariocuatro,
-                                    $coddestinatariocinco,
-                                    $coddestinatarioseis,
-                                    $coddestinatariosiete,
-                                    $coddestinatarioocho,
-                                    $coddestinatarionueve,
-                                    $coddestinatariodiez,
-                                    $coddestinatarioonce) {
-                                    $query->orwhere('fsi.fsidestinatario', $coddestinatario);
-                                    $query->orwhere('fsi.fsidestinatario', $coddestinatariodos);
-                                    $query->orwhere('fsi.fsidestinatario', $coddestinatariotres);
-                                    $query->orwhere('fsi.fsidestinatario', $coddestinatariocuatro);
-                                    $query->orwhere('fsi.fsidestinatario', $coddestinatariocinco);
-
-                                    $query->orwhere('fsi.fsidestinatario', $coddestinatarioseis);
-                                    $query->orwhere('fsi.fsidestinatario', $coddestinatariosiete);
-                                    $query->orwhere('fsi.fsidestinatario', $coddestinatarioocho);
-                                    $query->orwhere('fsi.fsidestinatario', $coddestinatarionueve);
-                                    $query->orwhere('fsi.fsidestinatario', $coddestinatariodiez);
-                                    $query->orwhere('fsi.fsidestinatario', $coddestinatarioonce);
+                                ->where('cli.clicodigo', $cli->clicodigo)
+                                ->where('cli.clibloqueado', false)
+                                ->where(function ($query) use($cli) {
+                                    if(isset($cli->cliclientegrupo)){
+                                        // $query->where('cliclientegrupo', $cli->cliclientegrupo);
+                                    }
                                 })
+                                // ->where(function ($query) use(
+                                //     $tieneDestinatarios,
+                                //     $coddestinatario,
+                                //     $coddestinatariodos,
+                                //     $coddestinatariotres,
+                                //     $coddestinatariocuatro,
+                                //     $coddestinatariocinco,
+                                //     $coddestinatarioseis,
+                                //     $coddestinatariosiete,
+                                //     $coddestinatarioocho,
+                                //     $coddestinatarionueve,
+                                //     $coddestinatariodiez,
+                                //     $coddestinatarioonce) {
+                                //     $query->orwhere('fsi.fsidestinatario', $coddestinatario);
+                                //     $query->orwhere('fsi.fsidestinatario', $coddestinatariodos);
+                                //     $query->orwhere('fsi.fsidestinatario', $coddestinatariotres);
+                                //     $query->orwhere('fsi.fsidestinatario', $coddestinatariocuatro);
+                                //     $query->orwhere('fsi.fsidestinatario', $coddestinatariocinco);
+
+                                //     $query->orwhere('fsi.fsidestinatario', $coddestinatarioseis);
+                                //     $query->orwhere('fsi.fsidestinatario', $coddestinatariosiete);
+                                //     $query->orwhere('fsi.fsidestinatario', $coddestinatarioocho);
+                                //     $query->orwhere('fsi.fsidestinatario', $coddestinatarionueve);
+                                //     $query->orwhere('fsi.fsidestinatario', $coddestinatariodiez);
+                                //     $query->orwhere('fsi.fsidestinatario', $coddestinatarioonce);
+                                // })
                                 // ->orwhere('fsi.fsidestinatario', $coddestinatariodos)
                                 // ->orwhere('fsi.fsidestinatario', $coddestinatariotres)
                                 // ->orwhere('fsi.fsidestinatario', $coddestinatariocuatro)
                                 // ->orwhere('fsi.fsidestinatario', $coddestinatariocinco)
-                                // ->where('fdssaldo', '>', 0)
+                                ->where('fdssaldo', '>', 0)
                                 ->where('fsiclase', '!=', 'ZPF9')
                                 ->where('fdsanulada', false)
                                 ->where('fsisunataprobado', true)
@@ -155,7 +165,9 @@ class MetMostrarFacturasSubsidiosPendientesController extends Controller
                                     'fsipedidooriginal',
                                     'fsiclase',
                                     'fsidestinatario',
-                                    'fsisolicitante'
+                                    'fsisolicitante',
+                                    'cliclientegrupo',
+                                    'clicodigoshipto'
                                 ]);
         
         $nuevoFsis = array();
@@ -205,6 +217,8 @@ class MetMostrarFacturasSubsidiosPendientesController extends Controller
                         "fsidestinatario" => $fsi->fsidestinatario,
                         "fecanionumero" => $fsi->fecanionumero,
                         "fecmesabreviacion" => $fsi->fecmesabreviacion,
+                        "cliclientegrupo" => $fsi->cliclientegrupo,
+                        "clicodigoshipto" => $fsi->clicodigoshipto,
                     );
                 }
 
