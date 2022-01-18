@@ -107,7 +107,7 @@ class MetMostrarFacturasSubsidiosPendientesController extends Controller
                                 ->where('cli.clibloqueado', false)
                                 ->where(function ($query) use($cli) {
                                     if(isset($cli->cliclientegrupo)){
-                                        // $query->where('cliclientegrupo', $cli->cliclientegrupo);
+                                        $query->where('cliclientegrupo', $cli->cliclientegrupo);
                                     }
                                 })
                                 // ->where(function ($query) use(
