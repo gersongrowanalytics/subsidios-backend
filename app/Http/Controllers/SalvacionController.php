@@ -1016,6 +1016,7 @@ class SalvacionController extends Controller
                                     ->where('fecid', $fecid)
                                     ->get(['sdeid', 'sdemontoacido', 'clinombre', 'clizona']);
         $logs = array();
+        $diferenciatotal = 0;
 
         foreach ($sdes as $key => $sde) {
             
@@ -1025,6 +1026,7 @@ class SalvacionController extends Controller
             $diferencia = doubleval($sde->sdemontoacido) - doubleval($sumaSfs);
 
             if(doubleval($diferencia) > 0){
+                $diferenciatotal = $diferenciatotal + $diferencia;
                 $logs[] = array(
                     "cliente" => $sde->clinombre,
                     "dif."    => $diferencia,
@@ -1034,8 +1036,12 @@ class SalvacionController extends Controller
             }
         }
 
-        return $logs;
+        $requestsalida = response()->json([
+            "data" => $logs,
+            "difTotal" => $diferencia
+        ]);
 
+        return $requestsalida;
     }
 
 }
