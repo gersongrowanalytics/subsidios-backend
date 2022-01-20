@@ -160,3 +160,4 @@ $router->get('/alerta-estados-facturas-asignadas/{fecid}', 'SalvacionController@
 $router->get('/alerta-clientes-bloqueados-facturas-asignadas/{fecid}', 'SalvacionController@AlertaClientesBloqueados');
 $router->get('/contar-numero-sunat', 'SalvacionController@MostrarSunatXMes');
 $router->get('/alerta-diferencia-monto-subsidiar-monto-subsidiar/{fecid}', 'SalvacionController@AlertaRestarMontoSubsidiarXMontoSubsidiado');
+$router->get('/alerta-diferencia-so-vs-si/{fecid}', 'SalvacionController@AlertaValidarDiferenciaSOSI');

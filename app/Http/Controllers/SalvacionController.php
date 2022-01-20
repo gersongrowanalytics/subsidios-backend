@@ -1009,6 +1009,35 @@ class SalvacionController extends Controller
 
     }
 
+    public function AlertaValidarDiferenciaSOSI($fecid)
+    {
+
+        $sdes = sdesubsidiosdetalles::join('cliclientes as cli', 'cli.cliid', 'sdesubsidiosdetalles.cliid')
+                                    ->where('fecid', $fecid)
+                                    ->get(['sdeid', 'sdemontoacido', 'clinombre', 'clizona']);
+        $logs = array();
+
+        foreach ($sdes as $key => $sde) {
+            
+            $sumaSfs = sfssubsidiosfacturassi::where('sdeid', $sde->sdeid)
+                                                ->sum('sfsvalorizado');
+
+            $diferencia = doubleval($sde->sdemontoacido) - doubleval($sumaSfs);
+
+            if(doubleval($diferencia) > 0){
+                $logs[] = array(
+                    "cliente" => $sde->clinombre,
+                    "dif."    => $diferencia,
+                    "montoSO" => $sde->sdemontoacido,
+                    "montoSI" => $sumaSfs
+                );
+            }
+        }
+
+        return $logs;
+
+    }
+
 }
 
 
