@@ -454,6 +454,7 @@ class SalvacionController extends Controller
                                         ->get();
         
         $treintaPorciento = array();
+        $sdeesEditados = [];
 
         $mayorDiferencia = 0;
 
@@ -475,17 +476,6 @@ class SalvacionController extends Controller
                     $mayorDiferencia = $nuevaDiferencia;
                 }
 
-                $sfsa = sfssubsidiosfacturassi::where('fdsid', $sfs->fdsid)
-                                                ->orderby('sfsid', 'DESC')
-                                                ->first();
-
-                // $sfsa->sfsvalorizado = $sfsa->sfsvalorizado - $nuevaDiferencia;
-                // $sfsa->update();
-
-                // $sdee = sdesubsidiosdetalles::where('sdeid', $sfsa->sdeid)->first();
-                // $sdee->sdependiente = true;
-                // $sdee->update();
-
                 $treintaPorciento[] = array(
                     "fdsid"      => $sfs->fdsid,
                     "treinta"    => $sfs->fdstreintaporciento,
@@ -496,128 +486,48 @@ class SalvacionController extends Controller
                 
             }
 
-            // $valSfsResta = $sfs->valorizado - 1;
-            // $valSfsSuma  = $sfs->valorizado + 1;
+        }
 
-            // if($sfs->fdstreintaporciento >= $valSfsResta && $sfs->fdstreintaporciento <= $valSfsSuma){
+        
+        foreach ($treintaPorciento as $key => $data) {            
 
-            //     $stringTreinta = strval($sfs->fdstreintaporciento);
-            //     $stringValoriz = strval($sfs->valorizado);
+            $sfse = sfssubsidiosfacturassi::where('fdsid', $data['fdsid'])
+                                            ->where('fecid', $fecid)
+                                            ->first();
 
-            //     $porcionesTreinta = explode(".", $stringTreinta);
-            //     $porcionesValoriz = explode(".", $stringValoriz);
+            if($sfse){
 
-            //     if(isset($porcionesTreinta[1])){
-            //         $decimalesTreinta = $porcionesTreinta[1];
-            //     }else{
-            //         $decimalesTreinta = "0";
-            //     }
+                $sfse->sfsvalorizado = $sfse->sfsvalorizado - $data['diferencia'];
+                if($sfse->update()){
 
-            //     if(isset($porcionesValoriz[1])){
-            //         $decimalesValoriz = $porcionesValoriz[1];
-            //     }else{
-            //         $decimalesValoriz = "0";
-            //     }
+                    $sdeesEditados[] = $sfse->sdeid;
 
-            //     if(strlen($decimalesTreinta) >= 2){
-            //         $treintaData = $porcionesTreinta[0].".".$decimalesTreinta[0].$decimalesTreinta[1];
-            //     }else{
-            //         $treintaData = $porcionesTreinta[0].".".$decimalesTreinta[0];
-            //     }
-                
-            //     if(strlen($decimalesValoriz) >= 2){
-            //         $valorizData = $porcionesValoriz[0].".".$decimalesValoriz[0].$decimalesValoriz[1];
-            //     }else{
-            //         $valorizData = $porcionesValoriz[0].".".$decimalesValoriz[0];
-            //     }
+                    // $sdee = sdesubsidiosdetalles::where($sfse->sdeid)->first();
 
-            //     $treintaData = doubleval($treintaData);
-            //     $valorizData = doubleval($valorizData);
+                    // if($sdee){
 
-            //     if($treintaData == $valorizData){
+                    //     $sdee->sdependiente = true;
+                    //     $sdee->update();
 
-            //     }else{
+                    // }else{
 
-            //         if($treintaData >= $valorizData){
+                    // }
 
-            //         }else{
+                }
 
-            //             // $nuevaDiferencia = $treintaData - $valorizData;
-            //             $nuevaDiferencia = $valorizData - $treintaData;
+            }else{
 
-            //             // $sfsa = sfssubsidiosfacturassi::where('fdsid', $sfs->fdsid)->first();
-            //             // $sfsa->sfsvalorizado = $sfsa->sfsvalorizado - $nuevaDiferencia;
-            //             // $sfsa->update();
-
-            //             // $sdee = sdesubsidiosdetalles::where('sdeid', $sfsa->sdeid)->first();
-            //             // $sdee->sdependiente = true;
-            //             // $sdee->update();
-
-            //             if($nuevaDiferencia > $mayorDiferencia){
-            //                 $mayorDiferencia = $nuevaDiferencia;
-            //             }
-
-            //             $treintaPorciento[] = array(
-            //                 "fdsid"      => $sfs->fdsid,
-            //                 "treinta"    => $sfs->fdstreintaporciento,
-            //                 "valorizado" => $sfs->valorizado,
-            //                 "diferencia" => $sfs->valorizado - $sfs->fdstreintaporciento,
-            //                 "mayor" => $mayorDiferencia,
-            //             );
-            //         }
-
-            //     }
-
-            // }
+            }
 
         }
 
-        // QUITAR DE PENDIENTES A LOS SUBSIDIOS QUE TENGAN UN PENDIENTE DE 0
 
-        // $logsPendientes = array();
+        $requestsalida = response()->json([
+            "treintaPorciento" => $treintaPorciento,
+            "sdees"  => $sdeesEditados,
+        ]);
 
-        // $sdes = sdesubsidiosdetalles::where('sdependiente', true)
-        //                             ->where('fecid', $fecid)
-        //                             ->get([
-        //                                 'sdeid',
-        //                                 'sdemontoacido'
-        //                             ]);
-
-        // foreach ($sdes as $key => $sde) {
-            
-        //     $sumSfs = sfssubsidiosfacturassi::where('sdeid', $sde->sdeid)
-        //                                     ->sum('sfsvalorizado');
-
-        //     $estado = "NO ES";
-        //     $diferencia = $sde->sdemontoacido - $sumSfs;
-            
-        //     if($diferencia < 1){
-                
-        //         if($diferencia <= 0.09){
-        //             $estado = "SI ES";
-        //             // $sdee = sdesubsidiosdetalles::find($sde->sdeid);
-        //             // $sdee->sdependiente = false;
-        //             // $sdee->update();
-        //         }
-
-        //         $logsPendientes[] = array(
-        //             "SDEID" => $sde->sdeid,
-        //             "SUMA_SFS" => $sumSfs,
-        //             "MONTO_ACIDO" => $sde->sdemontoacido,
-        //             "DIFERENCIA" => $diferencia,
-        //             "ESTADO" => $estado
-        //         );
-        //     }
-
-        // }
-
-
-
-        
-
-
-        // return $logsPendientes;
-        return $treintaPorciento;
+        return $requestsalida;
 
     }
 
