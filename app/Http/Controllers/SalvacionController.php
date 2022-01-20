@@ -1026,7 +1026,7 @@ class SalvacionController extends Controller
             $diferencia = doubleval($sde->sdemontoacido) - doubleval($sumaSfs);
 
             if(doubleval($diferencia) > 0){
-                $diferenciatotal = $diferenciatotal + $diferencia;
+                $diferenciatotal = doubleval($diferenciatotal) + doubleval($diferencia);
                 $logs[] = array(
                     "cliente" => $sde->clinombre,
                     "dif."    => $diferencia,
