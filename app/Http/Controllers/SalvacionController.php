@@ -489,37 +489,37 @@ class SalvacionController extends Controller
         }
 
         
-        foreach ($treintaPorciento as $key => $data) {            
+        // foreach ($treintaPorciento as $key => $data) {            
 
-            $sfse = sfssubsidiosfacturassi::where('fdsid', $data['fdsid'])
-                                            ->where('fecid', $fecid)
-                                            ->first();
+        //     $sfse = sfssubsidiosfacturassi::where('fdsid', $data['fdsid'])
+        //                                     ->where('fecid', $fecid)
+        //                                     ->first();
 
-            if($sfse){
+        //     if($sfse){
 
-                $sfse->sfsvalorizado = $sfse->sfsvalorizado - $data['diferencia'];
-                if($sfse->update()){
+        //         $sfse->sfsvalorizado = $sfse->sfsvalorizado - $data['diferencia'];
+        //         if($sfse->update()){
 
-                    $sdeesEditados[] = $sfse->sdeid;
+        //             $sdeesEditados[] = $sfse->sdeid;
 
-                    // $sdee = sdesubsidiosdetalles::where($sfse->sdeid)->first();
+        //             // $sdee = sdesubsidiosdetalles::where($sfse->sdeid)->first();
 
-                    // if($sdee){
+        //             // if($sdee){
 
-                    //     $sdee->sdependiente = true;
-                    //     $sdee->update();
+        //             //     $sdee->sdependiente = true;
+        //             //     $sdee->update();
 
-                    // }else{
+        //             // }else{
 
-                    // }
+        //             // }
 
-                }
+        //         }
 
-            }else{
+        //     }else{
 
-            }
+        //     }
 
-        }
+        // }
 
 
         $requestsalida = response()->json([
