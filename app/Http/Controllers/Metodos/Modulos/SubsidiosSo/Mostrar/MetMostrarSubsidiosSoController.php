@@ -101,7 +101,7 @@ class MetMostrarSubsidiosSoController extends Controller
                                         'sdebultosacordados',
                                         'sdesac',
                                         'sdesector',
-                                        'sdeterritorio',
+                                        'clitv as sdeterritorio',
                                         'sdevalidado',
                                         'clicodigoshipto',
                                         'sdebultosacido',
