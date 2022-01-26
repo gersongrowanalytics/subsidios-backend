@@ -184,7 +184,7 @@ class MetMostrarSubsidiosSoController extends Controller
                                             "sdeaprobado",
                                             "prosku",
                                             "cliclientesac",
-                                            "sdeterritorio",
+                                            "clitv as sdeterritorio",
                                             "sdevalidado",
                                             "sdebultosnoreconocido",
                                             "sdebultosacido",
