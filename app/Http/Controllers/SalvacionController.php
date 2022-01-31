@@ -1065,6 +1065,8 @@ class SalvacionController extends Controller
             if($diferencia > 0){
                 $logs[] = array(
                     "sdeid" => $sde->sdeid,
+                    "sdemontoacido" => $sde->sdemontoacido,
+                    "sumSfs" => $sumSfs,
                     "diferencia" => $diferencia
                 );
             }
