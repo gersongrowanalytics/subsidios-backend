@@ -651,6 +651,10 @@ class MetGenerarExcelNcController extends Controller
             //CONTENIDO
             $i = 18;
             $otros = 17;
+
+            $ultimaFilaFacturas = 0;
+            $ultimoTotalFactura = 0;
+
             for ($cont=0; $cont < sizeof($excel['facturas']) ; $cont++) { 
 
                 if($excel['facturas'][$cont]['sfsvalorizado'] >= 0.1){
@@ -670,12 +674,10 @@ class MetGenerarExcelNcController extends Controller
                     // $hoja->setCellValue("G$i", number_format($excel['facturas'][$cont]['sfsvalorizado'], 2))
                     //         ->getStyle("G$i")->getAlignment()->setVertical(Alignment::VERTICAL_BOTTOM);
 
-                    if(sizeof($excel['facturas']) == $cont+1){
-                        $hoja->setCellValue("G$otros", doubleval($excel['facturas'][$cont]['sfsvalorizado']) + doubleval($diferenciaTotal));
-                    }else{
-                        $hoja->setCellValue("G$otros", $excel['facturas'][$cont]['sfsvalorizado']);
-                    }
-                    
+                    $hoja->setCellValue("G$otros", $excel['facturas'][$cont]['sfsvalorizado']);
+
+                    $ultimaFilaFacturas = $otros;
+                    $ultimoTotalFactura = $excel['facturas'][$cont]['sfsvalorizado'];
 
                     $hoja->getStyle("G$otros")->getNumberFormat()
                             ->setFormatCode('#,##0.00');//LA COMA EN NUMEROS
@@ -690,6 +692,9 @@ class MetGenerarExcelNcController extends Controller
 
 
             }
+
+
+            $hoja->setCellValue("G$ultimaFilaFacturas", doubleval($ultimoTotalFactura) + doubleval($diferenciaTotal));
             
             $i = $i - 1;
 
