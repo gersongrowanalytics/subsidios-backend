@@ -651,7 +651,7 @@ class MetGenerarExcelNcController extends Controller
             $otros = 17;
             for ($cont=0; $cont < sizeof($excel['facturas']) ; $cont++) { 
 
-                // if($excel['facturas'][$cont]['sfsvalorizado'] >= 0.1){
+                if($excel['facturas'][$cont]['sfsvalorizado'] >= 0.1){
                     $hoja->setCellValue("D$otros", $excel['facturas'][$cont]['fsifactura'])
                         ->getStyle("D$otros")->getAlignment()->setVertical(Alignment::VERTICAL_BOTTOM);
                     $hoja->getStyle("D$otros")->getBorders()->getOutline()->setBorderStyle(Border::BORDER_THIN);
@@ -676,7 +676,7 @@ class MetGenerarExcelNcController extends Controller
     
                     $i = $i + 1;
                     $otros = $otros + 1;
-                // } 
+                } 
             }
             
             $i = $i - 1;
