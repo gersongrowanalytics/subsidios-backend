@@ -1049,6 +1049,7 @@ class SalvacionController extends Controller
 
         $sdes = sdesubsidiosdetalles::where('sdeaprobado', true)
                                     ->where('sdemontoareconocerreal', '!=',0)
+                                    ->where('fecid', $fecid)
                                     ->get();
 
 
