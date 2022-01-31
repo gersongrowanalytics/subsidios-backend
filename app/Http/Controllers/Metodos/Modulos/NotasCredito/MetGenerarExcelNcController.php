@@ -670,7 +670,11 @@ class MetGenerarExcelNcController extends Controller
                     // $hoja->setCellValue("G$i", number_format($excel['facturas'][$cont]['sfsvalorizado'], 2))
                     //         ->getStyle("G$i")->getAlignment()->setVertical(Alignment::VERTICAL_BOTTOM);
 
-                    $hoja->setCellValue("G$otros", $excel['facturas'][$cont]['sfsvalorizado']);
+                    if(sizeof($excel['facturas']) == $cont+1){
+                        $hoja->setCellValue("G$otros", doubleval($excel['facturas'][$cont]['sfsvalorizado']) + doubleval($diferenciaTotal));
+                    }else{
+                        $hoja->setCellValue("G$otros", $excel['facturas'][$cont]['sfsvalorizado']);
+                    }
                     
 
                     $hoja->getStyle("G$otros")->getNumberFormat()
@@ -682,10 +686,6 @@ class MetGenerarExcelNcController extends Controller
                     $otros = $otros + 1;
                 } else{
                     $diferenciaTotal = $excel['facturas'][$cont]['sfsvalorizado'];
-                }
-
-                if(sizeof($excel['facturas']) == $cont+1){
-                    $hoja->setCellValue("G$otros", doubleval($excel['facturas'][$cont]['sfsvalorizado']) + doubleval($diferenciaTotal));
                 }
 
 
