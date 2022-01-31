@@ -1060,7 +1060,7 @@ class SalvacionController extends Controller
                                         ->where('fecid', $fecid)
                                         ->sum('sfsvalorizado');
 
-            $diferencia = doubleval($sde->sdemontoacido) - doubleval($sumaSfs);
+            $diferencia = doubleval($sde->sdemontoacido) - doubleval($sumSfs);
 
             if($diferencia > 0){
                 $logs[] = array(
