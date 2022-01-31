@@ -1054,7 +1054,7 @@ class SalvacionController extends Controller
 
         $logs = array();
 
-        foreach ($sde as $key => $sde) {
+        foreach ($sdes as $key => $sde) {
             
             $sumSfs = sfssubsidiosfacturassi::where('sdeid', $sde->sdeid)
                                         ->where('fecid', $fecid)
