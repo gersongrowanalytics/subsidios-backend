@@ -382,8 +382,6 @@ class MetGenerarExcelNcController extends Controller
     public function ArmarExcelNc($array_generar_excel, $anio, $mes)
     {
 
-        $diferenciaTotal = 0;
-
         $hojas_clientes = $array_generar_excel['clientes'];
 
         $documento = new Spreadsheet();
@@ -654,6 +652,7 @@ class MetGenerarExcelNcController extends Controller
 
             $ultimaFilaFacturas = 0;
             $ultimoTotalFactura = 0;
+            $diferenciaTotal = 0;
 
             for ($cont=0; $cont < sizeof($excel['facturas']) ; $cont++) { 
 
@@ -687,7 +686,7 @@ class MetGenerarExcelNcController extends Controller
                     $i = $i + 1;
                     $otros = $otros + 1;
                 } else{
-                    $diferenciaTotal = $excel['facturas'][$cont]['sfsvalorizado'];
+                    $diferenciaTotal = $excel['facturas'][$cont]['sfsvalorizado'] + $diferenciaTotal;
                 }
 
 
