@@ -382,6 +382,8 @@ class MetGenerarExcelNcController extends Controller
     public function ArmarExcelNc($array_generar_excel, $anio, $mes)
     {
 
+        $diferenciaTotal = 0;
+
         $hojas_clientes = $array_generar_excel['clientes'];
 
         $documento = new Spreadsheet();
@@ -669,6 +671,8 @@ class MetGenerarExcelNcController extends Controller
                     //         ->getStyle("G$i")->getAlignment()->setVertical(Alignment::VERTICAL_BOTTOM);
 
                     $hoja->setCellValue("G$otros", $excel['facturas'][$cont]['sfsvalorizado']);
+                    
+
                     $hoja->getStyle("G$otros")->getNumberFormat()
                             ->setFormatCode('#,##0.00');//LA COMA EN NUMEROS
                 
@@ -676,7 +680,15 @@ class MetGenerarExcelNcController extends Controller
     
                     $i = $i + 1;
                     $otros = $otros + 1;
-                } 
+                } else{
+                    $diferenciaTotal = $excel['facturas'][$cont]['sfsvalorizado'];
+                }
+
+                if(sizeof($excel['facturas']) == $cont+1){
+                    $hoja->setCellValue("G$otros", doubleval($excel['facturas'][$cont]['sfsvalorizado']) + doubleval($diferenciaTotal));
+                }
+
+
             }
             
             $i = $i - 1;
