@@ -1044,6 +1044,41 @@ class SalvacionController extends Controller
         return $requestsalida;
     }
 
+    public function ObtenerSubsidiosPendientes($fecid)
+    {
+
+        $sdes = sdesubsidiosdetalles::where('sdeaprobado', true)->get();
+
+
+        $logs = array();
+
+        foreach ($sde as $key => $sde) {
+            
+            $sumSfs = sfssubsidiosfacturassi::where('sdeid', $sde->sdeid)
+                                        ->where('fecid', $fecid)
+                                        ->sum('sfsvalorizado');
+
+            $diferencia = doubleval($sde->sdemontoacido) - doubleval($sumaSfs);
+
+            if($diferencia > 0){
+                $logs[] = array(
+                    "sdeid" => $sde->sdeid,
+                    "diferencia" => $diferencia
+                );
+            }
+                
+
+        }
+
+
+
+        return dd($logs);
+
+
+
+
+    }
+
 }
 
 

@@ -92,6 +92,8 @@ $router->post('/crear-ambiente', 'Configuracion\CrearAmbienteHomeController@Crea
             $router->post('/mostrar-facturas-asignadas', 'Validaciones\Modulos\SubsidiosSi\Mostrar\MostrarSubsidiosSiController@ValMostrarFacturasAsignadas');
 
             $router->post('/mostrar/notascreditos', 'Validaciones\Modulos\SubsidiosSi\Mostrar\MostrarNotasCreditoFacturaController@ValMostrarNotasCreditoFactura');
+
+            $router->post('/mostrar-subsidios-si-ventas', 'Metodos\Modulos\SubsidiosSi\Mostrar\MetMostrarSubsidiosSiVentasController@MetMostrarSubsidiosSiVentas');
         });
 
         $router->group(['prefix' => 'regularizacion-so'], function () use ($router) {
@@ -161,3 +163,5 @@ $router->get('/alerta-clientes-bloqueados-facturas-asignadas/{fecid}', 'Salvacio
 $router->get('/contar-numero-sunat', 'SalvacionController@MostrarSunatXMes');
 $router->get('/alerta-diferencia-monto-subsidiar-monto-subsidiar/{fecid}', 'SalvacionController@AlertaRestarMontoSubsidiarXMontoSubsidiado');
 $router->get('/alerta-diferencia-so-vs-si/{fecid}', 'SalvacionController@AlertaValidarDiferenciaSOSI');
+
+$router->get('/obtener-subsidios-pendientes/{fecid}', 'SalvacionController@ObtenerSubsidiosPendientes');
