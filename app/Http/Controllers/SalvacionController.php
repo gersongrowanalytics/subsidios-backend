@@ -1047,7 +1047,9 @@ class SalvacionController extends Controller
     public function ObtenerSubsidiosPendientes($fecid)
     {
 
-        $sdes = sdesubsidiosdetalles::where('sdeaprobado', true)->get();
+        $sdes = sdesubsidiosdetalles::where('sdeaprobado', true)
+                                    ->where('sdemontoareconocerreal', '!=',0)
+                                    ->get();
 
 
         $logs = array();
