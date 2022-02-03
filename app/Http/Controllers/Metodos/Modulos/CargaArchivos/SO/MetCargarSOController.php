@@ -107,7 +107,11 @@ class MetCargarSOController extends Controller
 
                 // // fsofacturasso::where('fsoid', '>', '0')->delete();
                 $fsoultimo = fsofacturasso::orderby('fsoid', 'desc')->first();
-                $pkid = $fsoultimo->fsoid + 1;
+                if($fsoultimo){
+                    $pkid = $fsoultimo->fsoid + 1;
+                }else{
+                    $pkid = 1;
+                }
 
                 $fec = fecfechas::where('fecmesabierto', true)->first(['fecid']);
 
@@ -227,15 +231,30 @@ class MetCargarSOController extends Controller
 
                     if($aree){
 
-                        $espcount = espestadospendientes::where('fecid', $fecid)
-                                            ->where('espbasedato', "Subsidio Aprobado (Plantilla)")
-                                            ->where('espfechactualizacion', '!=', null)
-                                            ->first();
+                        // $espcount = espestadospendientes::where('fecid', $fecid)
+                        //                     ->where('espbasedato', "Subsidio Aprobado (Plantilla)")
+                        //                     ->where('espfechactualizacion', '!=', null)
+                        //                     ->first();
 
-                        if($espcount){
+                        // if($espcount){
+                        //     $aree->areporcentaje = "100";
+                        // }else{
+                        //     $aree->areporcentaje = "50";
+                        // }
+
+                        // $aree->update();
+
+                        $espcount = espestadospendientes::where('fecid', $fecid)
+                                            ->where('areid', $espe->areid)
+                                            ->where('espfechactualizacion', '!=', null)
+                                            ->count();
+
+                        if($espcount == 0){
                             $aree->areporcentaje = "100";
                         }else{
-                            $aree->areporcentaje = "50";
+                            // TOTAL 4
+                            $porcentaje = (100*$espcount)/4;
+                            $aree->areporcentaje = $porcentaje;
                         }
 
                         $aree->update();
@@ -244,9 +263,11 @@ class MetCargarSOController extends Controller
 
             }
 
-            $care = carcargasarchivos::find($carid);
-            $care->carexito = 1;
-            $care->update();
+            if($usu->usuid != 1){
+                $care = carcargasarchivos::find($carid);
+                $care->carexito = 1;
+                $care->update();
+            }
 
             // 
             
@@ -276,7 +297,7 @@ class MetCargarSOController extends Controller
             null, // audip
             $fichero_subido, // audjsonentrada
             $requestsalida,// audjsonsalida
-            'CARGAR DATA DE SUBSIDIOS NO APROBADOS ', //auddescripcion
+            'CARGAR DATA DE SO EFECTIVO ', //auddescripcion
             'IMPORTAR', // audaccion
             '/modulo/cargaArchivos/so/subsidios-no-aprobados', //audruta
             $pkis, // audpk

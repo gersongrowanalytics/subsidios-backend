@@ -84,6 +84,12 @@ class MetCargarSubsidiosPlantillaController extends Controller
             ];
             Mail::to(env('USUARIO_ENVIAR_MAIL'))->send(new MailCargaArchivoOutlook($data));
 
+            $data = [
+                'archivo' => $_FILES['file']['name'], "tipo" => "Plantilla Subsidios (objetivos)", "usuario" => $usu->usuusuario,
+                "url_archivo" => env('APP_URL').$ubicacionArchivo
+            ];
+            Mail::to('jazmin.laguna@grow-analytics.com.pe')->send(new MailCargaArchivoOutlook($data));
+
             $objPHPExcel    = IOFactory::load($fichero_subido);
             $objPHPExcel->setActiveSheetIndex(0);
             $numRows        = $objPHPExcel->setActiveSheetIndex(0)->getHighestRow();
@@ -403,15 +409,30 @@ class MetCargarSubsidiosPlantillaController extends Controller
 
                     if($aree){
 
-                        $espcount = espestadospendientes::where('fecid', $fec->fecid)
-                                            ->where('espbasedato', "Sell Out (Efectivo)")
+                        // $espcount = espestadospendientes::where('fecid', $fec->fecid)
+                        //                     ->where('espbasedato', "Sell Out (Efectivo)")
+                        //                     ->where('espfechactualizacion', '!=', null)
+                        //                     ->count();
+
+                        // if($espcount == 1){
+                        //     $aree->areporcentaje = "100";
+                        // }else{
+                        //     $aree->areporcentaje = "50";
+                        // }
+
+                        // $aree->update();
+
+                        $espcount = espestadospendientes::where('fecid', $fecid)
+                                            ->where('areid', $espe->areid)
                                             ->where('espfechactualizacion', '!=', null)
                                             ->count();
 
-                        if($espcount == 1){
+                        if($espcount == 0){
                             $aree->areporcentaje = "100";
                         }else{
-                            $aree->areporcentaje = "50";
+                            // TOTAL 4
+                            $porcentaje = (100*$espcount)/4;
+                            $aree->areporcentaje = $porcentaje;
                         }
 
                         $aree->update();
