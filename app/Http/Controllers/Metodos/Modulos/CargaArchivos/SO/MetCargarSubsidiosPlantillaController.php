@@ -16,6 +16,7 @@ use App\Models\sfssubsidiosfacturassi;
 use App\Models\espestadospendientes;
 use App\Models\areareasestados;
 use App\Models\carcargasarchivos;
+use App\Models\csoclientesso;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 use \DateTime;
@@ -110,6 +111,7 @@ class MetCargarSubsidiosPlantillaController extends Controller
             //                 ->first(['fecid', 'fecmesabierto']);
 
             if($fec){
+                $fecid = $fec->fecid;
 
                 // CERRAR TODOS LOS MESES Y ABRIR SOLO EL ACTUAL
                 // if($fec->fecmesabierto != true){
@@ -197,6 +199,10 @@ class MetCargarSubsidiosPlantillaController extends Controller
         
                             if($cli){
                                 
+
+                                // OBTENER CLIENTE SO
+
+
                                 // $sdee = sdesubsidiosdetalles::where('fecid', $fec->fecid)
                                 //                         ->where('sdedestrucsap', $ex_destrucsap)
                                 //                         ->first();
@@ -430,8 +436,10 @@ class MetCargarSubsidiosPlantillaController extends Controller
                         if($espcount == 0){
                             $aree->areporcentaje = "100";
                         }else{
-                            // TOTAL 4
-                            $porcentaje = (100*$espcount)/4;
+                            $countBasesTotales = espestadospendientes::where('fecid', $fecid)
+                                                                    ->where('areid', $espe->areid)
+                                                                    ->count();
+                            $porcentaje = (100*$espcount)/$countBasesTotales;
                             $aree->areporcentaje = $porcentaje;
                         }
 
