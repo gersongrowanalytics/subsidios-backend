@@ -440,7 +440,7 @@ class MetCargarSubsidiosPlantillaController extends Controller
                                                                     ->where('areid', $espe->areid)
                                                                     ->count();
                             $porcentaje = (100*$espcount)/$countBasesTotales;
-                            $aree->areporcentaje = $porcentaje;
+                            $aree->areporcentaje = round($porcentaje);
                         }
 
                         $aree->update();
