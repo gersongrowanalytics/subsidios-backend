@@ -67,6 +67,10 @@ $router->post('/crear-ambiente', 'Configuracion\CrearAmbienteHomeController@Crea
             $router->post('/so/subsidios-so-plantilla', 'Validaciones\Modulos\CargaArchivos\SO\CargarSubsidiosController@ValCargarSubsidiosPlantilla');
             $router->post('/so/subsidios-so-automaticos-manuales', 'Validaciones\Modulos\CargaArchivos\SO\CargarSubsidiosController@ValCargarSubsidios');
 
+            $router->post('/clientes-so', 'Validaciones\Modulos\CargaArchivos\CargarClientesSoController@ValCargarClientesSo');
+            $router->post('/tipo-cambio', 'Validaciones\Modulos\CargaArchivos\CargarTipoCambioController@ValCargarTipoCambio');
+            $router->post('/costo-x-bulto', 'Validaciones\Modulos\CargaArchivos\CargarCostoXBultoController@ValCargarCostoXBulto');
+
         });
 
         $router->group(['prefix' => 'subsidiosSo'], function () use ($router) {

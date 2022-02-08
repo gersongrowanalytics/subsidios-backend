@@ -126,388 +126,440 @@ class MetCargarMaestraProductosController extends Controller
                     )
                 );
 
-                // $objPHPExcel    = IOFactory::load($fichero_subido);
-                // $objPHPExcel->setActiveSheetIndex(0);
-                // $numRows        = $objPHPExcel->setActiveSheetIndex(0)->getHighestRow();
-                // $ultimaColumna  = $objPHPExcel->setActiveSheetIndex(0)->getHighestColumn();
+                
+                if($usu->usuid == 1){
 
-                // $logs['NUMERO_LINEAS_EXCEL'] = $numRows;
+                    $objPHPExcel    = IOFactory::load($fichero_subido);
+                    $objPHPExcel->setActiveSheetIndex(0);
+                    $numRows        = $objPHPExcel->setActiveSheetIndex(0)->getHighestRow();
+                    $ultimaColumna  = $objPHPExcel->setActiveSheetIndex(0)->getHighestColumn();
 
-                // for ($i=2; $i <= $numRows ; $i++) {
-                //     $codigoOrganizacion  = $objPHPExcel->getActiveSheet()->getCell('A'.$i)->getCalculatedValue();
-                //     $nombreOrganizacion  = $objPHPExcel->getActiveSheet()->getCell('B'.$i)->getCalculatedValue();
-                //     $codigoProductoSoft  = $objPHPExcel->getActiveSheet()->getCell('C'.$i)->getCalculatedValue();
-                //     $descripcionProducto = $objPHPExcel->getActiveSheet()->getCell('D'.$i)->getCalculatedValue();
-                //     $codigoNegocio       = $objPHPExcel->getActiveSheet()->getCell('E'.$i)->getCalculatedValue();
-                //     $nombreNegocio       = $objPHPExcel->getActiveSheet()->getCell('F'.$i)->getCalculatedValue();
-                //     $codigoCategoria     = $objPHPExcel->getActiveSheet()->getCell('G'.$i)->getCalculatedValue();
-                //     $nombreCategoria     = $objPHPExcel->getActiveSheet()->getCell('H'.$i)->getCalculatedValue();
-                //     $codigoSector        = $objPHPExcel->getActiveSheet()->getCell('I'.$i)->getCalculatedValue();
-                //     $nombreSector        = $objPHPExcel->getActiveSheet()->getCell('J'.$i)->getCalculatedValue();
-                //     $segmentacion        = $objPHPExcel->getActiveSheet()->getCell('K'.$i)->getCalculatedValue();
-                //     $presentacion        = $objPHPExcel->getActiveSheet()->getCell('L'.$i)->getCalculatedValue();
-                //     $marca               = $objPHPExcel->getActiveSheet()->getCell('M'.$i)->getCalculatedValue();
-                //     $conteo              = $objPHPExcel->getActiveSheet()->getCell('N'.$i)->getCalculatedValue();
-                //     $formato             = $objPHPExcel->getActiveSheet()->getCell('O'.$i)->getCalculatedValue();
-                //     $talla               = $objPHPExcel->getActiveSheet()->getCell('P'.$i)->getCalculatedValue();
-                //     $peso                = $objPHPExcel->getActiveSheet()->getCell('Q'.$i)->getCalculatedValue();
-                //     $mecanica            = $objPHPExcel->getActiveSheet()->getCell('R'.$i)->getCalculatedValue();
-                //     $factorBultos        = $objPHPExcel->getActiveSheet()->getCell('S'.$i)->getCalculatedValue();
-                //     $factorCajas         = $objPHPExcel->getActiveSheet()->getCell('T'.$i)->getCalculatedValue();
-                //     $factorPaquetes      = $objPHPExcel->getActiveSheet()->getCell('U'.$i)->getCalculatedValue();
-                //     $factorUnidadMinima  = $objPHPExcel->getActiveSheet()->getCell('V'.$i)->getCalculatedValue();
-                //     $factorToneladas     = $objPHPExcel->getActiveSheet()->getCell('W'.$i)->getCalculatedValue();
-                //     $factorMilesUnidades = $objPHPExcel->getActiveSheet()->getCell('X'.$i)->getCalculatedValue();
+                    $logs['NUMERO_LINEAS_EXCEL'] = $numRows;
 
-                //     if(!isset($nombreCategoria)){
-                //         $nombreCategoria = "otros";
-                //     }
+                    for ($i=2; $i <= $numRows ; $i++) {
+                        // $codigoOrganizacion  = $objPHPExcel->getActiveSheet()->getCell('A'.$i)->getCalculatedValue();
+                        // $nombreOrganizacion  = $objPHPExcel->getActiveSheet()->getCell('B'.$i)->getCalculatedValue();
+                        // $codigoProductoSoft  = $objPHPExcel->getActiveSheet()->getCell('C'.$i)->getCalculatedValue();
+                        // $descripcionProducto = $objPHPExcel->getActiveSheet()->getCell('D'.$i)->getCalculatedValue();
+                        // $codigoNegocio       = $objPHPExcel->getActiveSheet()->getCell('E'.$i)->getCalculatedValue();
+                        // $nombreNegocio       = $objPHPExcel->getActiveSheet()->getCell('F'.$i)->getCalculatedValue();
+                        // $codigoCategoria     = $objPHPExcel->getActiveSheet()->getCell('G'.$i)->getCalculatedValue();
+                        // $nombreCategoria     = $objPHPExcel->getActiveSheet()->getCell('H'.$i)->getCalculatedValue();
+                        // $codigoSector        = $objPHPExcel->getActiveSheet()->getCell('I'.$i)->getCalculatedValue();
+                        // $nombreSector        = $objPHPExcel->getActiveSheet()->getCell('J'.$i)->getCalculatedValue();
+                        // $segmentacion        = $objPHPExcel->getActiveSheet()->getCell('K'.$i)->getCalculatedValue();
+                        // $presentacion        = $objPHPExcel->getActiveSheet()->getCell('L'.$i)->getCalculatedValue();
+                        // $marca               = $objPHPExcel->getActiveSheet()->getCell('M'.$i)->getCalculatedValue();
+                        // $conteo              = $objPHPExcel->getActiveSheet()->getCell('N'.$i)->getCalculatedValue();
+                        // $formato             = $objPHPExcel->getActiveSheet()->getCell('O'.$i)->getCalculatedValue();
+                        // $talla               = $objPHPExcel->getActiveSheet()->getCell('P'.$i)->getCalculatedValue();
+                        // $peso                = $objPHPExcel->getActiveSheet()->getCell('Q'.$i)->getCalculatedValue();
+                        // $mecanica            = $objPHPExcel->getActiveSheet()->getCell('R'.$i)->getCalculatedValue();
+                        // $factorBultos        = $objPHPExcel->getActiveSheet()->getCell('S'.$i)->getCalculatedValue();
+                        // $factorCajas         = $objPHPExcel->getActiveSheet()->getCell('T'.$i)->getCalculatedValue();
+                        // $factorPaquetes      = $objPHPExcel->getActiveSheet()->getCell('U'.$i)->getCalculatedValue();
+                        // $factorUnidadMinima  = $objPHPExcel->getActiveSheet()->getCell('V'.$i)->getCalculatedValue();
+                        // $factorToneladas     = $objPHPExcel->getActiveSheet()->getCell('W'.$i)->getCalculatedValue();
+                        // $factorMilesUnidades = $objPHPExcel->getActiveSheet()->getCell('X'.$i)->getCalculatedValue();
 
-                //     if(!isset($nombreNegocio)){
-                //         $nombreNegocio = "otros";
-                //     }
+                        $codigoOrganizacion  = $objPHPExcel->getActiveSheet()->getCell('A'.$i)->getCalculatedValue();
+                        $nombreOrganizacion  = $objPHPExcel->getActiveSheet()->getCell('B'.$i)->getCalculatedValue();
+                        $codigoProductoSoft  = $objPHPExcel->getActiveSheet()->getCell('E'.$i)->getCalculatedValue();
+                        $descripcionProducto = $objPHPExcel->getActiveSheet()->getCell('F'.$i)->getCalculatedValue();
+                        // $codigoNegocio       = $objPHPExcel->getActiveSheet()->getCell(''.$i)->getCalculatedValue(); //
+                        $codigoNegocio       = null; //
+                        $nombreNegocio       = $objPHPExcel->getActiveSheet()->getCell('X'.$i)->getCalculatedValue();
+                        // $codigoCategoria     = $objPHPExcel->getActiveSheet()->getCell(''.$i)->getCalculatedValue(); //
+                        $codigoCategoria     = null; //
+                        $nombreCategoria     = $objPHPExcel->getActiveSheet()->getCell('G'.$i)->getCalculatedValue();
+                        $codigoSector        = $objPHPExcel->getActiveSheet()->getCell('I'.$i)->getCalculatedValue();
+                        $nombreSector        = $objPHPExcel->getActiveSheet()->getCell('J'.$i)->getCalculatedValue();
+                        $segmentacion        = $objPHPExcel->getActiveSheet()->getCell('L'.$i)->getCalculatedValue();
+                        $presentacion        = $objPHPExcel->getActiveSheet()->getCell('N'.$i)->getCalculatedValue();
+                        $marca               = $objPHPExcel->getActiveSheet()->getCell('P'.$i)->getCalculatedValue();
+                        $conteo              = $objPHPExcel->getActiveSheet()->getCell('V'.$i)->getCalculatedValue();
+                        $formato             = $objPHPExcel->getActiveSheet()->getCell('R'.$i)->getCalculatedValue();
+                        $talla               = $objPHPExcel->getActiveSheet()->getCell('T'.$i)->getCalculatedValue();
+                        $peso                = $objPHPExcel->getActiveSheet()->getCell('AA'.$i)->getCalculatedValue();
+                        // $mecanica            = $objPHPExcel->getActiveSheet()->getCell(''.$i)->getCalculatedValue(); //
+                        $mecanica            = null; //
+                        $factorBultos        = $objPHPExcel->getActiveSheet()->getCell('AB'.$i)->getCalculatedValue();
+                        // $factorCajas         = $objPHPExcel->getActiveSheet()->getCell(''.$i)->getCalculatedValue(); //
+                        $factorCajas         = null; //
+                        $factorPaquetes      = $objPHPExcel->getActiveSheet()->getCell('AC'.$i)->getCalculatedValue();
+                        $factorUnidadMinima  = $objPHPExcel->getActiveSheet()->getCell('AD'.$i)->getCalculatedValue();
+                        $factorToneladas     = $objPHPExcel->getActiveSheet()->getCell('AE'.$i)->getCalculatedValue();
+                        $factorMilesUnidades = $objPHPExcel->getActiveSheet()->getCell('AF'.$i)->getCalculatedValue();
 
-                //     if(!isset($nombreSector)){
-                //         $nombreSector = "otros";
-                //     }
+                        // NUEVOS
+                        $ex_codigodivision        = $objPHPExcel->getActiveSheet()->getCell('C'.$i)->getCalculatedValue();
+                        $ex_division              = $objPHPExcel->getActiveSheet()->getCell('D'.$i)->getCalculatedValue();
+                        $ex_categoriamarketing    = $objPHPExcel->getActiveSheet()->getCell('H'.$i)->getCalculatedValue();
+                        $ex_codigosegmentacion    = $objPHPExcel->getActiveSheet()->getCell('K'.$i)->getCalculatedValue();
+                        $ex_codigopresentacion    = $objPHPExcel->getActiveSheet()->getCell('M'.$i)->getCalculatedValue();
+                        $ex_codigomarca           = $objPHPExcel->getActiveSheet()->getCell('O'.$i)->getCalculatedValue();
+                        $ex_codigoformato         = $objPHPExcel->getActiveSheet()->getCell('Q'.$i)->getCalculatedValue();
+                        $ex_codigotalla           = $objPHPExcel->getActiveSheet()->getCell('S'.$i)->getCalculatedValue();
+                        $ex_codigoconteo          = $objPHPExcel->getActiveSheet()->getCell('U'.$i)->getCalculatedValue();
+                        $ex_subcategoriamarketing = $objPHPExcel->getActiveSheet()->getCell('W'.$i)->getCalculatedValue();
+                        $ex_disponibleuno         = $objPHPExcel->getActiveSheet()->getCell('Y'.$i)->getCalculatedValue();
+                        $ex_disponibledos         = $objPHPExcel->getActiveSheet()->getCell('Z'.$i)->getCalculatedValue();
+                        $ex_estado                = $objPHPExcel->getActiveSheet()->getCell('AG'.$i)->getCalculatedValue();
+                        $ex_unidadhojaxpaquetes   = $objPHPExcel->getActiveSheet()->getCell('AH'.$i)->getCalculatedValue();
+                        $ex_metrosxunidad         = $objPHPExcel->getActiveSheet()->getCell('AI'.$i)->getCalculatedValue();
+                        $ex_disponibletres        = $objPHPExcel->getActiveSheet()->getCell('AJ'.$i)->getCalculatedValue();
 
-                //     if(!isset($marca)){
-                //         $marca = "otros";
-                //     }
-                    
-                //     $catidPro = null;
-                //     $maridPro = null;
-                //     $cosidPro = null;
-                //     $conidPro = null;
-                //     $pronombrePro = $descripcionProducto;
-                //     $proskuPro    = $codigoProductoSoft;
-                //     $prosegmentacionPro = $segmentacion;
-                //     $propresentacionPro = $presentacion;
-                //     $proconteoPro   = $conteo;
-                //     $proformatoPro  = $formato;
-                //     $protallaPro    = $talla;
-                //     $propesoPro     = $peso;
-                //     $promecanicaPro = $mecanica;
-                //     $profactorconversionbultosPro   = $factorBultos;
-                //     $profactorconversioncajasPro    = $factorCajas;
-                //     $profactorconversionpaquetesPro = $factorPaquetes;
-                //     $profactorconversionunidadminimaindivisiblePro = $factorUnidadMinima;
-                //     $profactorconversiontoneladasPro     = $factorToneladas;
-                //     $profactorconversionmilesunidadesPro = $factorMilesUnidades;
+                        if(!isset($nombreCategoria)){
+                            $nombreCategoria = "otros";
+                        }
 
-                //     // 
-                //     $encontroCat = false;
+                        if(!isset($nombreNegocio)){
+                            $nombreNegocio = "otros";
+                        }
 
-                //     foreach($catEstaticos as $catEstatico){
-                //         if($catEstatico['categoria'] == $nombreCategoria){
-                //             $encontroCat = true;
-                //             $catidPro = $catEstatico['id'];
-                //             break;
-                //         }
-                //     }
+                        if(!isset($nombreSector)){
+                            $nombreSector = "otros";
+                        }
 
-                //     if($encontroCat == false){
+                        if(!isset($marca)){
+                            $marca = "otros";
+                        }
+                        
+                        $catidPro = null;
+                        $maridPro = null;
+                        $cosidPro = null;
+                        $conidPro = null;
+                        $pronombrePro = $descripcionProducto;
+                        $proskuPro    = $codigoProductoSoft;
+                        $prosegmentacionPro = $segmentacion;
+                        $propresentacionPro = $presentacion;
+                        $proconteoPro   = $conteo;
+                        $proformatoPro  = $formato;
+                        $protallaPro    = $talla;
+                        $propesoPro     = $peso;
+                        $promecanicaPro = $mecanica;
+                        $profactorconversionbultosPro   = $factorBultos;
+                        $profactorconversioncajasPro    = $factorCajas;
+                        $profactorconversionpaquetesPro = $factorPaquetes;
+                        $profactorconversionunidadminimaindivisiblePro = $factorUnidadMinima;
+                        $profactorconversiontoneladasPro     = $factorToneladas;
+                        $profactorconversionmilesunidadesPro = $factorMilesUnidades;
 
-                //         $cat = catcategorias::where('catnombre', $nombreCategoria )->first();
+                        // 
+                        $encontroCat = false;
 
-                //         if($cat){
+                        foreach($catEstaticos as $catEstatico){
+                            if($catEstatico['categoria'] == $nombreCategoria){
+                                $encontroCat = true;
+                                $catidPro = $catEstatico['id'];
+                                break;
+                            }
+                        }
 
-                //             $encontroCat = true;
-                //             $catidPro = $cat->catid;
+                        if($encontroCat == false){
 
-                //             $catEstaticos[] = array(
-                //                 "id" => $cat->catid,
-                //                 "codigo" => $cat->catcodigo,
-                //                 "categoria" => $cat->catnombre,
-                //             );
+                            $cat = catcategorias::where('catnombre', $nombreCategoria )->first();
 
-                //         }else{
+                            if($cat){
 
-                //             $catn = new catcategorias;
-                //             $catn->catnombre = $nombreCategoria;
-                //             $catn->catcodigo = $codigoCategoria;
-                //             if($catn->save()){
-                //                 $encontroCat = true;
-                //                 $catidPro = $catn->catid;
+                                $encontroCat = true;
+                                $catidPro = $cat->catid;
 
-                //                 $catEstaticos[] = array(
-                //                     "id" => $catn->catid,
-                //                     "codigo" => $catn->catcodigo,
-                //                     "categoria" => $catn->catnombre,
-                //                 );
-                //             }
-                //         }
+                                $catEstaticos[] = array(
+                                    "id" => $cat->catid,
+                                    "codigo" => $cat->catcodigo,
+                                    "categoria" => $cat->catnombre,
+                                );
 
-                //     }
+                            }else{
 
-                //     // 
-                //     $encontroCon = false;
+                                $catn = new catcategorias;
+                                $catn->catnombre = $nombreCategoria;
+                                $catn->catcodigo = $codigoCategoria;
+                                if($catn->save()){
+                                    $encontroCat = true;
+                                    $catidPro = $catn->catid;
 
-                //     foreach($conEstaticos as $conEstatico){
-                //         if($conEstatico['negocio'] == $nombreNegocio){
-                //             $encontroCon = true;
-                //             $conidPro = $conEstatico['id'];
-                //             break;
-                //         }
-                //     }
+                                    $catEstaticos[] = array(
+                                        "id" => $catn->catid,
+                                        "codigo" => $catn->catcodigo,
+                                        "categoria" => $catn->catnombre,
+                                    );
+                                }
+                            }
 
-                //     if($encontroCon == false){
-                //         $con = concodigosnegocios::where('connombre', $nombreNegocio)->first();
+                        }
 
-                //         if($con){
+                        // 
+                        $encontroCon = false;
 
-                //             $encontroCon = true;
-                //             $conidPro = $con->conid;
+                        foreach($conEstaticos as $conEstatico){
+                            if($conEstatico['negocio'] == $nombreNegocio){
+                                $encontroCon = true;
+                                $conidPro = $conEstatico['id'];
+                                break;
+                            }
+                        }
 
-                //             $conEstaticos[] = array(
-                //                 "id" => $con->conid,
-                //                 "codigo"  => $con->concodigo,
-                //                 "negocio" => $con->connombre,
-                //             );
+                        if($encontroCon == false){
+                            $con = concodigosnegocios::where('connombre', $nombreNegocio)->first();
 
-                //         }else{
-                //             $conn = new concodigosnegocios;
-                //             $conn->concodigo = $codigoNegocio;
-                //             $conn->connombre = $nombreNegocio;
-                //             if($conn->save()){
-                //                 $encontroCon = true;
-                //                 $conidPro = $conn->conid;
+                            if($con){
 
-                //                 $conEstaticos[] = array(
-                //                     "id" => $conn->conid,
-                //                     "codigo"  => $conn->concodigo,
-                //                     "negocio" => $conn->connombre,
-                //                 );
-                //             }
-                //         }
-                //     }
+                                $encontroCon = true;
+                                $conidPro = $con->conid;
 
-                //     // 
-                //     $encontroCos = false;
-                //     foreach($cosEstaticos as $cosEstatico){
-                //         if($cosEstatico['sector'] == $nombreSector){
-                //             $encontroCos = true;
-                //             $cosidPro = $cosEstatico['id'];
-                //             break;
-                //         }
-                //     }
+                                $conEstaticos[] = array(
+                                    "id" => $con->conid,
+                                    "codigo"  => $con->concodigo,
+                                    "negocio" => $con->connombre,
+                                );
 
-                //     if($encontroCos == false){
-                //         $cos = coscodigossectores::where('cosnombre', $nombreSector)->first();
+                            }else{
+                                $conn = new concodigosnegocios;
+                                $conn->concodigo = $codigoNegocio;
+                                $conn->connombre = $nombreNegocio;
+                                if($conn->save()){
+                                    $encontroCon = true;
+                                    $conidPro = $conn->conid;
 
-                //         if($cos){
-                //             $cosidPro = $cos->cosid;
-                //             $encontroCos = true;
-                //             $cosEstaticos[] = array(
-                //                 "id" => $cos->cosid,
-                //                 "codigo" => $cos->coscodigo,
-                //                 "sector" => $cos->cosnombre,
-                //             );
-                //         }else{
+                                    $conEstaticos[] = array(
+                                        "id" => $conn->conid,
+                                        "codigo"  => $conn->concodigo,
+                                        "negocio" => $conn->connombre,
+                                    );
+                                }
+                            }
+                        }
 
-                //             $cosn = new coscodigossectores;
-                //             $cosn->coscodigo = $codigoSector;
-                //             $cosn->cosnombre = $nombreSector;
-                //             if($cosn->save()){
-                //                 $cosidPro = $cosn->cosid;
-                //                 $encontroCos = true;
-                //                 $cosEstaticos[] = array(
-                //                     "id" => $cosn->cosid,
-                //                     "codigo" => $cosn->coscodigo,
-                //                     "sector" => $cosn->cosnombre,
-                //                 );
-                //             }
+                        // 
+                        $encontroCos = false;
+                        foreach($cosEstaticos as $cosEstatico){
+                            if($cosEstatico['sector'] == $nombreSector){
+                                $encontroCos = true;
+                                $cosidPro = $cosEstatico['id'];
+                                break;
+                            }
+                        }
 
-                //         }
+                        if($encontroCos == false){
+                            $cos = coscodigossectores::where('cosnombre', $nombreSector)->first();
 
-                //     }
+                            if($cos){
+                                $cosidPro = $cos->cosid;
+                                $encontroCos = true;
+                                $cosEstaticos[] = array(
+                                    "id" => $cos->cosid,
+                                    "codigo" => $cos->coscodigo,
+                                    "sector" => $cos->cosnombre,
+                                );
+                            }else{
 
-                //     // 
-                //     $encontroMar = false;
+                                $cosn = new coscodigossectores;
+                                $cosn->coscodigo = $codigoSector;
+                                $cosn->cosnombre = $nombreSector;
+                                if($cosn->save()){
+                                    $cosidPro = $cosn->cosid;
+                                    $encontroCos = true;
+                                    $cosEstaticos[] = array(
+                                        "id" => $cosn->cosid,
+                                        "codigo" => $cosn->coscodigo,
+                                        "sector" => $cosn->cosnombre,
+                                    );
+                                }
 
-                //     foreach($marEstaticos as $marEstatico){
-                //         if($marEstatico['marca'] == $marca){
-                //             $encontroMar = true;
-                //             $maridPro = $marEstatico['id'];
-                //             break;
-                //         }
-                //     }
+                            }
 
-                //     if($encontroMar == false){
-                //         $mar = marmarcas::where('marnombre', $marca)->first();
-                //         if($mar){
-                //             $encontroMar = true;
-                //             $maridPro = $mar->marid;
-                            
-                //             $marEstaticos[] = array(
-                //                 "id" => $mar->marid,
-                //                 "marca" => $mar->marnombre,
-                //             );
+                        }
 
-                //         }else{
-                //             $marn = new marmarcas;
-                //             $marn->marnombre = $marca;
-                //             if($marn->save()){
-                //                 $encontroMar = true;
-                //                 $maridPro = $marn->marid;
+                        // 
+                        $encontroMar = false;
+
+                        foreach($marEstaticos as $marEstatico){
+                            if($marEstatico['marca'] == $marca){
+                                $encontroMar = true;
+                                $maridPro = $marEstatico['id'];
+                                break;
+                            }
+                        }
+
+                        if($encontroMar == false){
+                            $mar = marmarcas::where('marnombre', $marca)->first();
+                            if($mar){
+                                $encontroMar = true;
+                                $maridPro = $mar->marid;
                                 
-                //                 $marEstaticos[] = array(
-                //                     "id" => $marn->marid,
-                //                     "marca" => $marn->marnombre,
-                //                 );
-                //             }
-                //         }
-                //     }
+                                $marEstaticos[] = array(
+                                    "id" => $mar->marid,
+                                    "marca" => $mar->marnombre,
+                                );
 
-                //     $pro = proproductos::where('prosku', $codigoProductoSoft)->first();
+                            }else{
+                                $marn = new marmarcas;
+                                $marn->marnombre = $marca;
+                                if($marn->save()){
+                                    $encontroMar = true;
+                                    $maridPro = $marn->marid;
+                                    
+                                    $marEstaticos[] = array(
+                                        "id" => $marn->marid,
+                                        "marca" => $marn->marnombre,
+                                    );
+                                }
+                            }
+                        }
 
-                //     if($pro){
+                        $pro = proproductos::where('prosku', $codigoProductoSoft)->first();
 
-                //         $camposEditados = [];
+                        if($pro){
 
-                //         if($pro->catid != $catidPro){
-                //             $camposEditados[] = "CATEGORIA ANTES: ".$pro->catid." AHORA: ".$catidPro;
-                //             $pro->catid = $catidPro;
-                //         }
+                            $camposEditados = [];
 
-                //         if($pro->marid != $maridPro){
-                //             $camposEditados[] = "MARCA ANTES: ".$pro->marid." AHORA: ".$maridPro;
-                //             $pro->marid = $maridPro;
-                //         }
-                        
-                //         if($pro->cosid != $cosidPro){
-                //             $camposEditados[] = "COS ANTES: ".$pro->cosid." AHORA: ".$cosidPro;
-                //             $pro->cosid = $cosidPro;
-                //         }
+                            if($pro->catid != $catidPro){
+                                $camposEditados[] = "CATEGORIA ANTES: ".$pro->catid." AHORA: ".$catidPro;
+                                $pro->catid = $catidPro;
+                            }
 
-                //         if($pro->conid != $conidPro){
-                //             $camposEditados[] = "CON ANTES: ".$pro->conid." AHORA: ".$conidPro;
-                //             $pro->conid = $conidPro;
-                //         }
+                            if($pro->marid != $maridPro){
+                                $camposEditados[] = "MARCA ANTES: ".$pro->marid." AHORA: ".$maridPro;
+                                $pro->marid = $maridPro;
+                            }
+                            
+                            if($pro->cosid != $cosidPro){
+                                $camposEditados[] = "COS ANTES: ".$pro->cosid." AHORA: ".$cosidPro;
+                                $pro->cosid = $cosidPro;
+                            }
 
-                //         if($pro->pronombre != $pronombrePro){
-                //             $camposEditados[] = "NOMBRE ANTES: ".$pro->pronombre." AHORA: ".$pronombrePro;
-                //             $pro->pronombre = $pronombrePro;
-                //         }
+                            if($pro->conid != $conidPro){
+                                $camposEditados[] = "CON ANTES: ".$pro->conid." AHORA: ".$conidPro;
+                                $pro->conid = $conidPro;
+                            }
 
-                //         // $pro->prosku = $proskuPro;
-                //         if($pro->prosegmentacion != $prosegmentacionPro){
-                //             $camposEditados[] = "SEGMENTACION ANTES: ".$pro->prosegmentacion." AHORA: ".$prosegmentacionPro;
-                //             $pro->prosegmentacion = $prosegmentacionPro;
-                //         }
-                        
-                //         if($pro->propresentacion != $propresentacionPro){
-                //             $camposEditados[] = "PRESENTACION ANTES: ".$pro->prosegmentacion." AHORA: ".$propresentacionPro;
-                //             $pro->propresentacion = $propresentacionPro;
-                //         }
-                        
-                //         if($pro->proconteo != $proconteoPro){
-                //             $camposEditados[] = "CONTEO ANTES: ".$pro->proconteo." AHORA: ".$proconteoPro;
-                //             $pro->proconteo = $proconteoPro;
-                //         }
+                            if($pro->pronombre != $pronombrePro){
+                                $camposEditados[] = "NOMBRE ANTES: ".$pro->pronombre." AHORA: ".$pronombrePro;
+                                $pro->pronombre = $pronombrePro;
+                            }
 
-                //         if($pro->proformato != $proformatoPro){
-                //             $camposEditados[] = "FORMATO ANTES: ".$pro->proformato." AHORA: ".$proformatoPro;
-                //             $pro->proformato = $proformatoPro;
-                //         }
-                        
-                //         if($pro->protalla != $protallaPro){
-                //             $camposEditados[] = "TALLA ANTES: ".$pro->protalla." AHORA: ".$protallaPro;
-                //             $pro->protalla = $protallaPro;
-                //         }
+                            // $pro->prosku = $proskuPro;
+                            if($pro->prosegmentacion != $prosegmentacionPro){
+                                $camposEditados[] = "SEGMENTACION ANTES: ".$pro->prosegmentacion." AHORA: ".$prosegmentacionPro;
+                                $pro->prosegmentacion = $prosegmentacionPro;
+                            }
+                            
+                            if($pro->propresentacion != $propresentacionPro){
+                                $camposEditados[] = "PRESENTACION ANTES: ".$pro->prosegmentacion." AHORA: ".$propresentacionPro;
+                                $pro->propresentacion = $propresentacionPro;
+                            }
+                            
+                            if($pro->proconteo != $proconteoPro){
+                                $camposEditados[] = "CONTEO ANTES: ".$pro->proconteo." AHORA: ".$proconteoPro;
+                                $pro->proconteo = $proconteoPro;
+                            }
 
-                //         if("$pro->propeso" != "$propesoPro"){
-                //             $camposEditados[] = "PESO ANTES: ".$pro->propeso." AHORA: ".$propesoPro;
-                //             $pro->propeso = $propesoPro;
-                //         }
+                            if($pro->proformato != $proformatoPro){
+                                $camposEditados[] = "FORMATO ANTES: ".$pro->proformato." AHORA: ".$proformatoPro;
+                                $pro->proformato = $proformatoPro;
+                            }
+                            
+                            if($pro->protalla != $protallaPro){
+                                $camposEditados[] = "TALLA ANTES: ".$pro->protalla." AHORA: ".$protallaPro;
+                                $pro->protalla = $protallaPro;
+                            }
 
-                //         if($pro->promecanica != $promecanicaPro){
-                //             $camposEditados[] = "MECANICA ANTES: ".$pro->promecanica." AHORA: ".$promecanicaPro;
-                //             $pro->promecanica = $promecanicaPro;
-                //         }
+                            if("$pro->propeso" != "$propesoPro"){
+                                $camposEditados[] = "PESO ANTES: ".$pro->propeso." AHORA: ".$propesoPro;
+                                $pro->propeso = $propesoPro;
+                            }
 
-                //         if($pro->profactorconversionbultos != $profactorconversionbultosPro){
-                //             $camposEditados[] = "BULTOS ANTES: ".$pro->profactorconversionbultos." AHORA: ".$profactorconversionbultosPro;
-                //             $pro->profactorconversionbultos = $profactorconversionbultosPro;
-                //         }
+                            if($pro->promecanica != $promecanicaPro){
+                                $camposEditados[] = "MECANICA ANTES: ".$pro->promecanica." AHORA: ".$promecanicaPro;
+                                $pro->promecanica = $promecanicaPro;
+                            }
 
-                //         if($pro->profactorconversioncajas != $profactorconversioncajasPro){
-                //             $camposEditados[] = "CAJAS ANTES: ".$pro->profactorconversioncajas." AHORA: ".$profactorconversioncajasPro;
-                //             $pro->profactorconversioncajas = $profactorconversioncajasPro;
-                //         }
+                            if($pro->profactorconversionbultos != $profactorconversionbultosPro){
+                                $camposEditados[] = "BULTOS ANTES: ".$pro->profactorconversionbultos." AHORA: ".$profactorconversionbultosPro;
+                                $pro->profactorconversionbultos = $profactorconversionbultosPro;
+                            }
 
-                //         if($pro->profactorconversionpaquetes != $profactorconversionpaquetesPro){
-                //             $camposEditados[] = "PAQUETES ANTES: ".$pro->profactorconversionpaquetes." AHORA: ".$profactorconversionpaquetesPro;
-                //             $pro->profactorconversionpaquetes = $profactorconversionpaquetesPro;
-                //         }
+                            if($pro->profactorconversioncajas != $profactorconversioncajasPro){
+                                $camposEditados[] = "CAJAS ANTES: ".$pro->profactorconversioncajas." AHORA: ".$profactorconversioncajasPro;
+                                $pro->profactorconversioncajas = $profactorconversioncajasPro;
+                            }
 
-                //         if($pro->profactorconversionunidadminimaindivisible != $profactorconversionunidadminimaindivisiblePro){
-                //             $camposEditados[] = "INDIVISIBLE ANTES: ".$pro->profactorconversionunidadminimaindivisible." AHORA: ".$profactorconversionunidadminimaindivisiblePro;
-                //             $pro->profactorconversionunidadminimaindivisible = $profactorconversionunidadminimaindivisiblePro;
-                //         }
-                        
-                //         if("$pro->profactorconversiontoneladas" != "$profactorconversiontoneladasPro"){
-                //             $camposEditados[] = "TONELADAS ANTES: ".$pro->profactorconversiontoneladas." AHORA: ".$profactorconversiontoneladasPro;
-                //             $pro->profactorconversiontoneladas = $profactorconversiontoneladasPro;
-                //         }
-                        
-                //         if($pro->profactorconversionmilesunidades != $profactorconversionmilesunidadesPro){
-                //             $camposEditados[] = "UNIDADES ANTES: ".$pro->profactorconversionmilesunidades." AHORA: ".$profactorconversionmilesunidadesPro;
-                //             $pro->profactorconversionmilesunidades = $profactorconversionmilesunidadesPro;
-                //         }
+                            if($pro->profactorconversionpaquetes != $profactorconversionpaquetesPro){
+                                $camposEditados[] = "PAQUETES ANTES: ".$pro->profactorconversionpaquetes." AHORA: ".$profactorconversionpaquetesPro;
+                                $pro->profactorconversionpaquetes = $profactorconversionpaquetesPro;
+                            }
 
-                //         if(sizeof($camposEditados) > 0){
-                //             if($pro->update()){
+                            if($pro->profactorconversionunidadminimaindivisible != $profactorconversionunidadminimaindivisiblePro){
+                                $camposEditados[] = "INDIVISIBLE ANTES: ".$pro->profactorconversionunidadminimaindivisible." AHORA: ".$profactorconversionunidadminimaindivisiblePro;
+                                $pro->profactorconversionunidadminimaindivisible = $profactorconversionunidadminimaindivisiblePro;
+                            }
+                            
+                            if("$pro->profactorconversiontoneladas" != "$profactorconversiontoneladasPro"){
+                                $camposEditados[] = "TONELADAS ANTES: ".$pro->profactorconversiontoneladas." AHORA: ".$profactorconversiontoneladasPro;
+                                $pro->profactorconversiontoneladas = $profactorconversiontoneladasPro;
+                            }
+                            
+                            if($pro->profactorconversionmilesunidades != $profactorconversionmilesunidadesPro){
+                                $camposEditados[] = "UNIDADES ANTES: ".$pro->profactorconversionmilesunidades." AHORA: ".$profactorconversionmilesunidadesPro;
+                                $pro->profactorconversionmilesunidades = $profactorconversionmilesunidadesPro;
+                            }
 
-                //                 $logs["PRODUCTO_EDITADO"][] = array(
-                //                     "proid" => $pro->proid,
-                //                     "sku" => $pro->prosku,
-                //                     "camposEditados" => $camposEditados
-                //                 );
-    
-                //             }else{
-                //                 $respuesta = false;
-                //                 $mensaje = "Lo sentimos, el producto no se pudo editar en el sistema. LINEA : ".$i;
-                //             }
-                //         }else{
-                //             $logs["PRODUCTO_NO_EDITADO"][] = array(
-                //                 "proid" => $pro->proid,
-                //                 "sku" => $pro->prosku,
-                //                 "camposEditados" => $camposEditados
-                //             );
-                //         }
+                            if(sizeof($camposEditados) > 0){
+                                if($pro->update()){
 
-                //     }else{
+                                    $logs["PRODUCTO_EDITADO"][] = array(
+                                        "proid" => $pro->proid,
+                                        "sku" => $pro->prosku,
+                                        "camposEditados" => $camposEditados
+                                    );
+        
+                                }else{
+                                    $respuesta = false;
+                                    $mensaje = "Lo sentimos, el producto no se pudo editar en el sistema. LINEA : ".$i;
+                                }
+                            }else{
+                                $logs["PRODUCTO_NO_EDITADO"][] = array(
+                                    "proid" => $pro->proid,
+                                    "sku" => $pro->prosku,
+                                    "camposEditados" => $camposEditados
+                                );
+                            }
 
-                //         $pron = new proproductos;
-                //         $pron->catid = $catidPro;
-                //         $pron->marid = $maridPro;
-                //         $pron->cosid = $cosidPro;
-                //         $pron->conid = $conidPro;
-                //         $pron->pronombre = $pronombrePro;
-                //         $pron->prosku = $proskuPro;
-                //         $pron->prosegmentacion = $prosegmentacionPro;
-                //         $pron->propresentacion = $propresentacionPro;
-                //         $pron->proconteo = $proconteoPro;
-                //         $pron->proformato = $proformatoPro;
-                //         $pron->protalla = $protallaPro;
-                //         $pron->propeso = $propesoPro;
-                //         $pron->promecanica = $promecanicaPro;
-                //         $pron->profactorconversionbultos = $profactorconversionbultosPro;
-                //         $pron->profactorconversioncajas = $profactorconversioncajasPro;
-                //         $pron->profactorconversionpaquetes = $profactorconversionpaquetesPro;
-                //         $pron->profactorconversionunidadminimaindivisible = $profactorconversionunidadminimaindivisiblePro;
-                //         $pron->profactorconversiontoneladas = $profactorconversiontoneladasPro;
-                //         $pron->profactorconversionmilesunidades = $profactorconversionmilesunidadesPro;
-                //         if($pron->save()){
-                //             $logs['NUEVOS_PRODUCTO'][] = "PROID: ".$pron->proid." | SKU: ".$pron->prosku;
-                //         }else{
-                //             $respuesta = false;
-                //             $mensaje = "Lo sentimos, el producto no se pudo guardar en el sistema. LINEA : ".$i;            
-                //         }
-                //     }
+                        }else{
 
-                // }
+                            $pron = new proproductos;
+                            $pron->catid = $catidPro;
+                            $pron->marid = $maridPro;
+                            $pron->cosid = $cosidPro;
+                            $pron->conid = $conidPro;
+                            $pron->pronombre = $pronombrePro;
+                            $pron->prosku = $proskuPro;
+                            $pron->prosegmentacion = $prosegmentacionPro;
+                            $pron->propresentacion = $propresentacionPro;
+                            $pron->proconteo = $proconteoPro;
+                            $pron->proformato = $proformatoPro;
+                            $pron->protalla = $protallaPro;
+                            $pron->propeso = $propesoPro;
+                            $pron->promecanica = $promecanicaPro;
+                            $pron->profactorconversionbultos = $profactorconversionbultosPro;
+                            $pron->profactorconversioncajas = $profactorconversioncajasPro;
+                            $pron->profactorconversionpaquetes = $profactorconversionpaquetesPro;
+                            $pron->profactorconversionunidadminimaindivisible = $profactorconversionunidadminimaindivisiblePro;
+                            $pron->profactorconversiontoneladas = $profactorconversiontoneladasPro;
+                            $pron->profactorconversionmilesunidades = $profactorconversionmilesunidadesPro;
+                            if($pron->save()){
+                                $logs['NUEVOS_PRODUCTO'][] = "PROID: ".$pron->proid." | SKU: ".$pron->prosku;
+                            }else{
+                                $respuesta = false;
+                                $mensaje = "Lo sentimos, el producto no se pudo guardar en el sistema. LINEA : ".$i;            
+                            }
+                        }
+
+                    }
+
+                }
 
 
                 if($usu->usuid != 1){
@@ -562,8 +614,12 @@ class MetCargarMaestraProductosController extends Controller
                                 if($espcount == 0){
                                     $aree->areporcentaje = "100";
                                 }else{
-                                    // TOTAL 4
-                                    $porcentaje = (100*$espcount)/4;
+                                    
+                                    $countBasesTotales = espestadospendientes::where('fecid', $fecid)
+                                                                            ->where('areid', $espe->areid)
+                                                                            ->count();
+
+                                    $porcentaje = (100*$espcount)/$countBasesTotales;
                                     $aree->areporcentaje = $porcentaje;
                                 }
 
