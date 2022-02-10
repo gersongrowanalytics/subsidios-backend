@@ -118,15 +118,23 @@ class MetCargarSOController extends Controller
                 $fec = fecfechas::where('fecmesabierto', true)->first(['fecid']);
 
                 for ($i=2; $i <= $numRows ; $i++) {
-                    $ex_codigo              = $objPHPExcel->getActiveSheet()->getCell('A'.$i)->getCalculatedValue();
-                    // $ex_codigodistribuidor  = $objPHPExcel->getActiveSheet()->getCell('B'.$i)->getCalculatedValue();
-                    $ex_codigofecha     = $objPHPExcel->getActiveSheet()->getCell('B'.$i)->getCalculatedValue();
-                    $ex_codigocliente   = $objPHPExcel->getActiveSheet()->getCell('C'.$i)->getCalculatedValue();
-                    $ex_codigoproducto  = $objPHPExcel->getActiveSheet()->getCell('D'.$i)->getCalculatedValue();
-                    $ex_ruc             = $objPHPExcel->getActiveSheet()->getCell('E'.$i)->getCalculatedValue();
-                    $ex_cantidadbultos  = $objPHPExcel->getActiveSheet()->getCell('F'.$i)->getCalculatedValue();
-                    $ex_ventasinigv     = $objPHPExcel->getActiveSheet()->getCell('G'.$i)->getCalculatedValue();
-                    $ex_factura         = $objPHPExcel->getActiveSheet()->getCell('H'.$i)->getCalculatedValue();
+                    // $ex_codigo              = $objPHPExcel->getActiveSheet()->getCell('A'.$i)->getCalculatedValue();
+                    // $ex_codigofecha     = $objPHPExcel->getActiveSheet()->getCell('B'.$i)->getCalculatedValue();
+                    // $ex_codigocliente   = $objPHPExcel->getActiveSheet()->getCell('C'.$i)->getCalculatedValue();
+                    // $ex_codigoproducto  = $objPHPExcel->getActiveSheet()->getCell('D'.$i)->getCalculatedValue();
+                    // $ex_ruc             = $objPHPExcel->getActiveSheet()->getCell('E'.$i)->getCalculatedValue();
+                    // $ex_cantidadbultos  = $objPHPExcel->getActiveSheet()->getCell('F'.$i)->getCalculatedValue();
+                    // $ex_ventasinigv     = $objPHPExcel->getActiveSheet()->getCell('G'.$i)->getCalculatedValue();
+                    // $ex_factura         = $objPHPExcel->getActiveSheet()->getCell('H'.$i)->getCalculatedValue();
+
+                    $ex_codigo          = $objPHPExcel->getActiveSheet()->getCell('C'.$i)->getCalculatedValue();
+                    $ex_codigofecha     = $objPHPExcel->getActiveSheet()->getCell('D'.$i)->getCalculatedValue();
+                    $ex_codigocliente   = $objPHPExcel->getActiveSheet()->getCell('E'.$i)->getCalculatedValue();
+                    $ex_codigoproducto  = $objPHPExcel->getActiveSheet()->getCell('F'.$i)->getCalculatedValue();
+                    $ex_ruc             = $objPHPExcel->getActiveSheet()->getCell('S'.$i)->getCalculatedValue();
+                    $ex_cantidadbultos  = $objPHPExcel->getActiveSheet()->getCell('W'.$i)->getCalculatedValue();
+                    $ex_ventasinigv     = $objPHPExcel->getActiveSheet()->getCell('Y'.$i)->getCalculatedValue();
+                    $ex_factura         = $objPHPExcel->getActiveSheet()->getCell('AB'.$i)->getCalculatedValue();
 
                     $ex_codigofecha = Date::excelToDateTimeObject($ex_codigofecha);
                     $ex_codigofecha = json_encode($ex_codigofecha);
