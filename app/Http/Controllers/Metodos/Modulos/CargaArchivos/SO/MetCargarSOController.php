@@ -136,11 +136,14 @@ class MetCargarSOController extends Controller
                     $ex_ventasinigv     = $objPHPExcel->getActiveSheet()->getCell('Y'.$i)->getCalculatedValue();
                     $ex_factura         = $objPHPExcel->getActiveSheet()->getCell('AB'.$i)->getCalculatedValue();
 
-                    $ex_codigofecha = Date::excelToDateTimeObject($ex_codigofecha);
-                    $ex_codigofecha = json_encode($ex_codigofecha);
-                    $ex_codigofecha = json_decode($ex_codigofecha);
-                    $ex_fecha = date("Y-m-d", strtotime($ex_codigofecha->date));
-                    $ex_codigofecha = date("Y-m", strtotime($ex_codigofecha->date));
+                    // $ex_codigofecha = Date::excelToDateTimeObject($ex_codigofecha);
+                    // $ex_codigofecha = json_encode($ex_codigofecha);
+                    // $ex_codigofecha = json_decode($ex_codigofecha);
+                    // $ex_fecha = date("Y-m-d", strtotime($ex_codigofecha->date));
+                    // $ex_codigofecha = date("Y-m", strtotime($ex_codigofecha->date));
+
+                    $ex_fecha = date("Y-m-d", strtotime($ex_codigofecha));
+                    $ex_codigofecha = date("Y-m", strtotime($ex_codigofecha));
 
                     
                     // $fec = fecfechas::where('fecfecha', 'LIKE', "%".$ex_codigofecha."%")
