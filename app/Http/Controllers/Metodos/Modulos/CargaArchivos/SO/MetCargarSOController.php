@@ -71,16 +71,18 @@ class MetCargarSOController extends Controller
         $carultimo = carcargasarchivos::orderby('carid', 'desc')->first();
         $pkcar = $carultimo->carid + 1;
 
-        $carn = new carcargasarchivos;
-        $carn->carid        = $pkcar;
-        $carn->tcaid        = 3;
-        $carn->usuid        = $usu->usuid;
-        $carn->carnombre    = $_FILES['file']['name'];
-        $carn->carextension = $ex_file_name[1];
-        $carn->carurl       = env('APP_URL').$ubicacionArchivo;
-        $carn->carexito     = 0;
-        $carn->save();
-        $carid = $pkcar;
+        if($usu->usuid != 1){
+            $carn = new carcargasarchivos;
+            $carn->carid        = $pkcar;
+            $carn->tcaid        = 3;
+            $carn->usuid        = $usu->usuid;
+            $carn->carnombre    = $_FILES['file']['name'];
+            $carn->carextension = $ex_file_name[1];
+            $carn->carurl       = env('APP_URL').$ubicacionArchivo;
+            $carn->carexito     = 0;
+            $carn->save();
+            $carid = $pkcar;
+        }
 
         if (move_uploaded_file($_FILES['file']['tmp_name'], $fichero_subido)) {
             if($usu->usuid != 1){
@@ -252,8 +254,11 @@ class MetCargarSOController extends Controller
                         if($espcount == 0){
                             $aree->areporcentaje = "100";
                         }else{
-                            // TOTAL 4
-                            $porcentaje = (100*$espcount)/4;
+
+                            $countBasesTotales = espestadospendientes::where('fecid', $fecid)
+                                                                    ->where('areid', $espe->areid)
+                                                                    ->count();
+                            $porcentaje = (100*$espcount)/$countBasesTotales;
                             $aree->areporcentaje = $porcentaje;
                         }
 
