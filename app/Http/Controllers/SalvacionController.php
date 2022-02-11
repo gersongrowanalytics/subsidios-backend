@@ -13,6 +13,8 @@ use App\Models\usuusuarios;
 use App\Models\sfssubsidiosfacturassi;
 use App\Models\ndsnotascreditossidetalles;
 use App\Models\csoclientesso;
+use App\Models\tictipocambios;
+use App\Models\cbucostosbultos;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\MailCargaArchivoOutlook;
 use Illuminate\Support\Facades\Hash;
@@ -1117,6 +1119,21 @@ class SalvacionController extends Controller
         }
 
         dd($logs);
+
+    }
+
+    public function ConvertirDolaresBultosTotal($fecid)
+    {
+        $tic = tictipocambios::where('fecid', $fecid)->first();
+
+        $cbus = cbucostosbultos::where('fecid', $fecid)->get();
+
+        foreach ($cbus as $key => $cbu) {
+            $cbue = cbucostosbultos::find($cbu->cbuid);
+            $cbue->cbutotal = $cbue->cbutotal / $tic->tictc;
+            $cbue->update();
+        }
+
 
     }
 

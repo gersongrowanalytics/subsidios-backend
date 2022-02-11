@@ -171,3 +171,4 @@ $router->get('/alerta-diferencia-so-vs-si/{fecid}', 'SalvacionController@AlertaV
 $router->get('/obtener-subsidios-pendientes/{fecid}', 'SalvacionController@ObtenerSubsidiosPendientes');
 
 $router->get('/asignar-csoid-a-subsidios/{fecid}', 'SalvacionController@AsignarCsoidASubsidios');
+$router->get('/convertir-dolares-bultos-total/{fecid}', 'SalvacionController@ConvertirDolaresBultosTotal');
