@@ -82,7 +82,7 @@ class MetCargarCostoXBultoController extends Controller
                 }
 
                 // $fec = fecfechas::where('fecmesabierto', true)->first(['fecid']);
-                $fec = fecfechas::where('fecid', "1109")->first(['fecid']);
+                $fec = fecfechas::where('fecid', 1109)->first(['fecid']);
 
                 if($fec){
 
