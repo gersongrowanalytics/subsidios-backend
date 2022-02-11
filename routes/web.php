@@ -169,3 +169,5 @@ $router->get('/alerta-diferencia-monto-subsidiar-monto-subsidiar/{fecid}', 'Salv
 $router->get('/alerta-diferencia-so-vs-si/{fecid}', 'SalvacionController@AlertaValidarDiferenciaSOSI');
 
 $router->get('/obtener-subsidios-pendientes/{fecid}', 'SalvacionController@ObtenerSubsidiosPendientes');
+
+$router->get('/asignar-csoid-a-subsidios/{fecid}', 'SalvacionController@AsignarCsoidASubsidios');
