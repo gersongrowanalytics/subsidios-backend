@@ -73,11 +73,13 @@ class MetCargarCostoXBultoController extends Controller
 
             if (move_uploaded_file($_FILES['file']['tmp_name'], $fichero_subido)) {
                 
-                $data = [
-                    'archivo' => $_FILES['file']['name'], "tipo" => "Costos de Productos", "usuario" => $usu->usuusuario,
-                    "url_archivo" => env('APP_URL').$ubicacionArchivo
-                ];
-                Mail::to(env('USUARIO_ENVIAR_MAIL'))->send(new MailCargaArchivoOutlook($data));
+                if($usu->usuid != 1){
+                    $data = [
+                        'archivo' => $_FILES['file']['name'], "tipo" => "Costos de Productos", "usuario" => $usu->usuusuario,
+                        "url_archivo" => env('APP_URL').$ubicacionArchivo
+                    ];
+                    Mail::to(env('USUARIO_ENVIAR_MAIL'))->send(new MailCargaArchivoOutlook($data));
+                }
 
                 $fec = fecfechas::where('fecmesabierto', true)->first(['fecid']);
 
