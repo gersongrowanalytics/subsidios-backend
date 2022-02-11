@@ -1149,8 +1149,8 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                             $colorLetraMargenXTon = 'FF006100';
                             $rellenoLetraMargenXTon = 'FFC6EFCE';
                         }else{
-                            $colorLetraMargenXTon = 'FF006100';
-                            $rellenoLetraMargenXTon = 'FFC6EFCE';
+                            $colorLetraMargenXTon = 'FF9C6500';
+                            $rellenoLetraMargenXTon = 'FFFFEB9C';
                         }
                         
                     }
