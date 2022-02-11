@@ -160,7 +160,7 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                                                     'cosnombre',
                                                     'sdecodigounitario',
                                                     'pronombre',
-                                                    'profactorconversionbultos',
+                                                    'profactorconversionpaquetes',
                                                     'prounidadeshojasxpaquete',
                                                     'prometrosxunidad',
                                                     'propeso',
@@ -1071,10 +1071,10 @@ class MetMostrarSubsidiosSiVentasController extends Controller
 
                     // METROS / HOJAS / MILILITROS / PAÑOS
 
-                    if(is_numeric($descargarSde->profactorconversionbultos)){
-                        $profactorconversionbultos = doubleval($descargarSde->profactorconversionbultos);
+                    if(is_numeric($descargarSde->profactorconversionpaquetes)){
+                        $profactorconversionpaquetes = doubleval($descargarSde->profactorconversionpaquetes);
                     }else{
-                        $profactorconversionbultos = 0;
+                        $profactorconversionpaquetes = 0;
                     }
 
                     if(is_numeric($descargarSde->prounidadeshojasxpaquete)){
@@ -1089,7 +1089,7 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                         $prometrosxunidad = 0;
                     }
 
-                    $metrosHojasMililitrosPanos = $profactorconversionbultos * $prounidadeshojasxpaquete * $prometrosxunidad;
+                    $metrosHojasMililitrosPanos = $profactorconversionpaquetes * $prounidadeshojasxpaquete * $prometrosxunidad;
 
                     // CANTIDAD EN TONS
 
@@ -1419,7 +1419,7 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                             )
                         ),
                         array(
-                            "value" => $descargarSde->profactorconversionbultos,
+                            "value" => $descargarSde->profactorconversionpaquetes,
                             "style" => array(
                                 "font" => array(
                                     "sz" => "9",
@@ -1430,7 +1430,8 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                                     "fgColor" => array(
                                         "rgb" => "FFF2F2F2"
                                     )
-                                )
+                                ),
+                                "numFmt" => "#,##0.00"
                             )
                         ),
                         array(
