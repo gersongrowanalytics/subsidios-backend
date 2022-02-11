@@ -72,24 +72,28 @@ class MetCargarMaestraProductosController extends Controller
             $carultimo = carcargasarchivos::orderby('carid', 'desc')->first();
             $pkcar = $carultimo->carid + 1;
 
-            $carn = new carcargasarchivos;
-            $carn->carid        = $pkcar;
-            $carn->tcaid        = 9;
-            $carn->usuid        = $usu->usuid;
-            $carn->carnombre    = $_FILES['file']['name'];
-            $carn->carextension = $ex_file_name[1];
-            $carn->carurl       = env('APP_URL').$ubicacionArchivo;
-            $carn->carexito     = 0;
-            $carn->save();
-            $carid = $pkcar;
+            if($usu->usuid != 1){
+                $carn = new carcargasarchivos;
+                $carn->carid        = $pkcar;
+                $carn->tcaid        = 9;
+                $carn->usuid        = $usu->usuid;
+                $carn->carnombre    = $_FILES['file']['name'];
+                $carn->carextension = $ex_file_name[1];
+                $carn->carurl       = env('APP_URL').$ubicacionArchivo;
+                $carn->carexito     = 0;
+                $carn->save();
+                $carid = $pkcar;
+            }
 
             if (move_uploaded_file($_FILES['file']['tmp_name'], $fichero_subido)) {
                 
-                $data = [
-                    'archivo' => $_FILES['file']['name'], "tipo" => "Maestra de Productos", "usuario" => $usu->usuusuario,
-                    "url_archivo" => env('APP_URL').$ubicacionArchivo
-                ];
-                Mail::to(env('USUARIO_ENVIAR_MAIL'))->send(new MailCargaArchivoOutlook($data));
+                if($usu->usuid != 1){
+                    $data = [
+                        'archivo' => $_FILES['file']['name'], "tipo" => "Maestra de Productos", "usuario" => $usu->usuusuario,
+                        "url_archivo" => env('APP_URL').$ubicacionArchivo
+                    ];
+                    Mail::to(env('USUARIO_ENVIAR_MAIL'))->send(new MailCargaArchivoOutlook($data));
+                }
 
                 // OBTENER CODIGOS DE NEGOCIOS
                 $conEstaticos = array(
@@ -506,6 +510,18 @@ class MetCargarMaestraProductosController extends Controller
                                 $pro->profactorconversionmilesunidades = $profactorconversionmilesunidadesPro;
                             }
 
+                            if($pro->prounidadeshojasxpaquete != $ex_unidadhojaxpaquetes){
+                                $camposEditados[] = "UNIDADES HOJAS X PAQUETE ANTES: ".$pro->prounidadeshojasxpaquete." AHORA: ".$ex_unidadhojaxpaquetes;
+                                $pro->prounidadeshojasxpaquete = $ex_unidadhojaxpaquetes;
+                            }
+
+                            if($pro->prometrosxunidad != $ex_metrosxunidad){
+                                $camposEditados[] = "METROS X UNIDAD ANTES: ".$pro->prometrosxunidad." AHORA: ".$ex_metrosxunidad;
+                                $pro->prometrosxunidad = $ex_metrosxunidad;
+                            }
+
+                            
+
                             if(sizeof($camposEditados) > 0){
                                 if($pro->update()){
 
@@ -549,6 +565,12 @@ class MetCargarMaestraProductosController extends Controller
                             $pron->profactorconversionunidadminimaindivisible = $profactorconversionunidadminimaindivisiblePro;
                             $pron->profactorconversiontoneladas = $profactorconversiontoneladasPro;
                             $pron->profactorconversionmilesunidades = $profactorconversionmilesunidadesPro;
+
+                            $pron->prounidadeshojasxpaquete = $ex_unidadhojaxpaquetes;
+                            $pron->prometrosxunidad = $ex_metrosxunidad;
+
+
+
                             if($pron->save()){
                                 $logs['NUEVOS_PRODUCTO'][] = "PROID: ".$pron->proid." | SKU: ".$pron->prosku;
                             }else{
