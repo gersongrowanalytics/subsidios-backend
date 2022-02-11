@@ -1128,12 +1128,32 @@ class SalvacionController extends Controller
 
         $cbus = cbucostosbultos::where('fecid', $fecid)->get();
 
+        $skus = [];
+
         foreach ($cbus as $key => $cbu) {
             $cbue = cbucostosbultos::find($cbu->cbuid);
             $cbue->cbutotal = $cbue->cbutotal / $tic->tictc;
             $cbue->update();
-        }
 
+            if(sizeof($skus) > 0){
+
+                $encontroDuplicado = false;
+
+                foreach ($skus as $key => $sku) {
+                    if($sku == $cbu->cbusku){
+                        $encontroDuplicado = true;
+                    }
+                }
+
+                if($encontroDuplicado == true){
+                    $cbud = cbucostosbultos::find($cbu->cbuid);
+                    $cbud->delete();
+                }
+
+            }else{
+                $skus[] = $cbu->cbusku;
+            }
+        }
 
     }
 
