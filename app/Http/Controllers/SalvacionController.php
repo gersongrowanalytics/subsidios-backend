@@ -1131,8 +1131,11 @@ class SalvacionController extends Controller
         $skus = [];
 
         foreach ($cbus as $key => $cbu) {
+
+            $totalCbu = $cbu->cbudirecto + $cbu->cbuindirecto;
+
             $cbue = cbucostosbultos::find($cbu->cbuid);
-            $cbue->cbutotal = $cbue->cbutotal / $tic->tictc;
+            $cbue->cbutotal = $totalCbu / $tic->tictc;
             $cbue->update();
 
             if(sizeof($skus) > 0){
