@@ -1024,27 +1024,6 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                                     
                                 )
                             ),
-
-                            array(
-                                "value" => "COMENTARIO",
-                                "style" => array(
-                                    "font" => array(
-                                        "sz" => "9",
-                                        "bold" => true,
-                                        "color" => array(
-                                            "rgb" => "FFFFFFFF"
-                                        )
-                                    ),
-                                    "fill" => array(
-                                        "patternType" => 'solid',
-                                        "fgColor" => array(
-                                            "rgb" => "FF004FB8"
-                                        )
-                                    )
-                                    
-                                )
-                            ),
-        
                             array(
                                 "value" => "NOMBRE COMERCIAL / GRUPO EMPRESARIAL",
                                 "style" => array(
@@ -1118,7 +1097,7 @@ class MetMostrarSubsidiosSiVentasController extends Controller
 
                     $metrosHojasMililitrosPanos = $metrosHojasMililitrosPanos;
 
-                    $pvppormetro = (($metrosHojasMililitrosPanos / $sdepvpigv) * 100);
+                    $pvppormetro = (($sdepvpigv / $metrosHojasMililitrosPanos ) * 100);
 
                     // COSTOS X TON
 
@@ -1157,6 +1136,39 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                     // MARGEN X TON
 
                     $margenxton = $ventasubsidiadaxton - $costosxton;
+                    $margenxton = floatval($margenxton);
+
+                    $colorLetraMargenXTon = "FF000000";
+                    $rellenoLetraMargenXTon = "FFF2F2F2";
+                    
+                    if(is_numeric($margenxton)){
+                        if($margenxton < 500){
+                            $colorLetraMargenXTon = 'FF9C0006';
+                            $rellenoLetraMargenXTon = 'FFFFC7CE';
+                        }else if($margenxton > 1000){
+                            $colorLetraMargenXTon = 'FF006100';
+                            $rellenoLetraMargenXTon = 'FFC6EFCE';
+                        }else{
+                            $colorLetraMargenXTon = 'FF006100';
+                            $rellenoLetraMargenXTon = 'FFC6EFCE';
+                        }
+                        
+                    }
+
+                    // AMARILLO
+                    // LETRA CAFE -> #9C6500
+                    // RELLENO AMARILLO -> #FFEB9C
+
+                    // ROJO
+                    // RELLENO FFC7CE
+                    // LETRA 9C0006
+
+                    // VERDE
+                    // LETRA 006100
+                    // RELLENO C6EFCE
+
+
+
 
 
                     date_default_timezone_set("America/Lima");
@@ -1766,18 +1778,16 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                                 "font" => array(
                                     "sz" => "9",
                                     "bold" => true,
+                                    "color" => $colorLetraMargenXTon
                                 ),
                                 "fill" => array(
                                     "patternType" => 'solid',
                                     "fgColor" => array(
-                                        "rgb" => "FFF2F2F2"
+                                        "rgb" => $rellenoLetraMargenXTon
                                     )
                                 ),
                                 "numFmt" => "#,##0.00"
                             )
-                        ),
-                        array(
-                            "value" => ""
                         ),
                         array(
                             "value" => $descargarSde->csonombrecomercial,
