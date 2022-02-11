@@ -33,7 +33,7 @@ class MetLoginController extends Controller
                             ->where('usuusuario', $usuario)
                             ->first([
                                 'usuid',
-                                'usu.estid',
+                                'usuusuarios.estid',
                                 'per.perid',
                                 'pernumerodocumentoidentidad',
                                 'pernombrecompleto',
