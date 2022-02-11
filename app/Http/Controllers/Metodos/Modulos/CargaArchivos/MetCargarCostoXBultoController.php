@@ -81,8 +81,7 @@ class MetCargarCostoXBultoController extends Controller
                     Mail::to(env('USUARIO_ENVIAR_MAIL'))->send(new MailCargaArchivoOutlook($data));
                 }
 
-                // $fec = fecfechas::where('fecmesabierto', true)->first(['fecid']);
-                $fec = fecfechas::where('fecid', 1109)->first(['fecid']);
+                $fec = fecfechas::where('fecmesabierto', true)->first(['fecid']);
 
                 if($fec){
 
