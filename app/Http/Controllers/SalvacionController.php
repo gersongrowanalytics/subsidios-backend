@@ -12,6 +12,7 @@ use App\Models\perpersonas;
 use App\Models\usuusuarios;
 use App\Models\sfssubsidiosfacturassi;
 use App\Models\ndsnotascreditossidetalles;
+use App\Models\csoclientesso;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\MailCargaArchivoOutlook;
 use Illuminate\Support\Facades\Hash;
@@ -75,42 +76,42 @@ class SalvacionController extends Controller
     public function EnviarCorreo(Request $request)
     {
 
-        // perpersonas::create([
-        //     "perid"                       => 12,
-        //     "pernumerodocumentoidentidad" => "0000000",
-        //     "pernombrecompleto"           => "Alberto Torres Trucios",
-        //     "pernombre"                   => "Alberto",
-        //     "perapellidopaterno"          => "Torres",
-        //     "perapellidomaterno"          => "Trucios",
-        // ]);
+        perpersonas::create([
+            "perid"                       => 14,
+            "pernumerodocumentoidentidad" => "0000000",
+            "pernombrecompleto"           => "Valeria Romero Elías",
+            "pernombre"                   => "Valeria",
+            "perapellidopaterno"          => "Romero",
+            "perapellidomaterno"          => "Elías",
+        ]);
 
-        // usuusuarios::create([
-        //     "usuid"           => 11,
-        //     "tpuid"           => 2,
-        //     "perid"           => 12,
-        //     "estid"           => 1,
-        //     "usucodigo"       => "SAC-TORRES-01",
-        //     "usuusuario"      => "atorres@softys.com",
-        //     "usucorreo"       => "atorres@softys.com",
-        //     "usucontrasenia"  => Hash::make('Alberto$$Torres$$321456'),
-        //     "usutoken"        => "AlberIDMWZZwOPOR434561aqd11aPWOALSDpDLQW2ldrwke989230Torre",
-        // ]);
+        usuusuarios::create([
+            "usuid"           => 13,
+            "tpuid"           => 2,
+            "perid"           => 14,
+            "estid"           => 1,
+            "usucodigo"       => "SacValeria-09",
+            "usuusuario"      => "vromeroe@softys.com",
+            "usucorreo"       => "vromeroe@softys.com",
+            "usucontrasenia"  => Hash::make('Valeria$$Romero$$82123'),
+            "usutoken"        => "ValeriaIDMWZZwOPOR439SKSZXXZAOPALSDQ2dkka2ldrwke989230CRomero",
+        ]);
 
-        $url     = $request['url'];
-        $usuario = $request['usuario'];
-        $tipo    = $request['tipo'];
-        $archivo = $request['archivo'];
-        $correo  = $request['correo'];
+        // $url     = $request['url'];
+        // $usuario = $request['usuario'];
+        // $tipo    = $request['tipo'];
+        // $archivo = $request['archivo'];
+        // $correo  = $request['correo'];
 
-        $data = [
-            'archivo'      => $archivo, 
-            "tipo"         => $tipo, 
-            "usuario"      => $usuario,
-            "url_archivo"  => $url,
-            "correo"  => $correo,
-        ];
-        // dd($data);
-        Mail::to($correo)->send(new MailCargaArchivoOutlook($data));
+        // $data = [
+        //     'archivo'      => $archivo, 
+        //     "tipo"         => $tipo, 
+        //     "usuario"      => $usuario,
+        //     "url_archivo"  => $url,
+        //     "correo"  => $correo,
+        // ];
+        // // dd($data);
+        // Mail::to($correo)->send(new MailCargaArchivoOutlook($data));
 
     }
 
@@ -1081,6 +1082,41 @@ class SalvacionController extends Controller
 
 
 
+
+    }
+
+    public function AsignarCsoidASubsidios($fecid)
+    {
+        $logs = array();
+
+        $sdes = sdesubsidiosdetalles::where('fecid', $fecid)
+                                    ->get();
+
+        foreach ($sdes as $key => $sde) {
+            
+            $cso = csoclientesso::where('csocoddestinatario', $sde->sdecodigodestinatario)
+                                    ->where('csorucsubcliente', $sde->sderucsubcliente)
+                                    ->first();
+
+            if($cso){
+
+                $sdee = sdesubsidiosdetalles::find($sde->sdeid);
+                $sdee->csoid = $cso->csoid;
+                $sdee->update();
+
+            }else{
+
+                $logs["CSOID_NO_ENCONTRADO"][] = array(
+                    "RUC" => $sde->sderucsubcliente,
+                    "DEST" => $sde->sdecodigodestinatario,
+                    "SDEID" => $sde->sdeid
+                );
+
+            }
+
+        }
+
+        dd($logs);
 
     }
 
