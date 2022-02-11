@@ -145,6 +145,7 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                                                     'sdeinicio',
                                                     'fec.fecanionumero',
                                                     'fec.fecmesabreviacion',
+                                                    'fec.fecmesnumero',
                                                     'clizona',
                                                     'clitv',
                                                     'clihml',
@@ -1208,7 +1209,19 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                             )
                         ),
                         array(
-                            "value" => "",
+                            "value" => $descargarSde->fecmesnumero,
+                            "style" => array(
+                                "font" => array(
+                                    "sz" => "9",
+                                    "bold" => true,
+                                ),
+                                "fill" => array(
+                                    "patternType" => 'solid',
+                                    "fgColor" => array(
+                                        "rgb" => "FFF2F2F2"
+                                    )
+                                )
+                            )
                         ),
                         array(
                             "value" => $descargarSde->clizona,
