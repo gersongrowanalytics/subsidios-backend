@@ -136,13 +136,15 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                                                 ->leftjoin('proproductos as pro', 'pro.proid', 'sdesubsidiosdetalles.proid')
                                                 ->leftjoin('coscodigossectores as cos', 'cos.cosid', 'pro.cosid')
                                                 ->leftjoin('cbucostosbultos as cbu', 'cbu.proid', 'pro.proid')
+                                                ->leftjoin('fecfechas as feccbu', 'cbu.fecid', 'feccbu.fecid')
                                                 ->where(function ($query) use($re_fechainicio) {
-                                                    $query->where('fecfecha', $re_fechainicio);
+                                                    $query->where('fec.fecfecha', $re_fechainicio);
+                                                    $query->where('feccbu.fecfecha', $re_fechainicio);
                                                 })
                                                 ->get([
                                                     'sdeinicio',
-                                                    'fecanionumero',
-                                                    'fecmesabreviacion',
+                                                    'fec.fecanionumero',
+                                                    'fec.fecmesabreviacion',
                                                     'clizona',
                                                     'clitv',
                                                     'clihml',
