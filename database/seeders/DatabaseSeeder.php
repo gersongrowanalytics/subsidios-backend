@@ -236,23 +236,67 @@ class DatabaseSeeder extends Seeder
         // ]);
 
 
+        // perpersonas::create([
+        //     "pernumerodocumentoidentidad" => "0000000",
+        //     "pernombrecompleto"           => "Miguel Caballero",
+        //     "pernombre"                   => "Miguel",
+        //     "perapellidopaterno"          => "Caballero",
+        //     "perapellidomaterno"          => "",
+        // ]);
+
+        // usuusuarios::create([
+        //     "tpuid"           => 1,
+        //     "perid"           => 5,
+        //     "estid"           => 1,
+        //     "usucodigo"       => "SoftSacAroel-01",
+        //     "usuusuario"      => "miguel.caballero@grow-analytics.com.pe",
+        //     "usucorreo"       => "miguel.caballero@grow-analytics.com.pe",
+        //     "usucontrasenia"  => Hash::make('Miguel$$Caballero$$283711'),
+        //     "usutoken"        => "MiguelwOPOR439asd11aaawq222dkka2ldrwke989230Caballeroo",
+        // ]);
+
+
+
+        // perpersonas::create([
+        //     "perid"                       => 13,
+        //     "pernumerodocumentoidentidad" => "0000000",
+        //     "pernombrecompleto"           => "Elisa Flores",
+        //     "pernombre"                   => "Elisa",
+        //     "perapellidopaterno"          => "Flores",
+        //     "perapellidomaterno"          => "",
+        // ]);
+
+        // usuusuarios::create([
+        //     "usuid"           => 12,
+        //     "tpuid"           => 1,
+        //     "perid"           => 13,
+        //     "estid"           => 1,
+        //     "usucodigo"       => "SacElisa-09",
+        //     "usuusuario"      => "elisa.flores@softys.com",
+        //     "usucorreo"       => "elisa.flores@softys.com",
+        //     "usucontrasenia"  => Hash::make('Elisa$$Flores$$012394'),
+        //     "usutoken"        => "ElisaIDMWZZwOPOR439asd11addqALSDQ2dkka2ldrwke989230CFlores",
+        // ]);
+
         perpersonas::create([
+            "perid"                       => 14,
             "pernumerodocumentoidentidad" => "0000000",
-            "pernombrecompleto"           => "Miguel Caballero",
-            "pernombre"                   => "Miguel",
-            "perapellidopaterno"          => "Caballero",
-            "perapellidomaterno"          => "",
+            "pernombrecompleto"           => "Valeria Romero Elías",
+            "pernombre"                   => "Valeria",
+            "perapellidopaterno"          => "Romero",
+            "perapellidomaterno"          => "Elías",
         ]);
 
         usuusuarios::create([
-            "tpuid"           => 1,
-            "perid"           => 5,
+            "usuid"           => 13,
+            "tpuid"           => 2,
+            "perid"           => 14,
             "estid"           => 1,
-            "usucodigo"       => "SoftSacAroel-01",
-            "usuusuario"      => "miguel.caballero@grow-analytics.com.pe",
-            "usucorreo"       => "miguel.caballero@grow-analytics.com.pe",
-            "usucontrasenia"  => Hash::make('Miguel$$Caballero$$283711'),
-            "usutoken"        => "MiguelwOPOR439asd11aaawq222dkka2ldrwke989230Caballeroo",
+            "usucodigo"       => "SacValeria-09",
+            "usuusuario"      => "vromeroe@softys.com",
+            "usucorreo"       => "vromeroe@softys.com",
+            "usucontrasenia"  => Hash::make('Valeria$$Romero$$82123'),
+            "usutoken"        => "ValeriaIDMWZZwOPOR439SKSZXXZAOPALSDQ2dkka2ldrwke989230CRomero",
         ]);
     }
 }
