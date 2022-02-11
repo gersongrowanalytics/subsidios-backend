@@ -1148,6 +1148,8 @@ class SalvacionController extends Controller
                 if($encontroDuplicado == true){
                     $cbud = cbucostosbultos::find($cbu->cbuid);
                     $cbud->delete();
+                }else{
+                    $skus[] = $cbu->cbusku;    
                 }
 
             }else{
