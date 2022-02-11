@@ -8,6 +8,7 @@ use App\Models\fecfechas;
 use App\Models\tictipocambios;
 use App\Models\sdesubsidiosdetalles;
 use ZipArchive;
+use \DateTime;
 
 class MetMostrarSubsidiosSiVentasController extends Controller
 {
@@ -1158,6 +1159,16 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                     $margenxton = $ventasubsidiadaxton - $costosxton;
 
 
+                    date_default_timezone_set("America/Lima");
+                    $fechaActual = date('Y-m-d');
+                    $dateuno = new DateTime($fechaActual);
+
+                    $otraFecha = $descargarSde->sdeinicio;
+                    $datedos = new \DateTime(date("Y-m-d", strtotime($otraFecha."-01")));
+                    $diff = $dateuno->diff($datedos);
+
+                    $diferenciaDias = $diff->days;
+
 
                     $arrayFilaExcel = array(
                         array(
@@ -1176,7 +1187,19 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                             )
                         ),
                         array(
-                            "value" => "",
+                            "value" => $diferenciaDias,
+                            "style" => array(
+                                "font" => array(
+                                    "sz" => "9",
+                                    "bold" => true,
+                                ),
+                                "fill" => array(
+                                    "patternType" => 'solid',
+                                    "fgColor" => array(
+                                        "rgb" => "FFF2F2F2"
+                                    )
+                                )
+                            )
                         ),
                         array(
                             "value" => $descargarSde->fecanionumero,
@@ -1419,7 +1442,7 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                             )
                         ),
                         array(
-                            "value" => $descargarSde->profactorconversionpaquetes,
+                            "value" => floatval($descargarSde->profactorconversionpaquetes),
                             "style" => array(
                                 "font" => array(
                                     "sz" => "9",
