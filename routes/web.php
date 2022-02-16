@@ -88,7 +88,9 @@ $router->post('/crear-ambiente', 'Configuracion\CrearAmbienteHomeController@Crea
 
         $router->group(['prefix' => 'SubsidiosSi'], function () use ($router) {
             $router->post('/logica', 'Validaciones\Modulos\SubsidiosSi\LogicaSubsidiosSiController@ValLogicaSubsidiosSi');
+            $router->post('/logica-nueva', 'Metodos\Modulos\SubsidiosSi\MetNuevaLogicaSubsidiosSiController@MetNuevaLogicaSubsidiosSi');
             $router->post('/logica-solic', 'Validaciones\Modulos\SubsidiosSi\LogicaSubsidiosSiController@ValLogicaSubsidiosSiSolic');
+            $router->post('/logica-solic-nueva', 'Metodos\Modulos\SubsidiosSi\MetNuevaLogicaSubsidiosSiController@MetNuevaLogicaSubsidiosSiSolic');
             $router->post('/logica-pendientes', 'Validaciones\Modulos\SubsidiosSi\LogicaSubsidiosSiController@ValLogicaSubsidiosSiPendientes');
 
             $router->post('/mostrar', 'Validaciones\Modulos\SubsidiosSi\Mostrar\MostrarSubsidiosSiController@ValMostrarSubsidiosSi');
@@ -98,6 +100,7 @@ $router->post('/crear-ambiente', 'Configuracion\CrearAmbienteHomeController@Crea
             $router->post('/mostrar/notascreditos', 'Validaciones\Modulos\SubsidiosSi\Mostrar\MostrarNotasCreditoFacturaController@ValMostrarNotasCreditoFactura');
 
             $router->post('/mostrar-subsidios-si-ventas', 'Metodos\Modulos\SubsidiosSi\Mostrar\MetMostrarSubsidiosSiVentasController@MetMostrarSubsidiosSiVentas');
+
         });
 
         $router->group(['prefix' => 'regularizacion-so'], function () use ($router) {
