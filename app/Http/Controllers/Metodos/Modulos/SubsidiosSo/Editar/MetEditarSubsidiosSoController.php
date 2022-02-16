@@ -5,11 +5,23 @@ namespace App\Http\Controllers\Metodos\Modulos\SubsidiosSo\Editar;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\sdesubsidiosdetalles;
+use App\Http\Controllers\AuditoriaController;
 
 class MetEditarSubsidiosSoController extends Controller
 {
     public function MetEditarBultosSubsidiosSo(Request $request)
     {
+
+        // $usutoken = "TOKENESPECIFICOUNIFODEVGERSONGROW1845475#LD72";
+        $usutoken = $request->header('api_token');
+        if(!isset($usutoken)){
+            $usutoken = "TOKENESPECIFICOUNIFODEVGERSONGROW1845475#LD72";
+        }
+
+        $usu = usuusuarios::where('usutoken', $usutoken)->first(['usuid', 'usuusuario', 'perid']);
+        $pkis = array();
+        $logs = array();
+
 
         $respuesta = true;
         $mensaje = "La cantidad de bultos fue actualizada correctamente";
@@ -60,6 +72,20 @@ class MetEditarSubsidiosSoController extends Controller
             "respuesta" => $respuesta,
             "mensaje" => $mensaje
         ]);
+
+        $AuditoriaController = new AuditoriaController;
+        $registrarAuditoria  = $AuditoriaController->registrarAuditoria(
+            $usutoken, // token
+            $usu->usuid, // usuid
+            null, // audip
+            $request, // audjsonentrada
+            $requestsalida,// audjsonsalida
+            'EDITAR REGULARIZACIÓN DE SUBSIDIOS ', //auddescripcion
+            'EDITAR', // audaccion
+            '/modulo/subsidiosSo/editar-bultos', //audruta
+            $pkis, // audpk
+            $logs // log
+        );
 
         return $requestsalida;
 
