@@ -28,8 +28,9 @@ class MetMostrarSubsidiosSiVentasController extends Controller
         $data  = [];
         $descargarHistorico = true;
 
-        $fecs = fecfechas::where('fecfecha', $re_fechainicio)
-                        // whereBetween('fecfecha', [$re_fechainicio, $re_fechafinal])
+        $fecs = fecfechas::
+                        // where('fecfecha', $re_fechainicio)
+                        whereBetween('fecfecha', [$re_fechainicio, $re_fechafinal])
                         ->distinct('fecid')
                         ->where('fecid', '<=', '1107') // SOLO TENEMOS HISTORICO DESDE NOV
                         ->get([
@@ -220,24 +221,9 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                             array("title" => "", "width" => array("wpx" => 100)),
                             array("title" => "", "width" => array("wpx" => 100)),
                             array("title" => "", "width" => array("wpx" => 100)),
-                            array("title" => "TC", "width" => array("wpx" => 100)),
-                            array(
-                                "title" => $ticcambio, 
-                                "width" => array("wpx" => 100),
-                                "style" => array(
-                                    "font" => array(
-                                        "sz" => "9",
-                                        "bold" => true,
-                                    ),
-                                    "fill" => array(
-                                        "patternType" => 'solid',
-                                        "fgColor" => array(
-                                            "rgb" => "FFF2F2F2"
-                                        )
-                                    ),
-                                    "numFmt" => "#,##0.00"
-                                )
-                            ),
+                            array("title" => "", "width" => array("wpx" => 100)),
+                            array("title" => "", "width" => array("wpx" => 100)),
+                            
                         );
 
                         $nuevoArray[0]['columns'] = $arrayTitulos;
@@ -256,7 +242,7 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                                     "fill" => array(
                                         "patternType" => 'solid',
                                         "fgColor" => array(
-                                            "rgb" => "FF004FB8"
+                                            "rgb" => "FF538DD5"
                                         )
                                     )
                                     
@@ -276,7 +262,7 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                                     "fill" => array(
                                         "patternType" => 'solid',
                                         "fgColor" => array(
-                                            "rgb" => "FF004FB8"
+                                            "rgb" => "FF538DD5"
                                         )
                                     )
                                     
@@ -345,6 +331,46 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                             ),
 
                             array(
+                                "value" => "CODIGO SOLICITANTE",
+                                "style" => array(
+                                    "font" => array(
+                                        "sz" => "9",
+                                        "bold" => true,
+                                        "color" => array(
+                                            "rgb" => "FFFFFFFF"
+                                        )
+                                    ),
+                                    "fill" => array(
+                                        "patternType" => 'solid',
+                                        "fgColor" => array(
+                                            "rgb" => "FFFF9900"
+                                        )
+                                    )
+                                    
+                                )
+                            ),
+
+                            array(
+                                "value" => "CODIGO DESTINATARIO",
+                                "style" => array(
+                                    "font" => array(
+                                        "sz" => "9",
+                                        "bold" => true,
+                                        "color" => array(
+                                            "rgb" => "FFFFFFFF"
+                                        )
+                                    ),
+                                    "fill" => array(
+                                        "patternType" => 'solid',
+                                        "fgColor" => array(
+                                            "rgb" => "FFFF9900"
+                                        )
+                                    )
+                                    
+                                )
+                            ),
+
+                            array(
                                 "value" => "ZONA",
                                 "style" => array(
                                     "font" => array(
@@ -357,7 +383,7 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                                     "fill" => array(
                                         "patternType" => 'solid',
                                         "fgColor" => array(
-                                            "rgb" => "FF004FB8"
+                                            "rgb" => "FFFF9900"
                                         )
                                     )
                                     
@@ -377,7 +403,7 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                                     "fill" => array(
                                         "patternType" => 'solid',
                                         "fgColor" => array(
-                                            "rgb" => "FF004FB8"
+                                            "rgb" => "FFFF9900"
                                         )
                                     )
                                     
@@ -397,52 +423,12 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                                     "fill" => array(
                                         "patternType" => 'solid',
                                         "fgColor" => array(
-                                            "rgb" => "FF004FB8"
+                                            "rgb" => "FFFF9900"
                                         )
                                     )
                                     
                                 )
-                            ),
-
-                            array(
-                                "value" => "CODIGO SOLICITANTE",
-                                "style" => array(
-                                    "font" => array(
-                                        "sz" => "9",
-                                        "bold" => true,
-                                        "color" => array(
-                                            "rgb" => "FFFFFFFF"
-                                        )
-                                    ),
-                                    "fill" => array(
-                                        "patternType" => 'solid',
-                                        "fgColor" => array(
-                                            "rgb" => "FF004FB8"
-                                        )
-                                    )
-                                    
-                                )
-                            ),
-        
-                            array(
-                                "value" => "CODIGO DESTINATARIO",
-                                "style" => array(
-                                    "font" => array(
-                                        "sz" => "9",
-                                        "bold" => true,
-                                        "color" => array(
-                                            "rgb" => "FFFFFFFF"
-                                        )
-                                    ),
-                                    "fill" => array(
-                                        "patternType" => 'solid',
-                                        "fgColor" => array(
-                                            "rgb" => "FF004FB8"
-                                        )
-                                    )
-                                    
-                                )
-                            ),
+                            ), 
 
                             array(
                                 "value" => "RUC SUB-CLIENTE",
@@ -457,67 +443,7 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                                     "fill" => array(
                                         "patternType" => 'solid',
                                         "fgColor" => array(
-                                            "rgb" => "FF004FB8"
-                                        )
-                                    )
-                                    
-                                )
-                            ),
-
-                            array(
-                                "value" => "SECTOR DE PBI",
-                                "style" => array(
-                                    "font" => array(
-                                        "sz" => "9",
-                                        "bold" => true,
-                                        "color" => array(
-                                            "rgb" => "FFFFFFFF"
-                                        )
-                                    ),
-                                    "fill" => array(
-                                        "patternType" => 'solid',
-                                        "fgColor" => array(
-                                            "rgb" => "FF004FB8"
-                                        )
-                                    )
-                                    
-                                )
-                            ),
-
-                            array(
-                                "value" => "SEGMENTO SOFTYS",
-                                "style" => array(
-                                    "font" => array(
-                                        "sz" => "9",
-                                        "bold" => true,
-                                        "color" => array(
-                                            "rgb" => "FFFFFFFF"
-                                        )
-                                    ),
-                                    "fill" => array(
-                                        "patternType" => 'solid',
-                                        "fgColor" => array(
-                                            "rgb" => "FF004FB8"
-                                        )
-                                    )
-                                    
-                                )
-                            ),
-
-                            array(
-                                "value" => "SUB SEGMENTO SOFTYS",
-                                "style" => array(
-                                    "font" => array(
-                                        "sz" => "9",
-                                        "bold" => true,
-                                        "color" => array(
-                                            "rgb" => "FFFFFFFF"
-                                        )
-                                    ),
-                                    "fill" => array(
-                                        "patternType" => 'solid',
-                                        "fgColor" => array(
-                                            "rgb" => "FF004FB8"
+                                            "rgb" => "FF00B050"
                                         )
                                     )
                                     
@@ -537,13 +463,95 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                                     "fill" => array(
                                         "patternType" => 'solid',
                                         "fgColor" => array(
-                                            "rgb" => "FF004FB8"
+                                            "rgb" => "FF00B050"
                                         )
                                     )
                                     
                                 )
                             ),
 
+                            array(
+                                "value" => "NOMBRE COMERCIAL / GRUPO EMPRESARIAL",
+                                "style" => array(
+                                    "font" => array(
+                                        "sz" => "9",
+                                        "bold" => true,
+                                        "color" => array(
+                                            "rgb" => "FFFFFFFF"
+                                        )
+                                    ),
+                                    "fill" => array(
+                                        "patternType" => 'solid',
+                                        "fgColor" => array(
+                                            "rgb" => "FF00B050"
+                                        )
+                                    )
+                                    
+                                )
+                            ),
+
+
+                            array(
+                                "value" => "SECTOR DE PBI",
+                                "style" => array(
+                                    "font" => array(
+                                        "sz" => "9",
+                                        "bold" => true,
+                                        "color" => array(
+                                            "rgb" => "FFFFFFFF"
+                                        )
+                                    ),
+                                    "fill" => array(
+                                        "patternType" => 'solid',
+                                        "fgColor" => array(
+                                            "rgb" => "FF00B050"
+                                        )
+                                    )
+                                    
+                                )
+                            ),
+
+                            array(
+                                "value" => "SEGMENTO SOFTYS",
+                                "style" => array(
+                                    "font" => array(
+                                        "sz" => "9",
+                                        "bold" => true,
+                                        "color" => array(
+                                            "rgb" => "FFFFFFFF"
+                                        )
+                                    ),
+                                    "fill" => array(
+                                        "patternType" => 'solid',
+                                        "fgColor" => array(
+                                            "rgb" => "FF00B050"
+                                        )
+                                    )
+                                    
+                                )
+                            ),
+
+                            array(
+                                "value" => "SUB SEGMENTO SOFTYS",
+                                "style" => array(
+                                    "font" => array(
+                                        "sz" => "9",
+                                        "bold" => true,
+                                        "color" => array(
+                                            "rgb" => "FFFFFFFF"
+                                        )
+                                    ),
+                                    "fill" => array(
+                                        "patternType" => 'solid',
+                                        "fgColor" => array(
+                                            "rgb" => "FF00B050"
+                                        )
+                                    )
+                                    
+                                )
+                            ),
+
+                            
                             array(
                                 "value" => "SECTOR",
                                 "style" => array(
@@ -557,7 +565,7 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                                     "fill" => array(
                                         "patternType" => 'solid',
                                         "fgColor" => array(
-                                            "rgb" => "FF004FB8"
+                                            "rgb" => "FF4BACC6"
                                         )
                                     )
                                     
@@ -577,7 +585,7 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                                     "fill" => array(
                                         "patternType" => 'solid',
                                         "fgColor" => array(
-                                            "rgb" => "FF004FB8"
+                                            "rgb" => "FF4BACC6"
                                         )
                                     )
                                     
@@ -597,7 +605,7 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                                     "fill" => array(
                                         "patternType" => 'solid',
                                         "fgColor" => array(
-                                            "rgb" => "FF004FB8"
+                                            "rgb" => "FF4BACC6"
                                         )
                                     )
                                     
@@ -617,7 +625,7 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                                     "fill" => array(
                                         "patternType" => 'solid',
                                         "fgColor" => array(
-                                            "rgb" => "FF004FB8"
+                                            "rgb" => "FF4BACC6"
                                         )
                                     )
                                     
@@ -637,7 +645,7 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                                     "fill" => array(
                                         "patternType" => 'solid',
                                         "fgColor" => array(
-                                            "rgb" => "FF004FB8"
+                                            "rgb" => "FF4BACC6"
                                         )
                                     )
                                     
@@ -657,7 +665,7 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                                     "fill" => array(
                                         "patternType" => 'solid',
                                         "fgColor" => array(
-                                            "rgb" => "FF004FB8"
+                                            "rgb" => "FF4BACC6"
                                         )
                                     )
                                     
@@ -677,7 +685,7 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                                     "fill" => array(
                                         "patternType" => 'solid',
                                         "fgColor" => array(
-                                            "rgb" => "FF004FB8"
+                                            "rgb" => "FF4BACC6"
                                         )
                                     )
                                     
@@ -697,67 +705,7 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                                     "fill" => array(
                                         "patternType" => 'solid',
                                         "fgColor" => array(
-                                            "rgb" => "FF004FB8"
-                                        )
-                                    )
-                                    
-                                )
-                            ),
-
-                            array(
-                                "value" => "PC SAP FINAL",
-                                "style" => array(
-                                    "font" => array(
-                                        "sz" => "9",
-                                        "bold" => true,
-                                        "color" => array(
-                                            "rgb" => "FFFFFFFF"
-                                        )
-                                    ),
-                                    "fill" => array(
-                                        "patternType" => 'solid',
-                                        "fgColor" => array(
-                                            "rgb" => "FF004FB8"
-                                        )
-                                    )
-                                    
-                                )
-                            ),
-
-                            array(
-                                "value" => "CANTIDAD EN TONS",
-                                "style" => array(
-                                    "font" => array(
-                                        "sz" => "9",
-                                        "bold" => true,
-                                        "color" => array(
-                                            "rgb" => "FFFFFFFF"
-                                        )
-                                    ),
-                                    "fill" => array(
-                                        "patternType" => 'solid',
-                                        "fgColor" => array(
-                                            "rgb" => "FF004FB8"
-                                        )
-                                    )
-                                    
-                                )
-                            ),
-
-                            array(
-                                "value" => "PVP POR METRO",
-                                "style" => array(
-                                    "font" => array(
-                                        "sz" => "9",
-                                        "bold" => true,
-                                        "color" => array(
-                                            "rgb" => "FFFFFFFF"
-                                        )
-                                    ),
-                                    "fill" => array(
-                                        "patternType" => 'solid',
-                                        "fgColor" => array(
-                                            "rgb" => "FF004FB8"
+                                            "rgb" => "FF4BACC6"
                                         )
                                     )
                                     
@@ -777,47 +725,7 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                                     "fill" => array(
                                         "patternType" => 'solid',
                                         "fgColor" => array(
-                                            "rgb" => "FF004FB8"
-                                        )
-                                    )
-                                    
-                                )
-                            ),
-
-                            array(
-                                "value" => "MUP",
-                                "style" => array(
-                                    "font" => array(
-                                        "sz" => "9",
-                                        "bold" => true,
-                                        "color" => array(
-                                            "rgb" => "FFFFFFFF"
-                                        )
-                                    ),
-                                    "fill" => array(
-                                        "patternType" => 'solid',
-                                        "fgColor" => array(
-                                            "rgb" => "FF004FB8"
-                                        )
-                                    )
-                                    
-                                )
-                            ),
-
-                            array(
-                                "value" => "PVP S/IGV",
-                                "style" => array(
-                                    "font" => array(
-                                        "sz" => "9",
-                                        "bold" => true,
-                                        "color" => array(
-                                            "rgb" => "FFFFFFFF"
-                                        )
-                                    ),
-                                    "fill" => array(
-                                        "patternType" => 'solid',
-                                        "fgColor" => array(
-                                            "rgb" => "FF004FB8"
+                                            "rgb" => "FF0070C0"
                                         )
                                     )
                                     
@@ -837,7 +745,107 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                                     "fill" => array(
                                         "patternType" => 'solid',
                                         "fgColor" => array(
-                                            "rgb" => "FF004FB8"
+                                            "rgb" => "FF8064A2"
+                                        )
+                                    )
+                                    
+                                )
+                            ),
+
+                            array(
+                                "value" => "CANTIDAD EN TONS",
+                                "style" => array(
+                                    "font" => array(
+                                        "sz" => "9",
+                                        "bold" => true,
+                                        "color" => array(
+                                            "rgb" => "FFFFFFFF"
+                                        )
+                                    ),
+                                    "fill" => array(
+                                        "patternType" => 'solid',
+                                        "fgColor" => array(
+                                            "rgb" => "FF8064A2"
+                                        )
+                                    )
+                                    
+                                )
+                            ),
+
+                            array(
+                                "value" => "PVP POR METRO",
+                                "style" => array(
+                                    "font" => array(
+                                        "sz" => "9",
+                                        "bold" => true,
+                                        "color" => array(
+                                            "rgb" => "FFFFFFFF"
+                                        )
+                                    ),
+                                    "fill" => array(
+                                        "patternType" => 'solid',
+                                        "fgColor" => array(
+                                            "rgb" => "FF8064A2"
+                                        )
+                                    )
+                                    
+                                )
+                            ),
+
+                            array(
+                                "value" => "MUP",
+                                "style" => array(
+                                    "font" => array(
+                                        "sz" => "9",
+                                        "bold" => true,
+                                        "color" => array(
+                                            "rgb" => "FFFFFFFF"
+                                        )
+                                    ),
+                                    "fill" => array(
+                                        "patternType" => 'solid',
+                                        "fgColor" => array(
+                                            "rgb" => "FF8064A2"
+                                        )
+                                    )
+                                    
+                                )
+                            ),
+
+                            array(
+                                "value" => "PVP S/IGV",
+                                "style" => array(
+                                    "font" => array(
+                                        "sz" => "9",
+                                        "bold" => true,
+                                        "color" => array(
+                                            "rgb" => "FFFFFFFF"
+                                        )
+                                    ),
+                                    "fill" => array(
+                                        "patternType" => 'solid',
+                                        "fgColor" => array(
+                                            "rgb" => "FF8064A2"
+                                        )
+                                    )
+                                    
+                                )
+                            ),
+
+                            array(
+                                "value" => "PC SAP FINAL",
+                                "style" => array(
+                                    "font" => array(
+                                        "sz" => "9",
+                                        "bold" => true,
+                                        "color" => array(
+                                            "rgb" => "FFFFFFFF"
+                                        )
+                                    ),
+                                    "fill" => array(
+                                        "patternType" => 'solid',
+                                        "fgColor" => array(
+                                            "rgb" => "FF8064A2"
                                         )
                                     )
                                     
@@ -857,7 +865,7 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                                     "fill" => array(
                                         "patternType" => 'solid',
                                         "fgColor" => array(
-                                            "rgb" => "FF004FB8"
+                                            "rgb" => "FF8064A2"
                                         )
                                     )
                                     
@@ -877,7 +885,7 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                                     "fill" => array(
                                         "patternType" => 'solid',
                                         "fgColor" => array(
-                                            "rgb" => "FF004FB8"
+                                            "rgb" => "FF9BBB59"
                                         )
                                     )
                                     
@@ -897,7 +905,7 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                                     "fill" => array(
                                         "patternType" => 'solid',
                                         "fgColor" => array(
-                                            "rgb" => "FF004FB8"
+                                            "rgb" => "FF9BBB59"
                                         )
                                     )
                                     
@@ -918,7 +926,7 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                                     "fill" => array(
                                         "patternType" => 'solid',
                                         "fgColor" => array(
-                                            "rgb" => "FF004FB8"
+                                            "rgb" => "FF9BBB59"
                                         )
                                     )
                                     
@@ -938,7 +946,7 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                                     "fill" => array(
                                         "patternType" => 'solid',
                                         "fgColor" => array(
-                                            "rgb" => "FF004FB8"
+                                            "rgb" => "FF9BBB59"
                                         )
                                     )
                                     
@@ -946,7 +954,7 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                             ),
 
                             array(
-                                "value" => "COSTOS X BULTO",
+                                "value" => "COSTOS X BULTO USD",
                                 "style" => array(
                                     "font" => array(
                                         "sz" => "9",
@@ -958,7 +966,7 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                                     "fill" => array(
                                         "patternType" => 'solid',
                                         "fgColor" => array(
-                                            "rgb" => "FF004FB8"
+                                            "rgb" => "FFFF5050"
                                         )
                                     )
                                     
@@ -966,7 +974,7 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                             ),
 
                             array(
-                                "value" => "COSTOS X TON",
+                                "value" => "COSTOS X TON USD",
                                 "style" => array(
                                     "font" => array(
                                         "sz" => "9",
@@ -978,7 +986,7 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                                     "fill" => array(
                                         "patternType" => 'solid',
                                         "fgColor" => array(
-                                            "rgb" => "FF004FB8"
+                                            "rgb" => "FFFF5050"
                                         )
                                     )
                                     
@@ -986,7 +994,7 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                             ),
 
                             array(
-                                "value" => "VENTA SUBSIDIADA X TON",
+                                "value" => "VENTA SUBSIDIADA X TON USD",
                                 "style" => array(
                                     "font" => array(
                                         "sz" => "9",
@@ -998,7 +1006,7 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                                     "fill" => array(
                                         "patternType" => 'solid',
                                         "fgColor" => array(
-                                            "rgb" => "FF004FB8"
+                                            "rgb" => "FFFF5050"
                                         )
                                     )
                                     
@@ -1006,7 +1014,7 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                             ),
 
                             array(
-                                "value" => "MARGEN X TON",
+                                "value" => "MARGEN X TON USD",
                                 "style" => array(
                                     "font" => array(
                                         "sz" => "9",
@@ -1018,14 +1026,15 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                                     "fill" => array(
                                         "patternType" => 'solid',
                                         "fgColor" => array(
-                                            "rgb" => "FF004FB8"
+                                            "rgb" => "FFFF5050"
                                         )
                                     )
                                     
                                 )
                             ),
+
                             array(
-                                "value" => "NOMBRE COMERCIAL / GRUPO EMPRESARIAL",
+                                "value" => "TC",
                                 "style" => array(
                                     "font" => array(
                                         "sz" => "9",
@@ -1037,12 +1046,13 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                                     "fill" => array(
                                         "patternType" => 'solid',
                                         "fgColor" => array(
-                                            "rgb" => "FF004FB8"
+                                            "rgb" => "FFFF5050"
                                         )
                                     )
                                     
                                 )
                             ),
+                            
                         );
 
                         $nuevoArray[0]['data'][] = $arrayFilaExcel;
@@ -1259,6 +1269,38 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                             )
                         ),
                         array(
+                            "value" => $descargarSde->sdecodigosolicitante,
+                            "style" => array(
+                                "font" => array(
+                                    "sz" => "9",
+                                    "bold" => true,
+                                ),
+                                "fill" => array(
+                                    "patternType" => 'solid',
+                                    "fgColor" => array(
+                                        "rgb" => "FFF2F2F2"
+                                    )
+                                )
+                            )
+                        ),
+
+                        array(
+                            "value" => $descargarSde->sdecodigodestinatario,
+                            "style" => array(
+                                "font" => array(
+                                    "sz" => "9",
+                                    "bold" => true,
+                                ),
+                                "fill" => array(
+                                    "patternType" => 'solid',
+                                    "fgColor" => array(
+                                        "rgb" => "FFF2F2F2"
+                                    )
+                                )
+                            )
+                        ),
+
+                        array(
                             "value" => $descargarSde->clizona,
                             "style" => array(
                                 "font" => array(
@@ -1303,36 +1345,8 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                                 )
                             )
                         ),
-                        array(
-                            "value" => $descargarSde->sdecodigosolicitante,
-                            "style" => array(
-                                "font" => array(
-                                    "sz" => "9",
-                                    "bold" => true,
-                                ),
-                                "fill" => array(
-                                    "patternType" => 'solid',
-                                    "fgColor" => array(
-                                        "rgb" => "FFF2F2F2"
-                                    )
-                                )
-                            )
-                        ),
-                        array(
-                            "value" => $descargarSde->sdecodigodestinatario,
-                            "style" => array(
-                                "font" => array(
-                                    "sz" => "9",
-                                    "bold" => true,
-                                ),
-                                "fill" => array(
-                                    "patternType" => 'solid',
-                                    "fgColor" => array(
-                                        "rgb" => "FFF2F2F2"
-                                    )
-                                )
-                            )
-                        ),
+                        
+                        
                         array(
                             "value" => $descargarSde->sderucsubcliente,
                             "style" => array(
@@ -1348,6 +1362,39 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                                 )
                             )
                         ),
+
+                        array(
+                            "value" => $descargarSde->csosubcliente,
+                            "style" => array(
+                                "font" => array(
+                                    "sz" => "9",
+                                    "bold" => true,
+                                ),
+                                "fill" => array(
+                                    "patternType" => 'solid',
+                                    "fgColor" => array(
+                                        "rgb" => "FFF2F2F2"
+                                    )
+                                )
+                            )
+                        ),
+
+                        array(
+                            "value" => $descargarSde->csonombrecomercial,
+                            "style" => array(
+                                "font" => array(
+                                    "sz" => "9",
+                                    "bold" => true,
+                                ),
+                                "fill" => array(
+                                    "patternType" => 'solid',
+                                    "fgColor" => array(
+                                        "rgb" => "FFF2F2F2"
+                                    )
+                                )
+                            )
+                        ),
+
                         array(
                             "value" => $descargarSde->csosectorpbi,
                             "style" => array(
@@ -1393,21 +1440,7 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                                 )
                             )
                         ),
-                        array(
-                            "value" => $descargarSde->csosubcliente,
-                            "style" => array(
-                                "font" => array(
-                                    "sz" => "9",
-                                    "bold" => true,
-                                ),
-                                "fill" => array(
-                                    "patternType" => 'solid',
-                                    "fgColor" => array(
-                                        "rgb" => "FFF2F2F2"
-                                    )
-                                )
-                            )
-                        ),
+                        
                         array(
                             "value" => $descargarSde->coscodigo." ".$descargarSde->cosnombre,
                             "style" => array(
@@ -1453,6 +1486,7 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                                 )
                             )
                         ),
+
                         array(
                             "value" => floatval($descargarSde->profactorconversionpaquetes),
                             "style" => array(
@@ -1469,6 +1503,7 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                                 "numFmt" => "#,##0.00"
                             )
                         ),
+
                         array(
                             "value" => floatval($descargarSde->prounidadeshojasxpaquete),
                             "style" => array(
@@ -1533,54 +1568,7 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                                 "numFmt" => "#,##0.00"
                             )
                         ),
-                        array(
-                            "value" => floatval($descargarSde->sdepcsapfinal),
-                            "style" => array(
-                                "font" => array(
-                                    "sz" => "9",
-                                    "bold" => true,
-                                ),
-                                "fill" => array(
-                                    "patternType" => 'solid',
-                                    "fgColor" => array(
-                                        "rgb" => "FFF2F2F2"
-                                    )
-                                ),
-                                "numFmt" => "#,##0.00"
-                            )
-                        ),
-                        array(
-                            "value" => floatval($cantidadTons),
-                            "style" => array(
-                                "font" => array(
-                                    "sz" => "9",
-                                    "bold" => true,
-                                ),
-                                "fill" => array(
-                                    "patternType" => 'solid',
-                                    "fgColor" => array(
-                                        "rgb" => "FFF2F2F2"
-                                    )
-                                ),
-                                "numFmt" => "#,##0.00"
-                            )
-                        ),
-                        array(
-                            "value" => floatval($pvppormetro),
-                            "style" => array(
-                                "font" => array(
-                                    "sz" => "9",
-                                    "bold" => true,
-                                ),
-                                "fill" => array(
-                                    "patternType" => 'solid',
-                                    "fgColor" => array(
-                                        "rgb" => "FFF2F2F2"
-                                    )
-                                ),
-                                "numFmt" => "#,##0.00"
-                            )
-                        ),
+
                         array(
                             "value" => $descargarSde->sdedestrucsap,
                             "style" => array(
@@ -1596,38 +1584,7 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                                 )
                             )
                         ),
-                        array(
-                            "value" => floatval($descargarSde->sdemup),
-                            "style" => array(
-                                "font" => array(
-                                    "sz" => "9",
-                                    "bold" => true,
-                                ),
-                                "fill" => array(
-                                    "patternType" => 'solid',
-                                    "fgColor" => array(
-                                        "rgb" => "FFF2F2F2"
-                                    )
-                                ),
-                                "numFmt" => "#,##0.00"
-                            )
-                        ),
-                        array(
-                            "value" => floatval($descargarSde->sdepvpigv),
-                            "style" => array(
-                                "font" => array(
-                                    "sz" => "9",
-                                    "bold" => true,
-                                ),
-                                "fill" => array(
-                                    "patternType" => 'solid',
-                                    "fgColor" => array(
-                                        "rgb" => "FFF2F2F2"
-                                    )
-                                ),
-                                "numFmt" => "#,##0.00"
-                            )
-                        ),
+
                         array(
                             "value" => floatval($descargarSde->sdebultosacordados),
                             "style" => array(
@@ -1644,6 +1601,92 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                                 "numFmt" => "#,##0.00"
                             )
                         ),
+
+                        array(
+                            "value" => floatval($cantidadTons),
+                            "style" => array(
+                                "font" => array(
+                                    "sz" => "9",
+                                    "bold" => true,
+                                ),
+                                "fill" => array(
+                                    "patternType" => 'solid',
+                                    "fgColor" => array(
+                                        "rgb" => "FFF2F2F2"
+                                    )
+                                ),
+                                "numFmt" => "#,##0.00"
+                            )
+                        ),
+
+                        array(
+                            "value" => floatval($pvppormetro),
+                            "style" => array(
+                                "font" => array(
+                                    "sz" => "9",
+                                    "bold" => true,
+                                ),
+                                "fill" => array(
+                                    "patternType" => 'solid',
+                                    "fgColor" => array(
+                                        "rgb" => "FFF2F2F2"
+                                    )
+                                ),
+                                "numFmt" => "#,##0.00"
+                            )
+                        ),
+
+                        array(
+                            "value" => floatval($descargarSde->sdemup),
+                            "style" => array(
+                                "font" => array(
+                                    "sz" => "9",
+                                    "bold" => true,
+                                ),
+                                "fill" => array(
+                                    "patternType" => 'solid',
+                                    "fgColor" => array(
+                                        "rgb" => "FFF2F2F2"
+                                    )
+                                ),
+                                "numFmt" => "#,##0.00"
+                            )
+                        ),
+
+                        array(
+                            "value" => floatval($descargarSde->sdepvpigv),
+                            "style" => array(
+                                "font" => array(
+                                    "sz" => "9",
+                                    "bold" => true,
+                                ),
+                                "fill" => array(
+                                    "patternType" => 'solid',
+                                    "fgColor" => array(
+                                        "rgb" => "FFF2F2F2"
+                                    )
+                                ),
+                                "numFmt" => "#,##0.00"
+                            )
+                        ),
+                        
+                        array(
+                            "value" => floatval($descargarSde->sdepcsapfinal),
+                            "style" => array(
+                                "font" => array(
+                                    "sz" => "9",
+                                    "bold" => true,
+                                ),
+                                "fill" => array(
+                                    "patternType" => 'solid',
+                                    "fgColor" => array(
+                                        "rgb" => "FFF2F2F2"
+                                    )
+                                ),
+                                "numFmt" => "#,##0.00"
+                            )
+                        ),
+
                         array(
                             "value" => floatval($descargarSde->sdepcsubsidiado),
                             "style" => array(
@@ -1660,6 +1703,7 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                                 "numFmt" => "#,##0.00"
                             )
                         ),
+
                         array(
                             "value" => floatval($descargarSde->sdedscto),
                             "style" => array(
@@ -1789,8 +1833,9 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                                 "numFmt" => "#,##0.00"
                             )
                         ),
+
                         array(
-                            "value" => $descargarSde->csonombrecomercial,
+                            "value" => $ticcambio,
                             "style" => array(
                                 "font" => array(
                                     "sz" => "9",
@@ -1801,7 +1846,8 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                                     "fgColor" => array(
                                         "rgb" => "FFF2F2F2"
                                     )
-                                )
+                                ),
+                                "numFmt" => "#,##0.00"
                             )
                         ),
 
