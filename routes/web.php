@@ -71,6 +71,8 @@ $router->post('/crear-ambiente', 'Configuracion\CrearAmbienteHomeController@Crea
             $router->post('/tipo-cambio', 'Validaciones\Modulos\CargaArchivos\CargarTipoCambioController@ValCargarTipoCambio');
             $router->post('/costo-x-bulto', 'Validaciones\Modulos\CargaArchivos\CargarCostoXBultoController@ValCargarCostoXBulto');
 
+            $router->post('/subsidios-si-formato-ventas', 'Metodos\Modulos\CargaArchivos\SI\SubsidiosSIFormatoVentasController@metSubsidiosSIFormatoVentas');
+
         });
 
         $router->group(['prefix' => 'subsidiosSo'], function () use ($router) {
@@ -100,6 +102,8 @@ $router->post('/crear-ambiente', 'Configuracion\CrearAmbienteHomeController@Crea
             $router->post('/mostrar/notascreditos', 'Validaciones\Modulos\SubsidiosSi\Mostrar\MostrarNotasCreditoFacturaController@ValMostrarNotasCreditoFactura');
 
             $router->post('/mostrar-subsidios-si-ventas', 'Metodos\Modulos\SubsidiosSi\Mostrar\MetMostrarSubsidiosSiVentasController@MetMostrarSubsidiosSiVentas');
+
+            $router->post('/mostrar-link-subsidios-si-formato-ventas', 'Metodos\Modulos\CargaArchivos\SI\SubsidiosSIFormatoVentasController@ObtenerLinkSubsidiosSIVentas');
 
         });
 
