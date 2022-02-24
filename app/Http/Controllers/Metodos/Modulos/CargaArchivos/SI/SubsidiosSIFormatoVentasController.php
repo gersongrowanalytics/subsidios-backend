@@ -28,9 +28,14 @@ class SubsidiosSIFormatoVentasController extends Controller
         $usu = usuusuarios::where('usutoken', $usutoken)->first(['usuid', 'usuusuario', 'perid']);
 
         $codigoArchivoAleatorio = mt_rand(0, mt_getrandmax())/mt_getrandmax();
-        $nombreArchivo = $codigoArchivoAleatorio.'-'.$_FILES['file']['name'];
+        $codigoArchivoAleatorio = substr($codigoArchivoAleatorio, -4);
 
-        $ubicacionArchivo = '/SubsidiosVentas/Consolidados/'.basename($codigoArchivoAleatorio.'-'.$_FILES['file']['name']);
+        $nombArchivoSubido = $_FILES['file']['name'];
+        $nombArchivoSubidoExplode = explode(".", $nombArchivoSubido);
+
+        $nombreArchivo = $nombArchivoSubidoExplode[0]."-".$codigoArchivoAleatorio.".".$nombArchivoSubidoExplode[1];
+
+        $ubicacionArchivo = '/SubsidiosVentas/Consolidados/'.basename($nombreArchivo);
         $fichero_subido = base_path().'/public'.$ubicacionArchivo;
 
         $ex_file_name = explode(".", $_FILES['file']['name']);
