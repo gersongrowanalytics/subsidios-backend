@@ -18,6 +18,7 @@ use App\Models\cbucostosbultos;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\MailCargaArchivoOutlook;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use DB;
 
 class SalvacionController extends Controller
@@ -848,7 +849,8 @@ class SalvacionController extends Controller
                     $logs[] = array(
                         "fdsid" => $sfs->fdsid,
                         "sfsid" => $sfs->sfsid,
-                        'fsisolicitante' => $sfs->fsisolicitante
+                        'fsisolicitante' => $sfs->fsisolicitante,
+                        "tramo" => "FSI SOLICITANTE"
                     );
                 }else{
 
@@ -861,7 +863,8 @@ class SalvacionController extends Controller
                     $logs[] = array(
                         "fdsid" => $sfs->fdsid,
                         "sfsid" => $sfs->sfsid,
-                        'fsidestinatario' => $sfs->fsidestinatario
+                        'fsidestinatario' => $sfs->fsidestinatario,
+                        "tramo" => "FSI DESTINATARIO"
                     );
                 }else{
 
@@ -1159,6 +1162,54 @@ class SalvacionController extends Controller
                 $skus[] = $cbu->cbusku;
             }
         }
+
+    }
+
+    public function CrearUsuario(Request $request)
+    {
+
+        $re_numerodocumentoidentidad = $request['numerodocumentoidentidad'];
+        $re_nombrecompleto           = $request['nombrecompleto'];
+        $re_nombre                   = $request['nombre'];
+        $re_apellidopaterno          = $request['apellidopaterno'];
+        $re_apellidomaterno          = $request['apellidomaterno'];
+        $re_tpuid                    = $request['tpuid'];
+        $re_codigo                   = $request['codigo'];
+        $re_usuario                  = $request['usuario'];
+        $re_correo                   = $request['correo'];
+        $re_contrasenia              = $request['contrasenia'];
+
+        $pern = new perpersonas;
+        $pern->pernumerodocumentoidentidad = $re_numerodocumentoidentidad;
+        $pern->pernombrecompleto           = $re_nombrecompleto;
+        $pern->pernombre                   = $re_nombre;
+        $pern->perapellidopaterno          = $re_apellidopaterno;
+        $pern->perapellidomaterno          = $re_apellidomaterno;
+        if($pern->save()){
+            $usun = new usuusuarios;
+            $usun->tpuid        = $re_tpuid;
+            $usun->perid        = $pern->perid;
+            $usun->estid        = 1;
+            $usun->usucodigo    = $re_codigo;
+            $usun->usuusuario   = $re_usuario;
+            $usun->usucorreo    = $re_correo;
+            $usun->usucontrasenia = Hash::make($re_contrasenia);
+            $usun->usutoken     =   Str::random(50);
+            $usun->save();
+
+            // usuusuarios::create([
+            //     "usuid"           => 13,
+            //     "tpuid"           => 2,
+            //     "perid"           => 14,
+            //     "estid"           => 1,
+            //     "usucodigo"       => "SacValeria-09",
+            //     "usuusuario"      => "vromeroe@softys.com",
+            //     "usucorreo"       => "vromeroe@softys.com",
+            //     "usucontrasenia"  => Hash::make('Valeria$$Romero$$82123'),
+            //     "usutoken"        => "ValeriaIDMWZZwOPOR439SKSZXXZAOPALSDQ2dkka2ldrwke989230CRomero",
+            // ]);
+        }
+
 
     }
 
