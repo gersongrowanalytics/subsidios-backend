@@ -32,7 +32,7 @@ $router->post('/cambiar-contrasenia', 'Validaciones\RecuperarContrasenia\Recuper
 $router->post('/crear-ambiente', 'Configuracion\CrearAmbienteHomeController@CrearAmbiente');
 $router->post('/crear-usuario', 'SalvacionController@CrearUsuario');
 
-$router->post('/aceptar-terminos-condiciones', 'SalvacionController@CrearUsuario');
+$router->post('/aceptar-terminos-condiciones', 'Metodos\Modulos\TerminosCondiciones\AceptarTerminosController@AceptarTerminos');
 
 // $router->group(['middleware' => ['permisos']], function() use($router) {
 

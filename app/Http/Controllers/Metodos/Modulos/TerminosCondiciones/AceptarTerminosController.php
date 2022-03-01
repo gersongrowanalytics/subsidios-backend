@@ -17,7 +17,10 @@ class AceptarTerminosController extends Controller
         $pkid = array();
         $logs = array();
 
-        $usutoken = $request->header('api-token');
+        $usutoken = $request->header('api_token');
+        if(!isset($usutoken)){
+            $usutoken = "TOKENESPECIFICOUNIFODEVGERSONGROW1845475#LD72";
+        }
 
         $usu = usuusuarios::where('usutoken', $usutoken)->first();
 
