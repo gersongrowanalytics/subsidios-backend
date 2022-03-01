@@ -32,6 +32,13 @@ class CrearAmbienteHomeController extends Controller
         $re_sacadm = $request['re_sacadm'];
         $re_sacnc  = $request['re_sacnc'];
 
+        $re_masterproductos  = $request['re_masterproductos'];
+        $re_masterclientes   = $request['re_masterclientes'];
+        $re_masterclientesso = $request['re_masterclientesso'];
+        $re_tipocambio       = $request['re_tipocambio'];
+        $re_costosproductos  = $request['re_costosproductos'];
+
+
         $fecAbierto = fecfechas::where('fecmesabierto', true)->first();
 
         if($fecAbierto){
@@ -157,6 +164,90 @@ class CrearAmbienteHomeController extends Controller
                 $espn->cliid = null;
                 $espn->save();
                 $pkesp = $pkesp + 1;
+
+
+                $espn = new espestadospendientes;
+                $espn->espid = $pkesp;
+                $espn->fecid = $fecn->fecid;
+                $espn->perid = null;
+                $espn->areid = $areidRevenue;
+                $espn->espfechaprogramado   = $re_masterproductos;
+                $espn->espchacargareal      = null;
+                $espn->espfechactualizacion = null;
+                $espn->espbasedato          = "Master Productos";
+                $espn->espresponsable       = "Maria Yauri";
+                $espn->espdiaretraso        = "0";
+                $espn->esporden             = "0";
+                $espn->cliid                = null;
+                $espn->save();
+                $pkesp = $pkesp + 1;
+
+                $espn = new espestadospendientes;
+                $espn->espid = $pkesp;
+                $espn->fecid = $fecn->fecid;
+                $espn->perid = null;
+                $espn->areid = $areidRevenue;
+                $espn->espfechaprogramado   = $re_masterclientes;
+                $espn->espchacargareal      = null;
+                $espn->espfechactualizacion = null;
+                $espn->espbasedato          = "Master Clientes";
+                $espn->espresponsable       = "Maria Yauri";
+                $espn->espdiaretraso        = "0";
+                $espn->esporden             = "0";
+                $espn->cliid                = null;
+                $espn->save();
+                $pkesp = $pkesp + 1;
+
+                $espn = new espestadospendientes;
+                $espn->espid = $pkesp;
+                $espn->fecid = $fecn->fecid;
+                $espn->perid = null;
+                $espn->areid = $areidRevenue;
+                $espn->espfechaprogramado   = $re_masterclientesso;
+                $espn->espchacargareal      = null;
+                $espn->espfechactualizacion = null;
+                $espn->espbasedato          = "Master Clientes SO";
+                $espn->espresponsable       = "Maria Yauri";
+                $espn->espdiaretraso        = "0";
+                $espn->esporden             = "0";
+                $espn->cliid                = null;
+                $espn->save();
+                $pkesp = $pkesp + 1;
+
+                $espn = new espestadospendientes;
+                $espn->espid = $pkesp;
+                $espn->fecid = $fecn->fecid;
+                $espn->perid = null;
+                $espn->areid = $areidRevenue;
+                $espn->espfechaprogramado   = $re_tipocambio;
+                $espn->espchacargareal      = null;
+                $espn->espfechactualizacion = null;
+                $espn->espbasedato          = "Tipo de Cambio";
+                $espn->espresponsable       = "Maria Yauri";
+                $espn->espdiaretraso        = "0";
+                $espn->esporden             = "0";
+                $espn->cliid                = null;
+                $espn->save();
+                $pkesp = $pkesp + 1;
+
+                $espn = new espestadospendientes;
+                $espn->espid = $pkesp;
+                $espn->fecid = $fecn->fecid;
+                $espn->perid = null;
+                $espn->areid = $areidRevenue;
+                $espn->espfechaprogramado   = $re_costosproductos;
+                $espn->espchacargareal      = null;
+                $espn->espfechactualizacion = null;
+                $espn->espbasedato          = "Costos de Productos";
+                $espn->espresponsable       = "Maria Yauri";
+                $espn->espdiaretraso        = "0";
+                $espn->esporden             = "0";
+                $espn->cliid                = null;
+                $espn->save();
+                $pkesp = $pkesp + 1;
+
+
+
                 // FIN DE REVENUE
 
                 // SAC SELL IN
