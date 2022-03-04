@@ -83,19 +83,21 @@ class MetCargarFacturasSiController extends Controller
 
         $ex_file_name = explode(".", $_FILES['file']['name']);
 
-        $carultimo = carcargasarchivos::orderby('carid', 'desc')->first();
-        $pkcar = $carultimo->carid + 1;
+        if($usu->usuid != 1){
+            $carultimo = carcargasarchivos::orderby('carid', 'desc')->first();
+            $pkcar = $carultimo->carid + 1;
 
-        $carn = new carcargasarchivos;
-        $carn->carid        = $pkcar;
-        $carn->tcaid        = 4;
-        $carn->usuid        = $usu->usuid;
-        $carn->carnombre    = $_FILES['file']['name'];
-        $carn->carextension = $ex_file_name[1];
-        $carn->carurl       = env('APP_URL').$ubicacionArchivo;
-        $carn->carexito     = 0;
-        $carn->save();
-        $carid = $pkcar;
+            $carn = new carcargasarchivos;
+            $carn->carid        = $pkcar;
+            $carn->tcaid        = 4;
+            $carn->usuid        = $usu->usuid;
+            $carn->carnombre    = $_FILES['file']['name'];
+            $carn->carextension = $ex_file_name[1];
+            $carn->carurl       = env('APP_URL').$ubicacionArchivo;
+            $carn->carexito     = 0;
+            $carn->save();
+            $carid = $pkcar;
+        }
 
         if (move_uploaded_file($_FILES['file']['tmp_name'], $fichero_subido)) {
 
@@ -163,23 +165,41 @@ class MetCargarFacturasSiController extends Controller
 
                 for ($i=2; $i <= $numRows; $i++) {
 
+                    // $ex_anio      = $objPHPExcel->getActiveSheet()->getCell('A'.$i)->getCalculatedValue();
+                    // $ex_mes       = $objPHPExcel->getActiveSheet()->getCell('B'.$i)->getCalculatedValue();
+
+                    // $ex_solicitante      = $objPHPExcel->getActiveSheet()->getCell('C'.$i)->getCalculatedValue();
+                    // $ex_destinatario     = $objPHPExcel->getActiveSheet()->getCell('D'.$i)->getCalculatedValue();
+                    // $ex_material         = $objPHPExcel->getActiveSheet()->getCell('E'.$i)->getCalculatedValue();
+                    // $ex_moneda           = "-";
+                    // $ex_clase            = $objPHPExcel->getActiveSheet()->getCell('F'.$i)->getCalculatedValue();
+                    // $ex_fechafactura     = $objPHPExcel->getActiveSheet()->getCell('G'.$i)->getCalculatedValue();
+                    // $ex_facturasap       = "-";
+                    // $ex_factura          = $objPHPExcel->getActiveSheet()->getCell('H'.$i)->getCalculatedValue();
+
+                    // $ex_valorneto        = $objPHPExcel->getActiveSheet()->getCell('I'.$i)->getCalculatedValue();
+                    // $ex_valornetodolares = "0";
+                    // $ex_pedido           = $objPHPExcel->getActiveSheet()->getCell('J'.$i)->getCalculatedValue();
+                    // $ex_pedidooriginal   = $objPHPExcel->getActiveSheet()->getCell('K'.$i)->getCalculatedValue();
+                    // $ex_facturaanulada   = $objPHPExcel->getActiveSheet()->getCell('L'.$i)->getCalculatedValue();
+
                     $ex_anio      = $objPHPExcel->getActiveSheet()->getCell('A'.$i)->getCalculatedValue();
                     $ex_mes       = $objPHPExcel->getActiveSheet()->getCell('B'.$i)->getCalculatedValue();
 
-                    $ex_solicitante      = $objPHPExcel->getActiveSheet()->getCell('C'.$i)->getCalculatedValue();
-                    $ex_destinatario     = $objPHPExcel->getActiveSheet()->getCell('D'.$i)->getCalculatedValue();
-                    $ex_material         = $objPHPExcel->getActiveSheet()->getCell('E'.$i)->getCalculatedValue();
+                    $ex_solicitante      = $objPHPExcel->getActiveSheet()->getCell('F'.$i)->getCalculatedValue();
+                    $ex_destinatario     = $objPHPExcel->getActiveSheet()->getCell('H'.$i)->getCalculatedValue();
+                    $ex_material         = $objPHPExcel->getActiveSheet()->getCell('J'.$i)->getCalculatedValue();
                     $ex_moneda           = "-";
-                    $ex_clase            = $objPHPExcel->getActiveSheet()->getCell('F'.$i)->getCalculatedValue();
-                    $ex_fechafactura     = $objPHPExcel->getActiveSheet()->getCell('G'.$i)->getCalculatedValue();
+                    $ex_clase            = $objPHPExcel->getActiveSheet()->getCell('P'.$i)->getCalculatedValue();
+                    $ex_fechafactura     = $objPHPExcel->getActiveSheet()->getCell('Q'.$i)->getCalculatedValue();
                     $ex_facturasap       = "-";
-                    $ex_factura          = $objPHPExcel->getActiveSheet()->getCell('H'.$i)->getCalculatedValue();
+                    $ex_factura          = $objPHPExcel->getActiveSheet()->getCell('Y'.$i)->getCalculatedValue();
 
-                    $ex_valorneto        = $objPHPExcel->getActiveSheet()->getCell('I'.$i)->getCalculatedValue();
+                    $ex_valorneto        = $objPHPExcel->getActiveSheet()->getCell('Z'.$i)->getCalculatedValue();
                     $ex_valornetodolares = "0";
-                    $ex_pedido           = $objPHPExcel->getActiveSheet()->getCell('J'.$i)->getCalculatedValue();
-                    $ex_pedidooriginal   = $objPHPExcel->getActiveSheet()->getCell('K'.$i)->getCalculatedValue();
-                    $ex_facturaanulada   = $objPHPExcel->getActiveSheet()->getCell('L'.$i)->getCalculatedValue();
+                    $ex_pedido           = $objPHPExcel->getActiveSheet()->getCell('AD'.$i)->getCalculatedValue();
+                    $ex_pedidooriginal   = $objPHPExcel->getActiveSheet()->getCell('AE'.$i)->getCalculatedValue();
+                    $ex_facturaanulada   = $objPHPExcel->getActiveSheet()->getCell('AK'.$i)->getCalculatedValue();
 
                     $cargarData = true;
 
@@ -481,25 +501,26 @@ class MetCargarFacturasSiController extends Controller
 
                                                                     $fsi = fsifacturassi::where('fsipedido', $ex_pedidooriginal)->first();
                                                                     $fsiid = 0;
+                                                                    $proid = 0;
                                                                     if($fsi){
                                                                         $fsiid = $fsi->fsiid;
-                                                                        
-                                                                        $pro = proproductos::where('prosku', $ex_material)->first();
-                                                                        $proid = 0;
-                                                                        if($pro){
-                                                                            $proid = $pro->proid;
-                                                                        }else{
-                                                                            $respuesta = false;
-                                                                            $mensaje = "No existe el producto: ".$ex_material." recomendamos actualizar dicha maestra, linea excel: ".$i;
-                                                                            // $logs['NO_EXISTE_PRODUCTO'][] = "El producto: ".$ex_material." no se encontro en nuestros registros, recomendamos actualizar la maestra de productos EN LA LINEA: ".$i;
-                                                                            $logs['PRODUCTOS_NO_ENCONTRADOS'] = $logs['PRODUCTOS_NO_ENCONTRADOS'][] = $this->EliminarDuplicidad( $logs["PRODUCTOS_NO_ENCONTRADOS"], $ex_material, $i);
-                                                                        }
 
                                                                     }else{
                                                                         $respuesta = false;
                                                                         $mensaje = "No se encontro una factura asignada a esta nota de credito";
                                                                         // $logs['FACTURA_NO_ASIGNADA'][] = "El pedido original: ".$ex_pedidooriginal." no existe en nuestros registros, recomendamos actualizar la información de facturas. EN LA LINEA: ".$i;
                                                                         $logs['FACTURA_NO_ASIGNADA'] = $this->EliminarDuplicidad( $logs["FACTURA_NO_ASIGNADA"], $ex_pedidooriginal, $i);
+                                                                    }
+
+                                                                    $pro = proproductos::where('prosku', $ex_material)->first();
+                                                                    $proid = 0;
+                                                                    if($pro){
+                                                                        $proid = $pro->proid;
+                                                                    }else{
+                                                                        $respuesta = false;
+                                                                        $mensaje = "No existe el producto: ".$ex_material." recomendamos actualizar dicha maestra, linea excel: ".$i;
+                                                                        // $logs['NO_EXISTE_PRODUCTO'][] = "El producto: ".$ex_material." no se encontro en nuestros registros, recomendamos actualizar la maestra de productos EN LA LINEA: ".$i;
+                                                                        $logs['PRODUCTOS_NO_ENCONTRADOS'] = $logs['PRODUCTOS_NO_ENCONTRADOS'][] = $this->EliminarDuplicidad( $logs["PRODUCTOS_NO_ENCONTRADOS"], $ex_material, $i);
                                                                     }
 
                                                                     $ndsn = new ndsnotascreditossidetalles;
@@ -542,24 +563,28 @@ class MetCargarFacturasSiController extends Controller
                                                                         $pknsi = $pknsi + 1;
                                                                         $fsi = fsifacturassi::where('fsipedido', $ex_pedidooriginal)->first();
                                                                         $fsiid = 0;
+                                                                        $proid = 0;
+
                                                                         if($fsi){
                                                                             $fsiid = $fsi->fsiid;
-                                                                            $pro = proproductos::where('prosku', $ex_material)->first();
-                                                                            $proid = 0;
-                                                                            if($pro){
-                                                                                $proid = $pro->proid;
-                                                                            }else{
-                                                                                $respuesta = false;
-                                                                                $mensaje = "No existe el producto: ".$ex_material." recomendamos actualizar dicha maestra, linea excel: ".$i;
-                                                                                // $logs['NO_EXISTE_PRODUCTO'][] = "El producto: ".$ex_material." no se encontro en nuestros registros, recomendamos actualizar la maestra de productos EN LA LINEA: ".$i;
-                                                                                $logs['PRODUCTOS_NO_ENCONTRADOS'] = $logs['PRODUCTOS_NO_ENCONTRADOS'][] = $this->EliminarDuplicidad( $logs["PRODUCTOS_NO_ENCONTRADOS"], $ex_material, $i);
-                                                                            }
+                                                                            
 
                                                                         }else{
                                                                             $respuesta = false;
                                                                             $mensaje = "No se encontro una factura asignada a esta nota de credito";
                                                                             // $logs['FACTURA_NO_ASIGNADA'][] = "El pedido original: ".$ex_pedidooriginal." no existe en nuestros registros, recomendamos actualizar la información de facturas. EN LA LINEA: ".$i;
                                                                             $logs['FACTURA_NO_ASIGNADA'] = $this->EliminarDuplicidad( $logs["FACTURA_NO_ASIGNADA"], $ex_pedidooriginal, $i);
+                                                                        }
+
+                                                                        $pro = proproductos::where('prosku', $ex_material)->first();
+                                                                        $proid = 0;
+                                                                        if($pro){
+                                                                            $proid = $pro->proid;
+                                                                        }else{
+                                                                            $respuesta = false;
+                                                                            $mensaje = "No existe el producto: ".$ex_material." recomendamos actualizar dicha maestra, linea excel: ".$i;
+                                                                            // $logs['NO_EXISTE_PRODUCTO'][] = "El producto: ".$ex_material." no se encontro en nuestros registros, recomendamos actualizar la maestra de productos EN LA LINEA: ".$i;
+                                                                            $logs['PRODUCTOS_NO_ENCONTRADOS'] = $logs['PRODUCTOS_NO_ENCONTRADOS'][] = $this->EliminarDuplicidad( $logs["PRODUCTOS_NO_ENCONTRADOS"], $ex_material, $i);
                                                                         }
 
                                                                         $ndsn = new ndsnotascreditossidetalles;

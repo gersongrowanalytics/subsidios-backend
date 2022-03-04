@@ -36,6 +36,7 @@ class MetCargarSubsidiosPlantillaController extends Controller
             "NUMERO_LINEAS_EXCEL" => 0,
             "FECHA_NO_REGISTRADA" => "",
             "CLIENTES_NO_ENCONTRADOS" => [],
+            "CLIENTES_SO_NO_ENCONTRADOS" => [],
             "PRODUCTOS_NO_ENCONTRADOS" => []
         );
 
@@ -79,17 +80,20 @@ class MetCargarSubsidiosPlantillaController extends Controller
 
         if (move_uploaded_file($_FILES['file']['tmp_name'], $fichero_subido)) {
 
-            $data = [
-                'archivo' => $_FILES['file']['name'], "tipo" => "Plantilla Subsidios (objetivos)", "usuario" => $usu->usuusuario,
-                "url_archivo" => env('APP_URL').$ubicacionArchivo
-            ];
-            Mail::to(env('USUARIO_ENVIAR_MAIL'))->send(new MailCargaArchivoOutlook($data));
-
-            $data = [
-                'archivo' => $_FILES['file']['name'], "tipo" => "Plantilla Subsidios (objetivos)", "usuario" => $usu->usuusuario,
-                "url_archivo" => env('APP_URL').$ubicacionArchivo
-            ];
-            Mail::to('jazmin.laguna@grow-analytics.com.pe')->send(new MailCargaArchivoOutlook($data));
+            if($usu->usuid != 1){
+                $data = [
+                    'archivo' => $_FILES['file']['name'], "tipo" => "Plantilla Subsidios (objetivos)", "usuario" => $usu->usuusuario,
+                    "url_archivo" => env('APP_URL').$ubicacionArchivo
+                ];
+                Mail::to(env('USUARIO_ENVIAR_MAIL'))->send(new MailCargaArchivoOutlook($data));
+    
+                $data = [
+                    'archivo' => $_FILES['file']['name'], "tipo" => "Plantilla Subsidios (objetivos)", "usuario" => $usu->usuusuario,
+                    "url_archivo" => env('APP_URL').$ubicacionArchivo
+                ];
+                Mail::to('jazmin.laguna@grow-analytics.com.pe')->send(new MailCargaArchivoOutlook($data));
+    
+            }
 
             $objPHPExcel    = IOFactory::load($fichero_subido);
             $objPHPExcel->setActiveSheetIndex(0);
@@ -135,6 +139,7 @@ class MetCargarSubsidiosPlantillaController extends Controller
 
                 $pksclientes = [];
                 $pksproductos = [];
+                $pksclientesso = [];
 
                 for ($i=6; $i <= $numRows ; $i++) {
                     $pksde = $pksde + 1;
@@ -187,13 +192,13 @@ class MetCargarSubsidiosPlantillaController extends Controller
     
                     if(isset($ex_codigouni)){
 
-                        $eliminarDup = $this->EliminarDuplicidadPks($pksproductos, $ex_codigouni, $i, "productos");
+                        $eliminarDup = $this->EliminarDuplicidadPks($pksproductos, $ex_codigouni, $i, "productos", "ruc");
                         $pksproductos = $eliminarDup["array"];
                         $pro = $eliminarDup["dato"];
 
                         if($pro){
                             // $cli = cliclientes::where('clicodigoshipto', $ex_codigodestinatario)->first(['cliid', 'cliclientesac']);
-                            $eliminarDup = $this->EliminarDuplicidadPks($pksclientes, $ex_codigodestinatario, $i, "clientes");
+                            $eliminarDup = $this->EliminarDuplicidadPks($pksclientes, $ex_codigodestinatario, $i, "clientes", "ruc");
                             $pksclientes = $eliminarDup["array"];
                             $cli = $eliminarDup["dato"];
         
@@ -201,148 +206,157 @@ class MetCargarSubsidiosPlantillaController extends Controller
                                 
 
                                 // OBTENER CLIENTE SO
+                                $eliminarDup = $this->EliminarDuplicidadPks($pksclientesso, $ex_codigodestinatario, $i, "clienteso", $ex_rucsubcliente);
+                                $pksclientesso = $eliminarDup["array"];
+                                $cso = $eliminarDup["dato"];
 
+                                if($cso){
+                                    // $sdee = sdesubsidiosdetalles::where('fecid', $fec->fecid)
+                                    //                         ->where('sdedestrucsap', $ex_destrucsap)
+                                    //                         ->first();
+                                    $sdee = false;
+                                    if($sdee){
 
-                                // $sdee = sdesubsidiosdetalles::where('fecid', $fec->fecid)
-                                //                         ->where('sdedestrucsap', $ex_destrucsap)
-                                //                         ->first();
-                                $sdee = false;
-                                if($sdee){
+                                        $sdee->fecid = $fec->fecid;
+                                        $sdee->proid = $pro->proid;
+                                        $sdee->cliid = $cli->cliid;
 
-                                    $sdee->fecid = $fec->fecid;
-                                    $sdee->proid = $pro->proid;
-                                    $sdee->cliid = $cli->cliid;
+                                        $sdee->sdezona = $ex_zona;
+                                        $sdee->sdeterritorio = $ex_territorio;
+                                        $sdee->sdecliente = $ex_cliente;
 
-                                    $sdee->sdezona = $ex_zona;
-                                    $sdee->sdeterritorio = $ex_territorio;
-                                    $sdee->sdecliente = $ex_cliente;
+                                        $sdee->sdecodigosolicitante     = $ex_codigosolicitante;
+                                        $sdee->sdecodigodestinatario    = $ex_codigodestinatario;
 
-                                    $sdee->sdecodigosolicitante     = $ex_codigosolicitante;
-                                    $sdee->sdecodigodestinatario    = $ex_codigodestinatario;
+                                        $sdee->sdesectoruno             = $ex_sectoruno;
 
-                                    $sdee->sdesectoruno             = $ex_sectoruno;
+                                        $sdee->sdesegmentoscliente      = $ex_segmentocliente;
+                                        $sdee->sdesubsegmentoscliente   = $ex_subsegmentocliente;
+                                        $sdee->sderucsubcliente         = $ex_rucsubcliente;
+                                        $sdee->sdesubcliente            = $ex_subcliente;
+                                        $sdee->sdenombrecomercial       = $ex_nombrecomercial;
+                                        $sdee->sdesector                = $ex_sector;
+                                        $sdee->sdecodigounitario        = $ex_codigouni;
+                                        $sdee->sdedescripcion           = $ex_descripcion;
+                                        $sdee->sdepcsapfinal            = $ex_pcsapfinal;
+                                        $sdee->sdedscto                 = $ex_dsctouno;
+                                        $sdee->sdepcsubsidiado          = $ex_pcsubsidiado;
+                                        $sdee->sdemup                   = $ex_mup;
+                                        $sdee->sdepvpigv                = $ex_pvpigv;
+                                        $sdee->sdedsctodos              = $ex_dsctodos;
+                                        $sdee->sdedestrucsap            = $ex_destrucsap;
+                                        $sdee->sdeinicio                = $ex_inicio;
+                                        $sdee->sdebultosacordados       = $ex_bultosacordados;
+                                        
+                                        if($cli->cliclientesac == 1){
+                                            $sdee->sdesac = true;
 
-                                    $sdee->sdesegmentoscliente      = $ex_segmentocliente;
-                                    $sdee->sdesubsegmentoscliente   = $ex_subsegmentocliente;
-                                    $sdee->sderucsubcliente         = $ex_rucsubcliente;
-                                    $sdee->sdesubcliente            = $ex_subcliente;
-                                    $sdee->sdenombrecomercial       = $ex_nombrecomercial;
-                                    $sdee->sdesector                = $ex_sector;
-                                    $sdee->sdecodigounitario        = $ex_codigouni;
-                                    $sdee->sdedescripcion           = $ex_descripcion;
-                                    $sdee->sdepcsapfinal            = $ex_pcsapfinal;
-                                    $sdee->sdedscto                 = $ex_dsctouno;
-                                    $sdee->sdepcsubsidiado          = $ex_pcsubsidiado;
-                                    $sdee->sdemup                   = $ex_mup;
-                                    $sdee->sdepvpigv                = $ex_pvpigv;
-                                    $sdee->sdedsctodos              = $ex_dsctodos;
-                                    $sdee->sdedestrucsap            = $ex_destrucsap;
-                                    $sdee->sdeinicio                = $ex_inicio;
-                                    $sdee->sdebultosacordados       = $ex_bultosacordados;
-                                    
-                                    if($cli->cliclientesac == 1){
-                                        $sdee->sdesac = true;
+                                        }else{
+                                            $sdee->sdesac = false;
+                                        }
+
+                                        $sdee->sdeeditado = 1;
+                                        $sdee->update();
 
                                     }else{
-                                        $sdee->sdesac = false;
+
+
+
+                                        $sden = new sdesubsidiosdetalles;
+                                        $sden->sdeid = $pksde;
+                                        $sden->fecid = $fec->fecid;
+                                        $sden->proid = $pro->proid;
+                                        $sden->cliid = $cli->cliid;
+                                        $sden->csoid = $cso->csois;
+
+                                        $sden->sdezona = $ex_zona;
+                                        $sden->sdeterritorio = $ex_territorio;
+                                        $sden->sdecliente = $ex_cliente;
+
+                                        $sden->sdecodigosolicitante     = $ex_codigosolicitante;
+                                        $sden->sdecodigodestinatario    = $ex_codigodestinatario;
+
+                                        $sden->sdesectoruno             = $ex_sectoruno;
+
+                                        $sden->sdesegmentoscliente      = $ex_segmentocliente;
+                                        $sden->sdesubsegmentoscliente   = $ex_subsegmentocliente;
+                                        $sden->sderucsubcliente         = $ex_rucsubcliente;
+                                        $sden->sdesubcliente            = $ex_subcliente;
+                                        $sden->sdenombrecomercial       = $ex_nombrecomercial;
+                                        $sden->sdesector                = $ex_sector;
+                                        $sden->sdecodigounitario        = $ex_codigouni;
+                                        $sden->sdedescripcion           = $ex_descripcion;
+                                        $sden->sdepcsapfinal            = $ex_pcsapfinal;
+                                        $sden->sdedscto                 = $ex_dsctouno;
+                                        $sden->sdepcsubsidiado          = $ex_pcsubsidiado;
+                                        $sden->sdemup                   = $ex_mup;
+                                        $sden->sdepvpigv                = $ex_pvpigv;
+                                        $sden->sdedsctodos              = $ex_dsctodos;
+                                        $sden->sdedestrucsap            = $ex_destrucsap;
+                                        $sden->sdeinicio                = $ex_inicio;
+                                        $sden->sdebultosacordados       = $ex_bultosacordados;
+                                        
+                                        if($cli->cliclientesac == 1){
+                                            $sden->sdesac = true;
+
+                                        }else{
+                                            $sden->sdesac = false;
+                                        }
+
+
+
+                                        // PARAMETROS UTILIZADOS PARA CARGAR DATA HISTORICA
+
+                                        // if($ex_cantidadbultos){
+
+                                        //     if(is_numeric($ex_cantidadbultos)){
+                                        //         $sden->sdecantidadbultos  = $ex_cantidadbultos;
+                                        //         $sden->sdemontoareconocer = $ex_cantidadbultos * $sden->sdedsctodos;
+                                        //     }else{
+                                        //         $sden->sdecantidadbultos  = 0;
+                                        //         $sden->sdemontoareconocer = 0;    
+                                        //     }
+
+                                        // }else{
+                                        //     $sden->sdecantidadbultos  = 0;
+                                        //     $sden->sdemontoareconocer = 0;
+                                        // }
+
+                                        // $sden->sdeaprobado = true;
+
+                                        // if($ex_cantidadbultosreal){
+
+                                        //     if(is_numeric($ex_cantidadbultosreal)){
+                                        //         $sden->sdecantidadbultosreal  = $ex_cantidadbultosreal;
+                                        //         $sden->sdemontoareconocerreal = $ex_cantidadbultosreal * $sden->sdedsctodos;
+                                        //     }else{
+                                        //         $sden->sdecantidadbultosreal  = 0;
+                                        //         $sden->sdemontoareconocerreal = 0;
+                                        //     }
+
+                                        // }else{
+                                        //     $sden->sdecantidadbultosreal  = 0;
+                                        //     $sden->sdemontoareconocerreal = 0;
+                                        // }
+
+                                        // if($ex_cantidadbultos == $ex_cantidadbultosreal){
+                                        //     $sden->sdestatus = "OK";
+                                        // }else{
+                                        //     $sden->sdestatus = "ERROR CANTIDADES";
+                                        // }
+
+                                        // $sden->sdediferenciaahorro = $ex_diferenciaahorrocliente;
+
+                                        //FINAL PARAMETROS UTILIZADOS PARA CARGAR DATA HISTORICA
+
+
+
+                                        $sden->save();
                                     }
-
-                                    $sdee->sdeeditado = 1;
-                                    $sdee->update();
-
                                 }else{
-
-
-
-                                    $sden = new sdesubsidiosdetalles;
-                                    $sden->sdeid = $pksde;
-                                    $sden->fecid = $fec->fecid;
-                                    $sden->proid = $pro->proid;
-                                    $sden->cliid = $cli->cliid;
-
-                                    $sden->sdezona = $ex_zona;
-                                    $sden->sdeterritorio = $ex_territorio;
-                                    $sden->sdecliente = $ex_cliente;
-
-                                    $sden->sdecodigosolicitante     = $ex_codigosolicitante;
-                                    $sden->sdecodigodestinatario    = $ex_codigodestinatario;
-
-                                    $sden->sdesectoruno             = $ex_sectoruno;
-
-                                    $sden->sdesegmentoscliente      = $ex_segmentocliente;
-                                    $sden->sdesubsegmentoscliente   = $ex_subsegmentocliente;
-                                    $sden->sderucsubcliente         = $ex_rucsubcliente;
-                                    $sden->sdesubcliente            = $ex_subcliente;
-                                    $sden->sdenombrecomercial       = $ex_nombrecomercial;
-                                    $sden->sdesector                = $ex_sector;
-                                    $sden->sdecodigounitario        = $ex_codigouni;
-                                    $sden->sdedescripcion           = $ex_descripcion;
-                                    $sden->sdepcsapfinal            = $ex_pcsapfinal;
-                                    $sden->sdedscto                 = $ex_dsctouno;
-                                    $sden->sdepcsubsidiado          = $ex_pcsubsidiado;
-                                    $sden->sdemup                   = $ex_mup;
-                                    $sden->sdepvpigv                = $ex_pvpigv;
-                                    $sden->sdedsctodos              = $ex_dsctodos;
-                                    $sden->sdedestrucsap            = $ex_destrucsap;
-                                    $sden->sdeinicio                = $ex_inicio;
-                                    $sden->sdebultosacordados       = $ex_bultosacordados;
-                                    
-                                    if($cli->cliclientesac == 1){
-                                        $sden->sdesac = true;
-
-                                    }else{
-                                        $sden->sdesac = false;
-                                    }
-
-
-
-                                    // PARAMETROS UTILIZADOS PARA CARGAR DATA HISTORICA
-
-                                    // if($ex_cantidadbultos){
-
-                                    //     if(is_numeric($ex_cantidadbultos)){
-                                    //         $sden->sdecantidadbultos  = $ex_cantidadbultos;
-                                    //         $sden->sdemontoareconocer = $ex_cantidadbultos * $sden->sdedsctodos;
-                                    //     }else{
-                                    //         $sden->sdecantidadbultos  = 0;
-                                    //         $sden->sdemontoareconocer = 0;    
-                                    //     }
-
-                                    // }else{
-                                    //     $sden->sdecantidadbultos  = 0;
-                                    //     $sden->sdemontoareconocer = 0;
-                                    // }
-
-                                    // $sden->sdeaprobado = true;
-
-                                    // if($ex_cantidadbultosreal){
-
-                                    //     if(is_numeric($ex_cantidadbultosreal)){
-                                    //         $sden->sdecantidadbultosreal  = $ex_cantidadbultosreal;
-                                    //         $sden->sdemontoareconocerreal = $ex_cantidadbultosreal * $sden->sdedsctodos;
-                                    //     }else{
-                                    //         $sden->sdecantidadbultosreal  = 0;
-                                    //         $sden->sdemontoareconocerreal = 0;
-                                    //     }
-
-                                    // }else{
-                                    //     $sden->sdecantidadbultosreal  = 0;
-                                    //     $sden->sdemontoareconocerreal = 0;
-                                    // }
-
-                                    // if($ex_cantidadbultos == $ex_cantidadbultosreal){
-                                    //     $sden->sdestatus = "OK";
-                                    // }else{
-                                    //     $sden->sdestatus = "ERROR CANTIDADES";
-                                    // }
-
-                                    // $sden->sdediferenciaahorro = $ex_diferenciaahorrocliente;
-
-                                    //FINAL PARAMETROS UTILIZADOS PARA CARGAR DATA HISTORICA
-
-
-
-                                    $sden->save();
+                                    $respuesta = false;
+                                    $mensaje = "Lo sentimos, hubieron algunos clientes SO que no se encontraron, recomendamos actualizar la maestra de clientes SO e intentar nuevamente gracias.";
+                                    $logs["CLIENTES_SO_NO_ENCONTRADOS"] = $this->EliminarDuplicidad( $logs["CLIENTES_SO_NO_ENCONTRADOS"], "Destinatario: ".$ex_codigodestinatario." con el RUC: ".$ex_rucsubcliente, $i);
                                 }
         
                             }else{
@@ -508,16 +522,28 @@ class MetCargarSubsidiosPlantillaController extends Controller
         return $array;
     }
 
-    public function EliminarDuplicidadPks($array, $dato, $linea, $campo)
+    public function EliminarDuplicidadPks($array, $dato, $linea, $campo, $ruc)
     {
         $encontroDato = false;
         $data = array();
 
-        foreach($array as $arr){
-            if($arr['pk'] == $dato){
-                $encontroDato = true;
-                $data = $arr['dat'];
-                break;
+        if($campo == "clienteso"){
+
+            foreach($array as $arr){
+                if($arr['pk'] == $dato && $arr['ruc'] == $ruc){
+                    $encontroDato = true;
+                    $data = $arr['dat'];
+                    break;
+                }
+            }
+
+        }else{
+            foreach($array as $arr){
+                if($arr['pk'] == $dato){
+                    $encontroDato = true;
+                    $data = $arr['dat'];
+                    break;
+                }
             }
         }
 
@@ -567,6 +593,31 @@ class MetCargarSubsidiosPlantillaController extends Controller
                         "linea" => $linea
                     );
                     $data = $pro;
+                }
+
+            }else if($campo == "clienteso"){
+                $cso = csoclientesso::where('csocoddestinatario', $dato)
+                                    ->where('csorucsubcliente', $ruc)
+                                    ->first();
+
+                if($cso){
+                    $array[] = array(
+                        "pk"     => $dato, 
+                        "existe" => true, 
+                        "dat"    => $cso,
+                        "linea"  => $linea,
+                        "ruc"    => $ruc
+                    );
+                    $data = $cso;
+                }else{
+                    $array[] = array(
+                        "pk"     => $dato,
+                        "existe" => false,
+                        "dat"    => $cso,
+                        "linea"  => $linea,
+                        "ruc"    => $ruc
+                    );
+                    $data = $cso;
                 }
 
             }

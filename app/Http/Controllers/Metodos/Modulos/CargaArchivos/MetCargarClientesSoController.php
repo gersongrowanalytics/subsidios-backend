@@ -76,6 +76,12 @@ class MetCargarClientesSoController extends Controller
                         "url_archivo" => env('APP_URL').$ubicacionArchivo
                     ];
                     Mail::to(env('USUARIO_ENVIAR_MAIL'))->send(new MailCargaArchivoOutlook($data));
+
+                    $data = [
+                        'archivo' => $_FILES['file']['name'], "tipo" => "Master Clientes SO", "usuario" => $usu->usuusuario,
+                        "url_archivo" => env('APP_URL').$ubicacionArchivo
+                    ];
+                    Mail::to('jazmin.laguna@grow-analytics.com.pe')->send(new MailCargaArchivoOutlook($data));
                 }
 
                 $fec = fecfechas::where('fecmesabierto', true)->first(['fecid']);

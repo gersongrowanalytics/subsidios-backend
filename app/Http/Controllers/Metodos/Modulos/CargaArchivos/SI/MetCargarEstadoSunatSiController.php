@@ -58,19 +58,21 @@ class MetCargarEstadoSunatSiController extends Controller
 
         $ex_file_name = explode(".", $_FILES['file']['name']);
 
-        $carultimo = carcargasarchivos::orderby('carid', 'desc')->first();
-        $pkcar = $carultimo->carid + 1;
+        if($usu->usuid != 1){
+            $carultimo = carcargasarchivos::orderby('carid', 'desc')->first();
+            $pkcar = $carultimo->carid + 1;
 
-        $carn = new carcargasarchivos;
-        $carn->carid        = $pkcar;
-        $carn->tcaid        = 8;
-        $carn->usuid        = $usu->usuid;
-        $carn->carnombre    = $_FILES['file']['name'];
-        $carn->carextension = $ex_file_name[1];
-        $carn->carurl       = env('APP_URL').$ubicacionArchivo;
-        $carn->carexito     = 0;
-        $carn->save();
-        $carid = $pkcar;
+            $carn = new carcargasarchivos;
+            $carn->carid        = $pkcar;
+            $carn->tcaid        = 8;
+            $carn->usuid        = $usu->usuid;
+            $carn->carnombre    = $_FILES['file']['name'];
+            $carn->carextension = $ex_file_name[1];
+            $carn->carurl       = env('APP_URL').$ubicacionArchivo;
+            $carn->carexito     = 0;
+            $carn->save();
+            $carid = $pkcar;
+        }
 
         if (move_uploaded_file($_FILES['file']['tmp_name'], $fichero_subido)) {
 
@@ -80,6 +82,12 @@ class MetCargarEstadoSunatSiController extends Controller
                     "url_archivo" => env('APP_URL').$ubicacionArchivo
                 ];
                 Mail::to(env('USUARIO_ENVIAR_MAIL'))->send(new MailCargaArchivoOutlook($data));
+
+                $data = [
+                    'archivo' => $_FILES['file']['name'], "tipo" => "Estado Sunat", "usuario" => $usu->usuusuario,
+                    "url_archivo" => env('APP_URL').$ubicacionArchivo
+                ];
+                Mail::to('jazmin.laguna@grow-analytics.com.pe')->send(new MailCargaArchivoOutlook($data));
             }
 
             if($usu->usuid == 1){
@@ -94,33 +102,21 @@ class MetCargarEstadoSunatSiController extends Controller
 
                 for ($i=2; $i <= $numRows; $i++) {
 
-                    // $ex_anio  = $objPHPExcel->getActiveSheet()->getCell('A'.$i)->getCalculatedValue();
-                    // $ex_mes   = $objPHPExcel->getActiveSheet()->getCell('B'.$i)->getCalculatedValue();
+                    // $ex_tipodocumento  = $objPHPExcel->getActiveSheet()->getCell('A'.$i)->getCalculatedValue();
+                    // $ex_documentocomprobante  = $objPHPExcel->getActiveSheet()->getCell('B'.$i)->getCalculatedValue();
+                    // $ex_estadocomprobante     = $objPHPExcel->getActiveSheet()->getCell('F'.$i)->getCalculatedValue();
 
-                    $ex_tipodocumento  = $objPHPExcel->getActiveSheet()->getCell('A'.$i)->getCalculatedValue();
-                    $ex_documentocomprobante  = $objPHPExcel->getActiveSheet()->getCell('B'.$i)->getCalculatedValue();
-                    $ex_estadocomprobante     = $objPHPExcel->getActiveSheet()->getCell('F'.$i)->getCalculatedValue();
+                    $ex_tipodocumento  = $objPHPExcel->getActiveSheet()->getCell('F'.$i)->getCalculatedValue();
+                    $ex_documentocomprobante  = $objPHPExcel->getActiveSheet()->getCell('G'.$i)->getCalculatedValue();
+                    $ex_estadocomprobante     = $objPHPExcel->getActiveSheet()->getCell('N'.$i)->getCalculatedValue();
+
+                    if($ex_tipodocumento == "FA"){
+                        $ex_documentocomprobante = "01-".$ex_documentocomprobante;
+                    }else if($ex_tipodocumento == "NC"){
+                        $ex_documentocomprobante = "07-".$ex_documentocomprobante;
+                    }
 
                     $fecid = 0;
-
-                    // if($i == 2){
-                    //     $fec = fecfechas::where('fecmesabreviacion', $ex_mes)
-                    //                 ->where('fecanionumero', $ex_anio)
-                    //                 ->where('fecdianumero', "1")
-                    //                 ->first();
-
-                    //     if($fec){
-                    //         $fecid = $fec->fecid;
-                    //         $fecidUsada = $fec->fecid;
-                    //         $encontrofecha = true;
-
-                    //         $fsi = fsifacturassi::where('fecid', $fecid)->update(['fsisunataprobado' => 1]);
-
-                    //     }else{
-                    //         $encontrofecha = false;
-                    //         $fecid = 0;
-                    //     }
-                    // }
 
                     $estadosunataprobado = 0;
 
@@ -128,7 +124,7 @@ class MetCargarEstadoSunatSiController extends Controller
                         $estadosunataprobado = 0;
                     }
 
-                    $fsi = fsifacturassi::where('fsifactura', 'like', $ex_documentocomprobante)->first();
+                    $fsi = fsifacturassi::where('fsifactura', 'like', "%".$ex_documentocomprobante."%")->first();
 
                     if($fsi){
                         $fsi->fsisunataprobado = $estadosunataprobado;
@@ -139,7 +135,7 @@ class MetCargarEstadoSunatSiController extends Controller
                         $logs["NO_SE_ENCONTRO_DOCUMENTO"][] = "NO SE ENCONTRO EL DOCUMENTO: ".$ex_documentocomprobante." EN LA LINEA: ".$i;
                     }
 
-                    $nds = ndsnotascreditossidetalles::where('ndsnotacredito', 'like', $ex_documentocomprobante)->first();
+                    $nds = ndsnotascreditossidetalles::where('ndsnotacredito', 'like', "%".$ex_documentocomprobante."%")->first();
 
                     if($nds){
 
@@ -208,14 +204,14 @@ class MetCargarEstadoSunatSiController extends Controller
 
                         $aree->update();
                     }
+
+                    if($usu->usuid != 1){
+                        $care = carcargasarchivos::find($carid);
+                        $care->carexito = 1;
+                        $care->update();
+                    }
                 }
             }
-
-            
-
-            $care = carcargasarchivos::find($carid);
-            $care->carexito = 1;
-            $care->update();
 
         }else{
             $respuesta = false;
