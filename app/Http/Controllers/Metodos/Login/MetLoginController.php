@@ -10,6 +10,7 @@ use App\Models\usuusuarios;
 use App\Models\tuptiposusuariospermisos;
 use App\Models\fecfechas;
 use App\Models\sdesubsidiosdetalles;
+use DateTime;
 
 class MetLoginController extends Controller
 {
@@ -29,7 +30,7 @@ class MetLoginController extends Controller
         $contrasenia = $request['contrasenia'];
 
         $aparecerTerminosCondiciones = false;
-        
+
         $usu = usuusuarios::join('perpersonas as per', 'per.perid', 'usuusuarios.perid')
                             ->join('tputiposusuarios as tpu', 'tpu.tpuid', 'usuusuarios.tpuid')
                             ->where('usuusuario', $usuario)
