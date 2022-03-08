@@ -28,4 +28,12 @@ class LoginController extends Controller
 
         
     }
+
+    public function ValCerrarSession(Request $request)
+    {
+
+        $login = new MetLoginController;
+        return $login->MetCerrarSession($request);
+
+    }
 }

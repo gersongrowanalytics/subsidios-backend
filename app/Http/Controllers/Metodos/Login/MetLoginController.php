@@ -28,6 +28,8 @@ class MetLoginController extends Controller
         $usuario     = $request['usuario'];
         $contrasenia = $request['contrasenia'];
 
+        $aparecerTerminosCondiciones = false;
+        
         $usu = usuusuarios::join('perpersonas as per', 'per.perid', 'usuusuarios.perid')
                             ->join('tputiposusuarios as tpu', 'tpu.tpuid', 'usuusuarios.tpuid')
                             ->where('usuusuario', $usuario)
@@ -50,7 +52,9 @@ class MetLoginController extends Controller
                                 'tpunombre',
                                 'percumpleanios',
                                 'pernumero',
-                                'usuimagen'
+                                'usuimagen',
+                                'usuaceptoterminos',
+                                'usucerrosesion'
                             ]);
 
         if($usu){
@@ -98,7 +102,57 @@ class MetLoginController extends Controller
                         }
                         $tiempo = $sdes;
                     }
-    
+   
+                    
+
+                    if(isset($usu->usuaceptoterminos)){
+
+                        date_default_timezone_set("America/Lima");
+                        $fechaActual = new DateTime();
+                        $fechaAceptacionTerminos = new DateTime($usu->usuaceptoterminos);
+
+                        $diff = $fechaActual->diff($fechaAceptacionTerminos);
+
+                        if($usu->usucerrosesion == true){
+                            $aparecerTerminosCondiciones = true;
+                        }else{
+                            if($diff->days >= 7){
+                                $aparecerTerminosCondiciones = true;
+
+                                date_default_timezone_set("America/Lima");
+                                $fechaActual = date('Y-m-d H:i:s');
+
+                                $usue = usuusuarios::where('usuid', $usu->usuid)->first();
+                                $usue->usuaceptoterminos = $fechaActual;
+                                $usue->update();
+
+                                $AuditoriaController = new AuditoriaController;
+                                $registrarAuditoria  = $AuditoriaController->registrarAuditoria(
+                                    $usutoken,
+                                    $usuidAud,
+                                    null,
+                                    $request,
+                                    [],
+                                    "VOLVER A ACEPTAR LOS TERMINOS  Y CONDICIONES DESPUES DE 7 DIAS",
+                                    'ACEPTAR TERMINOS Y CONDICONES',
+                                    '/aceptar-terminos-condiciones', //ruta
+                                    [],
+                                    [],
+                                    5 // Aceptar terminos y condiciones
+                                );
+
+                            }else{
+                                $aparecerTerminosCondiciones = false;
+                            }
+                        }
+
+
+                    }else{
+                        $aparecerTerminosCondiciones = true;
+                    }
+
+
+
                 }else{
                     $respuesta = false;
                     $mensaje = "Lo sentimos, el usuario o contraseña es incorrecta";
@@ -121,6 +175,21 @@ class MetLoginController extends Controller
             'fechaActualizacion' => "22 Febrero 2022",
             'mesespendientes' => $mesespendientes,
             'tiempo' => $tiempo,
+            'mostrarterminos' => $aparecerTerminosCondiciones,
         ]);
+    }
+
+    public function MetCerrarSession(Request $request)
+    {
+
+        $usutoken = $request->header('api-token');
+
+        $usu = usuusuarios::where('usutoken', $usutoken)->first();
+
+        if($usu){
+            $usu->usucerrosesion = true;
+            $usu->update();
+        }
+
     }
 }

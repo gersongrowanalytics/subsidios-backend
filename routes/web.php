@@ -23,6 +23,7 @@ $router->get('/propro', function () use ($router) {
 
 
 $router->post('/login', 'Validaciones\Login\LoginController@ValLogin');
+$router->post('/cerrar-session', 'Validaciones\Login\LoginController@ValCerrarSession');
 
 $router->get('/seed', 'Prueba\PruebaController@EjecutarSeeds');
 $router->post('/enviar-correo', 'Validaciones\RecuperarContrasenia\RecuperarContraseniaController@ValRecuperarContrasenia');
