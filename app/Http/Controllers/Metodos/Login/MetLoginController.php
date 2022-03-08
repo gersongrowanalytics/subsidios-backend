@@ -183,7 +183,10 @@ class MetLoginController extends Controller
     public function MetCerrarSession(Request $request)
     {
 
-        $usutoken = $request->header('api-token');
+        $usutoken = $request->header('api_token');
+        if(!isset($usutoken)){
+            $usutoken = "TOKENESPECIFICOUNIFODEVGERSONGROW1845475#LD72";
+        }
 
         $usu = usuusuarios::where('usutoken', $usutoken)->first();
 
