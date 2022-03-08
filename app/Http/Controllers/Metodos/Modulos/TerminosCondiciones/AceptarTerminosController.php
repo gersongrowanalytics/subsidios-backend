@@ -33,6 +33,7 @@ class AceptarTerminosController extends Controller
             $fechaActual = date('Y-m-d H:i:s');
 
             $usu->usuaceptoterminos = $fechaActual;
+            $usu->usucerrosesion = false;
             $usu->update();
 
             $respuesta = true;
