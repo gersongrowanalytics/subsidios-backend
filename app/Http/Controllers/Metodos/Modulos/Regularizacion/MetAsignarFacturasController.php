@@ -8,6 +8,7 @@ use App\Models\sfssubsidiosfacturassi;
 use App\Models\fecfechas;
 use App\Models\sdesubsidiosdetalles;
 use App\Models\fdsfacturassidetalles;
+use App\Http\Controllers\AuditoriaController;
 
 class MetAsignarFacturasController extends Controller
 {
@@ -20,6 +21,15 @@ class MetAsignarFacturasController extends Controller
         $mensajeDetalle = "";
         $mensajedev = "";
 
+        // $usutoken = "TOKENESPECIFICOUNIFODEVGERSONGROW1845475#LD72";
+        $usutoken = $request->header('api_token');
+        if(!isset($usutoken)){
+            $usutoken = "TOKENESPECIFICOUNIFODEVGERSONGROW1845475#LD72";
+        }
+
+        $usu = usuusuarios::where('usutoken', $usutoken)->first(['usuid', 'usuusuario', 'perid']);
+
+        $pkis = array();
         $logs = array(
             "FECHA_NO_ENCONTRADA" => "",
             "SUBSIDIO_NO_ENCONTRADO" => "",
@@ -134,13 +144,27 @@ class MetAsignarFacturasController extends Controller
         }
 
 
-        $rpta = array(
+        $requestsalida = array(
             "respuesta" => $respuesta,
             "mensaje" => $mensaje,
             "mensajedev" => $mensajedev,
             "logs" => $logs
         );
 
-        return $rpta;
+        $AuditoriaController = new AuditoriaController;
+        $registrarAuditoria  = $AuditoriaController->registrarAuditoria(
+            $usutoken, // token
+            $usu->usuid, // usuid
+            null, // audip
+            $request, // audjsonentrada
+            $requestsalida,// audjsonsalida
+            'ASIGNAR FACTURAS A LA REGULARIZACION ', //auddescripcion
+            'EDITAR', // audaccion
+            '/modulo/regularizacion-so/asignar-facturas', //audruta
+            $pkis, // audpk
+            $logs // log
+        );
+
+        return $requestsalida;
     }
 }
