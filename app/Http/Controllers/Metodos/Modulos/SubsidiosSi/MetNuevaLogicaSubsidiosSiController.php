@@ -61,7 +61,7 @@ class MetNuevaLogicaSubsidiosSiController extends Controller
                                         ->join('cliclientes as cli', 'cli.cliid', 'sdesubsidiosdetalles.cliid')
                                         ->where('fecid', $fecid)
                                         ->where('sdeaprobado', true)
-                                        ->where('sdependiente', true)
+                                        // ->where('sdependiente', true)
                                         ->where('sdemontoareconocerreal', '!=',0)
                                         ->get([
                                             'sdeid',
