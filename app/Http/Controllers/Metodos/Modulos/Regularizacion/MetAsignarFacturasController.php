@@ -8,6 +8,7 @@ use App\Models\sfssubsidiosfacturassi;
 use App\Models\fecfechas;
 use App\Models\sdesubsidiosdetalles;
 use App\Models\fdsfacturassidetalles;
+use App\Models\usuusuarios;
 use App\Http\Controllers\AuditoriaController;
 
 class MetAsignarFacturasController extends Controller
