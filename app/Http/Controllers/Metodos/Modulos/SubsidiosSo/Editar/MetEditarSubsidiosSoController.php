@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Metodos\Modulos\SubsidiosSo\Editar;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\sdesubsidiosdetalles;
+use App\Models\usuusuarios;
 use App\Http\Controllers\AuditoriaController;
 
 class MetEditarSubsidiosSoController extends Controller
