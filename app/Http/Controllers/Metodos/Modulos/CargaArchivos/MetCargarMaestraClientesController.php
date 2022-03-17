@@ -312,10 +312,27 @@ class MetCargarMaestraClientesController extends Controller
                                     $cli->cliidentificadoraplicativo = $cliidentificadoraplicativoSuc;
                                 }
 
-                                if($cli->cliclientesac == $essac){
+                                if($cli->cliclientesac != $essac){
                                     $camposEditados[] = "ES SAC  ANTES: ".$cli->cliclientesac." AHORA: ".$essac;
                                     $cli->cliclientesac = $essac;
                                 }
+
+                                $mystring  = $ex_estado;
+                                $findme    = 'ACTIVO';
+                                $bloqueado = false;
+
+                                $pos = strpos($mystring, $findme);
+
+                                if ($pos === false) {
+                                    $bloqueado = true;
+                                }else {
+                                    $bloqueado = false;
+                                }
+
+                                if($cli->clibloqueado != $bloqueado){
+                                    $camposEditados[] = "ESTADO ANTES: ".$cli->clibloqueado." AHORA: ".$bloqueado;
+                                }
+                                $cli->clibloqueado = $bloqueado;
 
                                 if(sizeof($camposEditados) > 0){
                                     $cli->update();
@@ -358,6 +375,29 @@ class MetCargarMaestraClientesController extends Controller
                                 $clin->cliejecutivo         = $cliejecutivoSuc;
                                 $clin->cliidentificadoraplicativo = $cliidentificadoraplicativoSuc;
                                 $clin->cliclientesac = $essac;
+
+                                if( $ex_estado == "" ){
+                                    
+                                }else{
+                                    $clin->clibloqueado = $essac;
+                                }
+
+
+                                $mystring = $ex_estado;
+                                $findme   = 'ACTIVO';
+
+                                $pos = strpos($mystring, $findme);
+
+                                if ($pos === false) {
+                                    
+                                    $clin->clibloqueado = true;
+                                } else {
+                                    
+                                    $clin->clibloqueado = false;
+                                }
+                                
+
+
                                 if($clin->save()){
                                     $logs["NUEVOS_SUCURSAL"][] = array(
                                         "sucid" => $clin->cliid,
