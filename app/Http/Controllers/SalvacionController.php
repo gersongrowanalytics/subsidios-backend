@@ -1020,7 +1020,8 @@ class SalvacionController extends Controller
 
         $sdes = sdesubsidiosdetalles::join('cliclientes as cli', 'cli.cliid', 'sdesubsidiosdetalles.cliid')
                                     ->where('fecid', $fecid)
-                                    ->where('sdeaprobado', true)
+                                    ->where('sdemontoacido', '>', 0)
+                                    // ->where('sdeaprobado', true)
                                     ->get(['sdeid', 'sdemontoacido', 'clinombre', 'clizona']);
         $logs = array();
         $sdeis = array();
