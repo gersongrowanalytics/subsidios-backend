@@ -58,6 +58,7 @@ class MetEditarSubsidiosSoController extends Controller
             $sdee->sdebultosnoreconocido = $sdebultosnoreconocido;
             $sdee->sderegularizacion     = $esRegularizacion;
             $sdee->sdependiente          = true;
+            $sdee->sdeaprobado           = true;
             if($sdee->update()){
 
             }else{
