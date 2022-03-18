@@ -39,7 +39,8 @@ class MetEditarSubsidiosSoController extends Controller
                                         'sdemontoacido',
                                         'sdedsctodos',
                                         'sdebultosnoreconocido',
-                                        'sdecantidadbultosreal'
+                                        'sdecantidadbultosreal',
+                                        'sdeaprobado'
                                     ]);
         
         if($sdee){
