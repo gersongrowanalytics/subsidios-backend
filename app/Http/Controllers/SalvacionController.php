@@ -1047,7 +1047,8 @@ class SalvacionController extends Controller
 
         $requestsalida = response()->json([
             "data" => $logs,
-            "difTotal" => $diferencia
+            "difTotal" => $diferencia,
+            "sdeis" => $sdeis,
         ]);
 
         return $requestsalida;
