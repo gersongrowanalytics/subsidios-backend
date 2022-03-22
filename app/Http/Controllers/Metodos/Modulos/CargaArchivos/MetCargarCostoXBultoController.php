@@ -114,6 +114,7 @@ class MetCargarCostoXBultoController extends Controller
                             $ex_directo     = $objPHPExcel->getActiveSheet()->getCell('E'.$i)->getCalculatedValue();
                             $ex_indirecto   = $objPHPExcel->getActiveSheet()->getCell('F'.$i)->getCalculatedValue();
                             $ex_total       = $ex_indirecto + $ex_indirecto;
+                            $ex_total_dolares = 0;
 
                             if($i == 2){
 
@@ -124,13 +125,18 @@ class MetCargarCostoXBultoController extends Controller
                                 if($fec){
 
                                     cbucostosbultos::where('fecid', $fec->fecid)->delete();
+                                    $tic = tictipocambios::where('fecid', $fec->fecid)->first();
+                                    if($tic){
+                                        $ex_total_dolares = $ex_total / $tic->tictc;
+                                    }
 
                                 }else{
                                     $agregarCbu = false;
                                     $logs["FECHA_NO_REGISTRADA"] = $ex_anio." ".$ex_mes." EN LA LINEA: ".$i;
                                 }
-
                             }
+
+                            
 
                             if($agregarCbu == true){
 
@@ -156,6 +162,10 @@ class MetCargarCostoXBultoController extends Controller
                                             $cbun->cbutotal     = $ex_total;    
                                         }
                                         
+                                        if(isset($ex_total_dolares)){
+                                            $cbun->cbutotaldolares = $ex_total_dolares;    
+                                        }
+                                        
                                         $cbun->save();
 
                                     }else{
@@ -177,6 +187,10 @@ class MetCargarCostoXBultoController extends Controller
                                             $cbun->cbutotal     = $ex_total;    
                                         }
                                         
+                                        if(isset($ex_total_dolares)){
+                                            $cbun->cbutotaldolares = $ex_total_dolares;    
+                                        }
+
                                         $cbun->save();
 
                                         $respuesta = false;
