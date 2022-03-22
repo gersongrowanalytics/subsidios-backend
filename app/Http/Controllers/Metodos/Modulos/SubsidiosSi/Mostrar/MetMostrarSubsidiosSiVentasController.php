@@ -176,7 +176,7 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                                                     'sdedsctodos',
                                                     'sdebultosacido',
                                                     'sdemontoacido',
-                                                    'cbutotal',
+                                                    'cbutotaldolares as cbutotal',
                                                     'csonombrecomercial'
                                                 ]);
 
