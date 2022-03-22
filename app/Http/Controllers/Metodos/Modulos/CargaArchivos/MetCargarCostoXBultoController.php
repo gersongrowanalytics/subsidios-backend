@@ -16,6 +16,7 @@ use App\Models\areareasestados;
 use App\Models\carcargasarchivos;
 use App\Models\cbucostosbultos;
 use App\Models\proproductos;
+use App\Models\tictipocambios;
 use \DateTime;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\MailCargaArchivoOutlook;
@@ -128,6 +129,8 @@ class MetCargarCostoXBultoController extends Controller
                                     $tic = tictipocambios::where('fecid', $fec->fecid)->first();
                                     if($tic){
                                         $ex_total_dolares = $ex_total / $tic->tictc;
+                                    }else{
+                                        $logs["TIPO_CAMBIO_NO_REGISTRADO"] = "EL TIPO DE CAMBIO NO SE HA REGISTRADO EN LA FECHA SELECCIONADA: ".$ex_anio." ".$ex_mes;
                                     }
 
                                 }else{
