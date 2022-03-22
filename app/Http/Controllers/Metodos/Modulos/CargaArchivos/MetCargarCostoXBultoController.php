@@ -106,6 +106,8 @@ class MetCargarCostoXBultoController extends Controller
 
                         $agregarCbu = true;
 
+                        $fechasEditadas = [];
+
                         for ($i=2; $i <= $numRows ; $i++) {
 
                             $ex_anio        = $objPHPExcel->getActiveSheet()->getCell('A'.$i)->getCalculatedValue();
@@ -117,27 +119,42 @@ class MetCargarCostoXBultoController extends Controller
                             $ex_total       = $ex_indirecto + $ex_indirecto;
                             $ex_total_dolares = 0;
 
-                            if($i == 2){
+                            // if($i == 2){
 
-                                $fec = fecfechas::where('fecmesnumero', $ex_mes)
-                                                ->where('fecanionumero', $ex_anio)
-                                                ->first();
+                            $fec = fecfechas::where('fecmesnumero', $ex_mes)
+                                            ->where('fecanionumero', $ex_anio)
+                                            ->first();
 
-                                if($fec){
+                            if($fec){
 
-                                    cbucostosbultos::where('fecid', $fec->fecid)->delete();
-                                    $tic = tictipocambios::where('fecid', $fec->fecid)->first();
-                                    if($tic){
-                                        $ex_total_dolares = $ex_total / $tic->tictc;
-                                    }else{
-                                        $logs["TIPO_CAMBIO_NO_REGISTRADO"] = "EL TIPO DE CAMBIO NO SE HA REGISTRADO EN LA FECHA SELECCIONADA: ".$ex_anio." ".$ex_mes;
+                                $eliminarData = true;
+
+                                foreach($fechasEditadas as $fechaEditada){
+                                    if($fechaEditada == $fec->fecid){
+                                        $eliminarData = false;
                                     }
-
-                                }else{
-                                    $agregarCbu = false;
-                                    $logs["FECHA_NO_REGISTRADA"] = $ex_anio." ".$ex_mes." EN LA LINEA: ".$i;
                                 }
+
+                                if($eliminarData == true){
+
+                                    $fechasEditadas[] = $fec->fecid;
+                                    cbucostosbultos::where('fecid', $fec->fecid)->delete();
+
+                                }
+                                
+                                $tic = tictipocambios::where('fecid', $fec->fecid)->first();
+                                if($tic){
+                                    $ex_total_dolares = $ex_total / $tic->tictc;
+                                }else{
+                                    $logs["TIPO_CAMBIO_NO_REGISTRADO"] = "EL TIPO DE CAMBIO NO SE HA REGISTRADO EN LA FECHA SELECCIONADA: ".$ex_anio." ".$ex_mes;
+                                }
+
+                            }else{
+                                $agregarCbu = false;
+                                $respuesta = false;
+                                $logs["FECHA_NO_REGISTRADA"] = $ex_anio." ".$ex_mes." EN LA LINEA: ".$i;
                             }
+                            // }
 
                             
 
