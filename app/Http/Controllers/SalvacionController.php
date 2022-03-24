@@ -1219,6 +1219,35 @@ class SalvacionController extends Controller
 
     }
 
+    public function CalcularCostosBultoDolares($fecid)
+    {
+
+        $tic  = tictipocambios::where('fecid', $fecid)->first();
+
+        $cbus = cbucostosbultos::where('fecid', $fecid)->get();
+
+        foreach($cbus as  $cbu){
+
+            $directo   = floatval($cbu->cbudirecto);
+            $indirecto = floatval($cbu->cbuindirecto);
+
+            $total = $directo +  $indirecto;
+
+            $totalDolares = floatval($total)/floatval($tic->tictc);
+
+            $cbue = cbucostosbultos::find($cbu->cbuid);
+            $cbue->cbutotal = $total;
+            $cbue->cbutotaldolares = $totalDolares;
+            $cbue->update();
+
+        }
+
+        return true;
+
+
+
+    }
+
 }
 
 

@@ -183,3 +183,5 @@ $router->get('/obtener-subsidios-pendientes/{fecid}', 'SalvacionController@Obten
 
 $router->get('/asignar-csoid-a-subsidios/{fecid}', 'SalvacionController@AsignarCsoidASubsidios');
 $router->get('/convertir-dolares-bultos-total/{fecid}', 'SalvacionController@ConvertirDolaresBultosTotal');
+
+$router->get('/sumar-directo-indirecto-calcular-total-soles-y-dolares/{fecid}', 'SalvacionController@CalcularCostosBultoDolares');
