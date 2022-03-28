@@ -51,6 +51,7 @@ class MetEditarSubsidiosSoController extends Controller
             if($sdee->fecmesabierto == true){
                 $esRegularizacion = false;
                 $sdebultosnoreconocido = $sdee->sdecantidadbultosreal - $nuevacantidadbultos;
+                $sdee->sdependiente  = true;
             }else{
                 $esRegularizacion = true;
                 $sdebultosnoreconocido = $nuevacantidadbultos - $sdee->sdecantidadbultosreal;
@@ -58,7 +59,6 @@ class MetEditarSubsidiosSoController extends Controller
 
             $sdee->sdebultosnoreconocido = $sdebultosnoreconocido;
             $sdee->sderegularizacion     = $esRegularizacion;
-            $sdee->sdependiente          = true;
             $sdee->sdeaprobado           = true;
             if($sdee->update()){
 

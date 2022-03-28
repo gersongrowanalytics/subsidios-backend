@@ -31,5 +31,16 @@ class LogicaSubsidiosSiController extends Controller
 
     }
 
+    public function ValLogicaSubsidiosSiPendientes(Request $request)
+    {
+
+        $mensajes = new CustomMessagesController;
+        $customMessages  = $mensajes->CustomMensajes();
+
+        $MetLogicaSubsidiosSiPendientes = new MetLogicaSubsidiosSiController;
+        return $MetLogicaSubsidiosSiPendientes->MetLogicaSubsidiosSiPendientes($request);
+
+    }
+
     
 }

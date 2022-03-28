@@ -349,7 +349,7 @@ class CrearAmbienteHomeController extends Controller
                 $espn->espfechaprogramado = $re_sacadm;
                 $espn->espchacargareal = null;
                 $espn->espfechactualizacion = null;
-                $espn->espbasedato = "Aoribación de Subsidios SO";
+                $espn->espbasedato = "Aprobación de Subsidios SO";
                 $espn->espresponsable = "SAC";
                 $espn->espdiaretraso = "0";
                 $espn->esporden = "0";
