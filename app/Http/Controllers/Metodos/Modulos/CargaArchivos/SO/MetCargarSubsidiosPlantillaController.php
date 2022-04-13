@@ -47,7 +47,7 @@ class MetCargarSubsidiosPlantillaController extends Controller
         $datos          = [];
         $mensajeDetalle = "";
 
-        $subirinformacion = false;
+        $subirinformacion = true;
 
         $usutoken = $request->header('api_token');
         if(!isset($usutoken)){
