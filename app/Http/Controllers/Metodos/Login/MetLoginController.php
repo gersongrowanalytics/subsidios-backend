@@ -11,6 +11,7 @@ use App\Models\tuptiposusuariospermisos;
 use App\Models\fecfechas;
 use App\Models\sdesubsidiosdetalles;
 use DateTime;
+use App\Http\Controllers\AuditoriaController;
 
 class MetLoginController extends Controller
 {
