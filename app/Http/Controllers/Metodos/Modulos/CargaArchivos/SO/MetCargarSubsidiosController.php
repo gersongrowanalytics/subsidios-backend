@@ -214,32 +214,34 @@ class MetCargarSubsidiosController extends Controller
                     
                                             }else{
                                                 $espe->perid = $usu->perid;
-                                            }
-                                            $espe->espfechactualizacion = $fechaActual;
-                                            if($espe->espfechaprogramado == null){
-                                                $espe->espdiaretraso = "0";
-                                            }else{
-    
-                                                $fecha_carga_real = date("Y-m-d", strtotime($espe->espfechaprogramado));
-    
-                                                $date1 = new DateTime($fechaActual);
-                                                $date2 = new DateTime($fecha_carga_real);
-    
-                                                if($date1 > $date2){
-                                                    $diff = $date1->diff($date2);
-            
-                                                    if($diff->days > 0){
-                                                        $espe->espdiaretraso = $diff->days;
+
+                                                $espe->espfechactualizacion = $fechaActual;
+                                                if($espe->espfechaprogramado == null){
+                                                    $espe->espdiaretraso = "0";
+                                                }else{
+        
+                                                    $fecha_carga_real = date("Y-m-d", strtotime($espe->espfechaprogramado));
+        
+                                                    $date1 = new DateTime($fechaActual);
+                                                    $date2 = new DateTime($fecha_carga_real);
+        
+                                                    if($date1 > $date2){
+                                                        $diff = $date1->diff($date2);
+                
+                                                        if($diff->days > 0){
+                                                            $espe->espdiaretraso = $diff->days;
+                                                        }else{
+                                                            $espe->espdiaretraso = "0";
+                                                        }
+                
                                                     }else{
                                                         $espe->espdiaretraso = "0";
                                                     }
-            
-                                                }else{
-                                                    $espe->espdiaretraso = "0";
                                                 }
+        
+                                                $espe->update();
+
                                             }
-    
-                                            $espe->update();
     
                                         }else{
     
