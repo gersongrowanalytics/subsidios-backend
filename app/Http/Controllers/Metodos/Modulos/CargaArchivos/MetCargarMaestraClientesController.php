@@ -318,15 +318,15 @@ class MetCargarMaestraClientesController extends Controller
                                 }
 
                                 $mystring  = $ex_estado;
-                                $findme    = 'ACTIVO';
+                                $findme    = 'NAC';
                                 $bloqueado = false;
 
                                 $pos = strpos($mystring, $findme);
 
                                 if ($pos === false) {
-                                    $bloqueado = true;
-                                }else {
                                     $bloqueado = false;
+                                }else {
+                                    $bloqueado = true;
                                 }
 
                                 if($cli->clibloqueado != $bloqueado){
