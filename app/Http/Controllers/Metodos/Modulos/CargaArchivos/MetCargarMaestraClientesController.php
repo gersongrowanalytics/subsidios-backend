@@ -175,7 +175,7 @@ class MetCargarMaestraClientesController extends Controller
 
                         $essac = false;
 
-                        if($identificador == "MANUAL"){
+                        if($identificador == "MANUAL" || $identificador == "NO COMPARTE"){
                             $essac = true;
                         }
 
