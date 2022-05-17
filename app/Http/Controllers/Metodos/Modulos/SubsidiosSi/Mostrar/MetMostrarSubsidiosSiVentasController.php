@@ -141,7 +141,7 @@ class MetMostrarSubsidiosSiVentasController extends Controller
                                                 ->leftjoin('fecfechas as feccbu', 'cbu.fecid', 'feccbu.fecid')
                                                 ->where(function ($query) use($re_fechainicio) {
                                                     $query->where('fec.fecfecha', $re_fechainicio);
-                                                    $query->where('feccbu.fecfecha', $re_fechainicio);
+                                                    // $query->where('feccbu.fecfecha', $re_fechainicio);
                                                 })
                                                 ->get([
                                                     'sdeinicio',
