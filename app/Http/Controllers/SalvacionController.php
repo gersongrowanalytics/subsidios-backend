@@ -1141,32 +1141,32 @@ class SalvacionController extends Controller
 
         foreach ($cbus as $key => $cbu) {
 
-            // $totalCbu = $cbu->cbudirecto + $cbu->cbuindirecto;
+            $totalCbu = $cbu->cbudirecto + $cbu->cbuindirecto;
 
-            // $cbue = cbucostosbultos::find($cbu->cbuid);
-            // $cbue->cbutotal = $totalCbu / $tic->tictc;
-            // $cbue->update();
+            $cbue = cbucostosbultos::find($cbu->cbuid);
+            $cbue->cbutotal = $totalCbu / $tic->tictc;
+            $cbue->update();
 
-            if(sizeof($skus) > 0){
+            // if(sizeof($skus) > 0){
 
-                $encontroDuplicado = false;
+            //     $encontroDuplicado = false;
 
-                foreach ($skus as $key => $sku) {
-                    if($sku == $cbu->cbusku){
-                        $encontroDuplicado = true;
-                    }
-                }
+            //     foreach ($skus as $key => $sku) {
+            //         if($sku == $cbu->cbusku){
+            //             $encontroDuplicado = true;
+            //         }
+            //     }
 
-                if($encontroDuplicado == true){
-                    $cbud = cbucostosbultos::find($cbu->cbuid);
-                    $cbud->delete();
-                }else{
-                    $skus[] = $cbu->cbusku;    
-                }
+            //     if($encontroDuplicado == true){
+            //         $cbud = cbucostosbultos::find($cbu->cbuid);
+            //         $cbud->delete();
+            //     }else{
+            //         $skus[] = $cbu->cbusku;    
+            //     }
 
-            }else{
-                $skus[] = $cbu->cbusku;
-            }
+            // }else{
+            //     $skus[] = $cbu->cbusku;
+            // }
         }
 
     }
