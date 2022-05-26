@@ -116,7 +116,7 @@ class MetCargarCostoXBultoController extends Controller
                             $ex_descsku     = $objPHPExcel->getActiveSheet()->getCell('D'.$i)->getCalculatedValue();
                             $ex_directo     = $objPHPExcel->getActiveSheet()->getCell('E'.$i)->getCalculatedValue();
                             $ex_indirecto   = $objPHPExcel->getActiveSheet()->getCell('F'.$i)->getCalculatedValue();
-                            $ex_total       = $ex_indirecto + $ex_indirecto;
+                            $ex_total       = $ex_directo + $ex_indirecto;
                             $ex_total_dolares = 0;
 
                             // if($i == 2){
