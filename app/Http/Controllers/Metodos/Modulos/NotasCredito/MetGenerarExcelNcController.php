@@ -387,14 +387,21 @@ class MetGenerarExcelNcController extends Controller
         $documento = new Spreadsheet();
 
         foreach ($hojas_clientes as $key => $excel) {
+
+            $titulodelahojaexcel = $excel['cliente'];
+
+            if(strlen($titulodelahojaexcel) >= 30){   
+                $titulodelahojaexcel = substr($titulodelahojaexcel, 30);
+            }
+
             if($key == 0){
-                
+                    
                 $hoja = $documento->getActiveSheet();
-                $hoja->setTitle($excel['cliente']);
+                $hoja->setTitle($titulodelahojaexcel);
 
             }else{
                 $worksheet2 = $documento->createSheet();
-                $worksheet2->setTitle($excel['cliente']);
+                $worksheet2->setTitle($titulodelahojaexcel);
 
                 $hoja = $documento->getSheet($key);
             }
