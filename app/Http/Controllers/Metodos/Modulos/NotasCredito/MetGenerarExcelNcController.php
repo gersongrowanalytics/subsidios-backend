@@ -397,11 +397,11 @@ class MetGenerarExcelNcController extends Controller
             if($key == 0){
                     
                 $hoja = $documento->getActiveSheet();
-                $hoja->setTitle($titulodelahojaexcel);
+                $hoja->setTitle($excel['cliente']);
 
             }else{
                 $worksheet2 = $documento->createSheet();
-                $worksheet2->setTitle($titulodelahojaexcel);
+                $worksheet2->setTitle($excel['cliente']);
 
                 $hoja = $documento->getSheet($key);
             }
