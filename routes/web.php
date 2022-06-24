@@ -182,6 +182,6 @@ $router->get('/alerta-diferencia-so-vs-si/{fecid}', 'SalvacionController@AlertaV
 $router->get('/obtener-subsidios-pendientes/{fecid}', 'SalvacionController@ObtenerSubsidiosPendientes');
 
 $router->get('/asignar-csoid-a-subsidios/{fecid}', 'SalvacionController@AsignarCsoidASubsidios');
-$router->get('/convertir-dolares-bultos-total/{fecid}', 'SalvacionController@ConvertirDolaresBultosTotal');
+$router->get('/eliminar-duplicidad-costo-x-bultos/{fecid}', 'SalvacionController@EliminarDuplicidadSkuCostoXBultos');
 
 $router->get('/sumar-directo-indirecto-calcular-total-soles-y-dolares/{fecid}', 'SalvacionController@CalcularCostosBultoDolares');

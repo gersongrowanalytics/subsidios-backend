@@ -1131,7 +1131,7 @@ class SalvacionController extends Controller
 
     }
 
-    public function ConvertirDolaresBultosTotal($fecid)
+    public function EliminarDuplicidadSkuCostoXBultos($fecid)
     {
         $tic = tictipocambios::where('fecid', $fecid)->first();
 
@@ -1141,33 +1141,26 @@ class SalvacionController extends Controller
 
         foreach ($cbus as $key => $cbu) {
 
-            $totalCbu = $cbu->cbudirecto + $cbu->cbuindirecto;
+            if(sizeof($skus) > 0){
 
-            $cbue = cbucostosbultos::find($cbu->cbuid);
-            $cbue->cbutotal = $totalCbu;
-            $cbue->cbutotaldolares = $totalCbu / $tic->tictc;
-            $cbue->update();
+                $encontroDuplicado = false;
 
-            // if(sizeof($skus) > 0){
+                foreach ($skus as $key => $sku) {
+                    if($sku == $cbu->cbusku){
+                        $encontroDuplicado = true;
+                    }
+                }
 
-            //     $encontroDuplicado = false;
+                if($encontroDuplicado == true){
+                    $cbud = cbucostosbultos::find($cbu->cbuid);
+                    $cbud->delete();
+                }else{
+                    $skus[] = $cbu->cbusku;    
+                }
 
-            //     foreach ($skus as $key => $sku) {
-            //         if($sku == $cbu->cbusku){
-            //             $encontroDuplicado = true;
-            //         }
-            //     }
-
-            //     if($encontroDuplicado == true){
-            //         $cbud = cbucostosbultos::find($cbu->cbuid);
-            //         $cbud->delete();
-            //     }else{
-            //         $skus[] = $cbu->cbusku;    
-            //     }
-
-            // }else{
-            //     $skus[] = $cbu->cbusku;
-            // }
+            }else{
+                $skus[] = $cbu->cbusku;
+            }
         }
 
     }
