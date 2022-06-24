@@ -1099,6 +1099,7 @@ class SalvacionController extends Controller
     public function AsignarCsoidASubsidios($fecid)
     {
         $logs = array();
+        $logsCbu = array();
 
         $sdes = sdesubsidiosdetalles::where('fecid', $fecid)
                                     ->get();
@@ -1127,7 +1128,36 @@ class SalvacionController extends Controller
 
         }
 
-        dd($logs);
+        // ASIGNAR PRODUCTOS X COSTO QUE NO EXISTEN EN LA MAESTRA PERO SI EN LOS SUBSIDIOS
+        foreach ($sdes as $key => $sde) {
+            $cbu = cbucostosbultos::where('cbusku', $sde->sdecodigounitario)
+                                    ->where('fecid', $fecid)
+                                    ->first();
+
+            if($cbu){
+
+            }else{
+                $cbun = new cbucostosbultos;
+                $cbun->fecid = $fecid;
+                $cbun->proid = $sde->proid;
+                $cbun->cbusku = $sde->sdecodigounitario;
+                $cbun->cbudescsku = "";
+                $cbun->cbudirecto = 0;
+                $cbun->cbuindirecto = 0;
+                $cbun->cbutotal = 0;
+                $cbun->cbutotaldolares = 0;
+                if($cbun->save()){
+                    $logsCbu["PRODUCTOS_NO_ENCONTRADOS_CBU"] = $sde->sdecodigounitario;
+                }
+            }
+
+        }
+
+        return array(
+            "LOG_ASIGNAR_CSO" => $logs,
+            "LOG_ASIGNAR_CBU" => $logsCbu
+        );
+        // dd($logs);
 
     }
 
