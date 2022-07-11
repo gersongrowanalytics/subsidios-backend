@@ -88,17 +88,17 @@ class MetCargarMaestraProductosController extends Controller
             if (move_uploaded_file($_FILES['file']['tmp_name'], $fichero_subido)) {
                 
                 if($usu->usuid != 1){
-                    $data = [
-                        'archivo' => $_FILES['file']['name'], "tipo" => "Maestra de Productos", "usuario" => $usu->usuusuario,
-                        "url_archivo" => env('APP_URL').$ubicacionArchivo
-                    ];
-                    Mail::to(env('USUARIO_ENVIAR_MAIL'))->send(new MailCargaArchivoOutlook($data));
+                    // $data = [
+                    //     'archivo' => $_FILES['file']['name'], "tipo" => "Maestra de Productos", "usuario" => $usu->usuusuario,
+                    //     "url_archivo" => env('APP_URL').$ubicacionArchivo
+                    // ];
+                    // Mail::to(env('USUARIO_ENVIAR_MAIL'))->send(new MailCargaArchivoOutlook($data));
 
                     $data = [
                         'archivo' => $_FILES['file']['name'], "tipo" => "Maestra de Productos", "usuario" => $usu->usuusuario,
                         "url_archivo" => env('APP_URL').$ubicacionArchivo
                     ];
-                    Mail::to('jazmin.laguna@grow-analytics.com.pe')->send(new MailCargaArchivoOutlook($data));
+                    Mail::to(['jazmin.laguna@grow-analytics.com.pe', 'milagros.roncal@grow-analytics.com.pe', 'gerson.vilca@grow-analytics.com.pe'])->send(new MailCargaArchivoOutlook($data));
                 }
 
                 // OBTENER CODIGOS DE NEGOCIOS
