@@ -89,7 +89,7 @@ class MetCargarMaestraClientesController extends Controller
                         'archivo' => $_FILES['file']['name'], "tipo" => "Maestra de Clientes", "usuario" => $usu->usuusuario,
                         "url_archivo" => env('APP_URL').$ubicacionArchivo
                     ];
-                    Mail::to('jazmin.laguna@grow-analytics.com.pe', 'milagros.roncal@grow-analytics.com.pe', 'gerson.vilca@grow-analytics.com.pe')->send(new MailCargaArchivoOutlook($data));
+                    Mail::to(['jazmin.laguna@grow-analytics.com.pe', 'milagros.roncal@grow-analytics.com.pe', 'gerson.vilca@grow-analytics.com.pe'])->send(new MailCargaArchivoOutlook($data));
                 }
 
                 if($usu->usuid == 1){
