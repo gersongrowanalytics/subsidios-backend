@@ -211,9 +211,9 @@ class MetNuevaLogicaSubsidiosSiController extends Controller
                             ]);                           
 
 
-        // $fdss = fdsfacturassidetalles::get(['fdsid']);
-        $fdss = fdsfacturassidetalles::where('fecid', '>', '1100')
-                                        // ->where('fecid', '<', '1101')
+        // // $fdss = fdsfacturassidetalles::get(['fdsid']);
+        $fdss = fdsfacturassidetalles::where('fecid', '1102')
+                                        // ->where('fecid', '1100')
                                         ->get();
 
         foreach($fdss as $fds){
