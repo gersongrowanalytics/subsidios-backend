@@ -140,6 +140,7 @@ $router->post('/aceptar-terminos-condiciones', 'Metodos\Modulos\TerminosCondicio
         $router->group(['prefix' => 'home'], function () use ($router) {
 
             $router->post('/mostrar/estados-pendientes', 'Validaciones\Modulos\Home\Mostrar\MostrarEstadosPendientesController@ValMostrarEstadosPendientes');
+            $router->post('/editar/staus-home', 'Metodos\Modulos\Home\Editar\EditarStatusHomeController@EditarStatusHome');
 
         });
 
@@ -185,3 +186,6 @@ $router->get('/asignar-csoid-a-subsidios/{fecid}', 'SalvacionController@AsignarC
 $router->get('/eliminar-duplicidad-costo-x-bultos/{fecid}', 'SalvacionController@EliminarDuplicidadSkuCostoXBultos');
 
 $router->get('/sumar-directo-indirecto-calcular-total-soles-y-dolares/{fecid}', 'SalvacionController@CalcularCostosBultoDolares');
+
+$router->get('/identificar-codigos-solicitantes-faltantes/{fecid}', 'SalvacionController@IdentificarSolicitantesFaltantes');
+$router->get('/asignar-cliid-a-fds/{fecid}', 'SalvacionController@AsignarCliidAFds');
