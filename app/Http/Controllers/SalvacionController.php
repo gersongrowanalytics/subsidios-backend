@@ -630,7 +630,7 @@ class SalvacionController extends Controller
                 
                 $cliSelecFDS = cliclientes::where('cliid', $sfs->cliFDS)->first();
                 $cliSelecSDE = cliclientes::where('cliid', $sfs->cliSDE)->first();
-
+                
                 if($cliSelecFDS->clinombre == $cliSelecSDE->clinombre){
 
                 }else{
@@ -1147,7 +1147,7 @@ class SalvacionController extends Controller
                 $cbun->cbutotal = 0;
                 $cbun->cbutotaldolares = 0;
                 if($cbun->save()){
-                    $logsCbu["PRODUCTOS_NO_ENCONTRADOS_CBU"] = $sde->sdecodigounitario;
+                    $logsCbu["PRODUCTOS_NO_ENCONTRADOS_CBU"][] = $sde->sdecodigounitario;
                 }
             }
 
@@ -1269,6 +1269,87 @@ class SalvacionController extends Controller
         return true;
 
 
+
+    }
+
+    public function AsignarCliidAFds($fecid)
+    {
+
+        $logs = [];
+
+        $fdss = fdsfacturassidetalles::join('fsifacturassi as fsi', 'fsi.fsiid', 'fdsfacturassidetalles.fsiid')
+                                    ->where('fdsfacturassidetalles.cliid', "0")
+                                    // ->where('fds.fecid', $fecid)
+                                    ->get([
+                                        'fdsid',
+                                        'fsisolicitante',
+                                        'fsidestinatario'
+                                    ]);
+
+        foreach($fdss as $fds){
+            
+            $cli = cliclientes::where('clicodigo', $fds->fsisolicitante)
+                                ->where('clicodigoshipto', $fds->fsidestinatario)
+                                ->first();
+
+            if($cli){
+                
+                $fdse = fdsfacturassidetalles::find($fds->fdsid);
+                $fdse->cliid = $cli->cliid;
+                $fdse->update();
+            
+            }else{
+                $logs[] = array(
+                    "destinatario" => $fds->fsidestinatario,
+                    "solicitante" => $fds->fsisolicitante
+                ); 
+            }
+            
+        }
+
+        return $logs;
+
+    }
+
+    public function IdentificarSolicitantesFaltantes($fecid)
+    {
+
+        $logs = array();
+
+        $sdes = sdesubsidiosdetalles::join('proproductos as pro', 'pro.proid', 'sdesubsidiosdetalles.proid')
+                                    ->join('cliclientes as cli', 'cli.cliid', 'sdesubsidiosdetalles.cliid')
+                                    ->where('fecid', $fecid)
+                                    ->where('sdeaprobado', true)
+                                    ->where('sdemontoareconocerreal', '!=', 0)
+                                    ->where('sdependiente', true) // SOLO INCLUIR EN "BUSCARFACTURASOLIC"
+                                    // ->where('sdeid', 99887)
+                                    ->get([
+                                        'sdeid',
+                                        'pro.proid',
+                                        'pro.prosku',
+                                        'fecid',
+                                        'cli.cliid',
+                                        'cli.clicodigo',
+                                        'sdemontoareconocerreal',
+                                        'sdemontoacido',
+                                        'sdecodigosolicitante',
+                                        'cliclientegrupo',
+                                        'sdecodigounitario'
+                                    ]);
+
+        foreach($sdes as $sde){
+            
+            $cli = cliclientes::where('clicodigo', $sde->sdecodigosolicitante)->first();
+
+            if($cli){
+
+            }else{
+                $logs[] = $sde->sdecodigosolicitante;
+            }
+
+        }
+
+        return $logs;
 
     }
 
